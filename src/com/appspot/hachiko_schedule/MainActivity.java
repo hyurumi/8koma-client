@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
 
         actionBar.addTab(actionBar.newTab()
                 .setText("Friends")
