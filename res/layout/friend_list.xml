@@ -11,4 +11,9 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Friends list must come here"
             android:id="@+id/textView" android:layout_gravity="center"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="New Plan"
+            android:id="@+id/new_plan_button"/>
 </LinearLayout>
