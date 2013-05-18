@@ -34,6 +34,8 @@
         <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:background="@android:color/darker_gray"/>
         <Button
                 android:layout_width="wrap_content"
