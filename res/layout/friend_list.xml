@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <ListView android:id="@+id/contact_list"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"/>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/incremental_search_box"
+            android:layout_alignParentTop="true"
+            android:textSize="12dp" android:paddingTop="5dp"
+            android:paddingBottom="5dp" android:hint="Input Your Friend Name"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="New Plan"
-            android:id="@+id/new_plan_button"/>
-</LinearLayout>
+            android:id="@+id/new_plan_button"
+            android:layout_alignParentBottom="true" android:enabled="false"
+            android:clickable="false"/>
+    <ListView android:id="@+id/contact_list"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/incremental_search_box"
+              android:layout_above="@id/new_plan_button"/>
+</RelativeLayout>

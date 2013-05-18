@@ -18,31 +18,35 @@ import com.appspot.hachiko_schedule.data.Friend;
  */
 public class FriendsFragment extends Fragment {
     private ArrayAdapter<String> adapter;
+    private ListView listView;
+    private Button createPlanButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friend_list, container, false);
 
-        ((Button) view.findViewById(R.id.new_plan_button)).setOnClickListener(new View.OnClickListener() {
+        createPlanButton = (Button) view.findViewById(R.id.new_plan_button);
+        createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
-                startActivityForResult(intent, 0);
-            }
-        });
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-        ListView listView = (ListView) view.findViewById(R.id.contact_list);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO set selected Friend info
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,
                         new Friend[] {new Friend("Toriaezu Ugokasu", "090-1111-2222", "hoge@fuga")});
-                startActivity(intent);
+                startActivityForResult(intent, 0);
+            }
+        });
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice);
+        listView = (ListView) view.findViewById(R.id.contact_list);
+        listView.setItemsCanFocus(false);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                createPlanButton.setEnabled(listView.getCheckedItemCount() > 0);
             }
         });
         return view;
