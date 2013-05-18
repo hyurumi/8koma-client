@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * @author Kazuki Nishiura
+ * Activity that is used by guest to check event date.
  */
 public class HostPlanDetailActivity extends Activity {
 
