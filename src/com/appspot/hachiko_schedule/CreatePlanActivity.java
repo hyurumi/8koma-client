@@ -21,7 +21,7 @@ public class CreatePlanActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
 
-        ((Button) findViewById(R.id.finish_button)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.ok_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CreatePlanActivity.this.finish();

@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-    <TextView
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HOGE"
+                android:id="@+id/textView"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Nice UI for creating plan will come here"
-            android:id="@+id/textView"/>
-    <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Finish"
-            android:id="@+id/finish_button"/>
+            android:layout_height="wrap_content">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="OK"
+                android:id="@+id/ok_button"
+                android:layout_gravity="center_vertical"
+                android:background="#ffffff"
+                style="?android:attr/borderlessButtonStyle"/>
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:id="@+id/cancel_button"
+                android:layout_gravity="center_vertical"
+                android:background="#ffffff"
+                style="?android:attr/borderlessButtonStyle" android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>
