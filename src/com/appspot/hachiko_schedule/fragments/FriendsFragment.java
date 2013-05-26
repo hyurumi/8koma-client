@@ -3,6 +3,7 @@ package com.appspot.hachiko_schedule.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import com.appspot.hachiko_schedule.ContactManager;
 import com.appspot.hachiko_schedule.CreatePlanActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.Friend;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Friend list where user can choose friends to invite.
@@ -29,14 +33,23 @@ public class FriendsFragment extends Fragment {
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO set selected Friend info
+                Set<Friend> friendsToInvite = new HashSet<Friend>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
+                int len = listView.getCount();
+                SparseBooleanArray checked = listView.getCheckedItemPositions();
+                for (int i = 0; i < len; i++){
+                    if (checked.get(i)) {
+                        String item = adapter.getItem(i);
+                        friendsToInvite.add(new Friend(item, "DummyPhoneNo", "Dummy email"));
+                    }
+                }
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,
-                        new Friend[] {new Friend("Toriaezu Ugokasu", "090-1111-2222", "hoge@fuga")});
+                        friendsToInvite.toArray(new Friend[0]));
                 startActivityForResult(intent, 0);
             }
         });
+        // TODO: implement a means for managing user info with their name.
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice);
         listView = (ListView) view.findViewById(R.id.contact_list);
         listView.setItemsCanFocus(false);
