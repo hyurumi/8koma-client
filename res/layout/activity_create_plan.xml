@@ -5,45 +5,83 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical">
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HOGE"
-                android:id="@+id/textView"/>
-    </LinearLayout>
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp">
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-        <Button
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="OK"
-                android:id="@+id/ok_button"
-                android:layout_gravity="center_vertical"
-                android:background="#ffffff"
-                style="?android:attr/borderlessButtonStyle"/>
-        <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:background="@android:color/darker_gray"/>
-        <Button
+                android:text="@string/with_who_label"/>
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:id="@+id/cancel_button"
+                android:id="@+id/friends_name_to_invite"/>
+    </LinearLayout>
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/what_label"/>
+    </RelativeLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/when_label"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/days_after_spinner"
+                android:entries="@array/positive_num_list"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/days_after_label"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_words_spinner"
+                android:entries="@array/time_words"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/duration_spinner"
+                android:layout_marginLeft="10dp"
+                android:entries="@array/duration"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minutes"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedules"
+                android:visibility="gone">
+        </LinearLayout>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/invite_button_label"
+                android:id="@+id/invite_button"
                 android:layout_gravity="center_vertical"
                 android:background="#ffffff"
-                style="?android:attr/borderlessButtonStyle" android:layout_weight="1"/>
+                style="?android:attr/borderlessButtonStyle"
+                android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
