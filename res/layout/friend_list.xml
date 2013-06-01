@@ -13,16 +13,33 @@
             android:layout_alignParentTop="true"
             android:textSize="12dp" android:paddingTop="5dp"
             android:paddingBottom="5dp" android:hint="Input Your Friend Name"/>
-    <Button
-            android:layout_width="fill_parent"
+    <RelativeLayout
             android:layout_height="wrap_content"
-            android:text="New Plan"
-            android:id="@+id/new_plan_button"
-            android:layout_alignParentBottom="true" android:enabled="false"
-            android:clickable="false"/>
+            android:layout_width="match_parent"
+            android:id="@+id/new_plan_button_wrapper"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/new_plan_button"
+                android:layout_alignParentRight="true"
+                android:background="@android:drawable/checkbox_on_background"/>
+        <HorizontalScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/selected_friends_wrapper_scrollable"
+                android:layout_toLeftOf="@id/new_plan_button">
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selected_friends">
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
     <ListView android:id="@+id/contact_list"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:layout_below="@id/incremental_search_box"
-              android:layout_above="@id/new_plan_button"/>
+              android:layout_above="@id/new_plan_button_wrapper"/>
 </RelativeLayout>
