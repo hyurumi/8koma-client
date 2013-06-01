@@ -5,11 +5,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds;
-import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Utility class to get data from system contacts.
@@ -23,9 +19,31 @@ public class ContactManager {
     }
 
     /**
+     * @return cursor that point the first element or null if no element found.
+     */
+    public Cursor queryAllFriends() {
+        Cursor c = context.getContentResolver().query(
+                ContactsContract.Data.CONTENT_URI,
+                new String[] {
+                        Contacts.DISPLAY_NAME,
+                        Contacts.PHOTO_THUMBNAIL_URI,
+                        CommonDataKinds.StructuredName.PHONETIC_GIVEN_NAME,
+                        CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME,
+                        CommonDataKinds.Email.ADDRESS
+                },
+                ContactsContract.Data.MIMETYPE + "==\'vnd.android.cursor.item/name\'",
+                null,
+                CommonDataKinds.StructuredName.DISPLAY_NAME);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        return null;
+    }
+
+    /**
      * Query all friends info from contacts and set it to given adapter.
      */
-    public void queryAllFriends(ArrayAdapter<String> adapter) {
+    public void queryAllFriendsAndSet(ArrayAdapter<String> adapter) {
         Cursor cursor = context.getContentResolver().query(
                 ContactsContract.Data.CONTENT_URI,
                 new String[] {

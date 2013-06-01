@@ -37,9 +37,12 @@
             </LinearLayout>
         </HorizontalScrollView>
     </RelativeLayout>
-    <ListView android:id="@+id/contact_list"
+    <GridView android:id="@+id/contact_list"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:layout_below="@id/incremental_search_box"
-              android:layout_above="@id/new_plan_button_wrapper"/>
+              android:layout_above="@id/new_plan_button_wrapper"
+              android:numColumns="4"
+              android:verticalSpacing="10dp"
+              android:horizontalSpacing="10dp"/>
 </RelativeLayout>

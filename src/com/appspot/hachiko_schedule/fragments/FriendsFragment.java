@@ -8,10 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.appspot.hachiko_schedule.Constants;
-import com.appspot.hachiko_schedule.ContactManager;
-import com.appspot.hachiko_schedule.CreatePlanActivity;
-import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.google.common.primitives.Longs;
 
@@ -24,10 +21,10 @@ import java.util.Set;
  * Friend list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
-    private ArrayAdapter<String> adapter;
+    private FriendGridViewAdapter adapter;
     private Map<Long, View> selectedFriendNameViews = new HashMap<Long, View>();
 
-    private ListView listView;
+    private GridView gridView;
     private View createPlanButtonWrapper;
     private HorizontalScrollView selectedFriendsNamesScrollView;
     private ViewGroup selectedFriendsNameContainer;
@@ -41,20 +38,16 @@ public class FriendsFragment extends Fragment {
                 = (HorizontalScrollView) view.findViewById(R.id.selected_friends_wrapper_scrollable);
         selectedFriendsNameContainer = (ViewGroup) view.findViewById(R.id.selected_friends);
         createPlanButton = (Button) view.findViewById(R.id.new_plan_button);
-        listView = (ListView) view.findViewById(R.id.contact_list);
+        gridView = (GridView) view.findViewById(R.id.contact_list);
 
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Set<Friend> friendsToInvite = new HashSet<Friend>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
-                int len = listView.getCount();
-                SparseBooleanArray checked = listView.getCheckedItemPositions();
-                for (int i = 0; i < len; i++){
-                    if (checked.get(i)) {
-                        String item = adapter.getItem(i);
-                        friendsToInvite.add(new Friend(item, "DummyPhoneNo", "Dummy email"));
-                    }
+                for (Long friendId: selectedFriendNameViews.keySet()) {
+                    FriendGridViewAdapter.Entry item = adapter.getItemById(friendId);
+                    friendsToInvite.add(new Friend(item.getDisplayName(), "DummyPhoneNo", "Dummy email"));
                 }
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,
@@ -63,25 +56,15 @@ public class FriendsFragment extends Fragment {
             }
         });
         // TODO: implement a means for managing user info with their name.
-        listView.setItemsCanFocus(false);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        adapter = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_list_item_multiple_choice);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new OnFriendItemClickListener());
+        adapter = new FriendGridViewAdapter(getActivity());
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new OnFriendItemClickListener());
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        ContactManager contactManager = new ContactManager(getActivity());
-        contactManager.queryAllFriends(adapter);
-    }
-
-    @Override
     public void onPause() {
-        listView.clearChoices();
+        gridView.clearChoices();
         selectedFriendNameViews.clear();
         super.onPause();
     }
@@ -90,16 +73,21 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            boolean shouldEnable = listView.getCheckedItemCount() > 0;
-            createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
-            createPlanButton.setEnabled(shouldEnable);
             if (selectedFriendNameViews.containsKey(id)) {
                 View unselectedFriendNameView = selectedFriendNameViews.get(id);
                 selectedFriendsNameContainer.removeView(unselectedFriendNameView);
                 selectedFriendNameViews.remove(id);
+                adapter.applyFilterToIcon(false, view, position);
             } else {
-                addSelectedFriendNameView(id, (String) listView.getItemAtPosition(position));
+                addSelectedFriendNameView(
+                        id,
+                        ((FriendGridViewAdapter.Entry)
+                                gridView.getItemAtPosition(position)).getDisplayName());
+                adapter.applyFilterToIcon(true, view, position);
             }
+            boolean shouldEnable = !selectedFriendNameViews.isEmpty();
+            createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
+            createPlanButton.setEnabled(shouldEnable);
         }
 
         private void addSelectedFriendNameView(long friendId, String friendName) {
