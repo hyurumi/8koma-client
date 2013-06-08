@@ -11,4 +11,12 @@ public class HachikoLogger {
     static public int debug(String msg) {
         return Log.d(DEFAULT_TAG, msg);
     }
+
+    static public int debug(Object... objects) {
+        StringBuilder builder = new StringBuilder();
+        for (Object obj: objects) {
+            builder.append(obj).append(' ');
+        }
+        return Log.d(DEFAULT_TAG, builder.toString());
+    }
 }
