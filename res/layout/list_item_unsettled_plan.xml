@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10dp"
+              android:layout_marginBottom="10dp">
+  <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="内容"
+      android:textStyle="bold"
+      android:id="@+id/event_title"/>
+  <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="所要時間: "
+      android:id="@+id/event_duration"/>
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:gravity="center_vertical"
+      android:paddingLeft="10dp">
+    <include  layout="@layout/list_item_unsettled_plan_day" android:id="@+id/candidate0" />
+    <include  layout="@layout/list_item_unsettled_plan_day" android:id="@+id/candidate1" />
+    <include  layout="@layout/list_item_unsettled_plan_day" android:id="@+id/candidate2" />
+  </LinearLayout>
+</LinearLayout>
