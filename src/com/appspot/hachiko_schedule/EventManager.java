@@ -4,10 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import com.appspot.hachiko_schedule.data.Event;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.data.Timeslot;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -24,7 +22,7 @@ public class EventManager {
      * @return List of events contains all events which start in the future,
      * ordered
      */
-    public List<Event> queryAllForecomingEvent() {
+    public List<Timeslot> queryAllForecomingEvent() {
         final String[] EVENT_PROJECTION = {Events.DTSTART, Events.DTEND, Events.ALL_DAY};
         final int PROJECTION_DATE_START_INDEX = 0;
         final int PROJECTION_DATE_END_INDEX = 1;
@@ -38,13 +36,13 @@ public class EventManager {
                 new String[] {Long.toString(new Date().getTime())},
                 Events.DTSTART);
 
-        List<Event> events = new ArrayList<Event>();
+        List<Timeslot> events = new ArrayList<Timeslot>();
         if (!cursor.moveToFirst()) {
             return events;
         }
 
         while (cursor.moveToNext()) {
-            events.add(new Event(
+            events.add(new Timeslot(
                     new Date(cursor.getLong(PROJECTION_DATE_START_INDEX)),
                     new Date(cursor.getLong(PROJECTION_DATE_END_INDEX)),
                     cursor.getInt(PROJECTION_IS_ALL_DAY_INDEX) == 1));

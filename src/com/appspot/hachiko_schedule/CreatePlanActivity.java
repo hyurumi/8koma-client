@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.appspot.hachiko_schedule.data.Event;
+import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Preconditions;
@@ -68,11 +68,11 @@ public class CreatePlanActivity extends Activity {
     }
 
     private void debugQueryEvents() {
-        List<Event> events = new EventManager(this).queryAllForecomingEvent();
+        List<Timeslot> events = new EventManager(this).queryAllForecomingEvent();
         HachikoLogger.debug(events.size() + " events are registered");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        for (Event event: events) {
+        for (Timeslot event: events) {
             HachikoLogger.debug(dateFormat.format(event.getStartDate())
                     + "-" + timeFormat.format(event.getEndDate()));
         }
@@ -92,12 +92,12 @@ public class CreatePlanActivity extends Activity {
                 return;
             }
 
-            List<Event> schedules = scheduleSuggester.suggestTimeSlot(
+            List<Timeslot> schedules = scheduleSuggester.suggestTimeSlot(
                     TimeWords.values()[timeWordIndex],
                     Integer.parseInt(duration),
                     Integer.parseInt(daysAfter)
             );
-            for (Event schedule: schedules) {
+            for (Timeslot schedule: schedules) {
                 TextView scheduleView = new TextView(CreatePlanActivity.this);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
                 scheduleView.setText(dateFormat.format(schedule.getStartDate())
