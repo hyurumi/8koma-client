@@ -6,39 +6,22 @@ import java.util.List;
 /**
  * 確定したイベント
  */
-public class SettledEvent {
-    private String title;
-    private EventCategory category;
+public class SettledEvent extends Event {
     private List<String> participants;
     private Date when;
-    private int durationInMinutes;
 
-    public SettledEvent(String title, EventCategory category, List<String> participants, Date when,
-                        int durationInMinutes) {
-        this.title = title;
-        this.category = category;
+    public SettledEvent(String title, EventCategory category, List<String> participants,
+                        Date when, int durationInMinutes) {
+        super(title, category, durationInMinutes);
         this.participants = participants;
         this.when = when;
-        this.durationInMinutes = durationInMinutes;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public EventCategory getCategory() {
-        return category;
-    }
-
-    public List<String> getParticipants() {
-        return participants;
     }
 
     public Date getWhen() {
         return when;
     }
 
-    public int getDurationInMinutes() {
-        return durationInMinutes;
+    public List<String> getParticipants() {
+        return participants;
     }
 }
