@@ -3,6 +3,8 @@
     <string name="app_name">Hachiko</string>
   <string name="settled_schedules">確定済み</string>
   <string name="unsettled_schedules">調整中</string>
+  <string name="action_create_event">新しい予定</string>
+  <string name="action_config">設定</string>
     <string name="with_who_label">誰と？</string>
     <string name="what_label">何を?</string>
     <string name="when_label">いつ？</string>
