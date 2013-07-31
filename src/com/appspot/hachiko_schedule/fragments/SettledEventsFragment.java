@@ -2,16 +2,19 @@ package com.appspot.hachiko_schedule.fragments;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.SettledEvent;
+import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
@@ -42,6 +45,14 @@ public class SettledEventsFragment extends ListFragment {
 
         SettledEventAdapter adapter = new SettledEventAdapter(getActivity(), events);
         setListAdapter(adapter);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(getActivity(), NotImplementedActivity.class);
+        intent.putExtra(NotImplementedActivity.EXTRA_KEY_DETAILED_MESSAGE,
+                "イベント: 「" + events[position].getTitle() + "」に関する詳細が表示される予定");
+        startActivity(intent);
     }
 
     /**

@@ -25,5 +25,9 @@
         <activity android:name=".HostPlanDetailActivity"
                   android:label="@string/app_name">
         </activity>
+        <activity android:name=".util.NotImplementedActivity"
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.Holo.Light">
+        </activity>
     </application>
 </manifest>
