@@ -14,6 +14,8 @@ import android.view.Window;
 import android.widget.Button;
 import com.appspot.hachiko_schedule.fragments.FriendsFragment;
 import com.appspot.hachiko_schedule.fragments.PlansFragment;
+import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
+import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -31,13 +33,13 @@ public class MainActivity extends Activity {
         actionBar.setDisplayShowHomeEnabled(false);
 
         actionBar.addTab(actionBar.newTab()
-                .setText("Friends")
-                .setTabListener(new TabListener<FriendsFragment>(
-                        this, "friends", FriendsFragment.class)));
+                .setText(getString(R.string.settled_schedules))
+                .setTabListener(new TabListener<SettledEventsFragment>(
+                        this, "settled_events", SettledEventsFragment.class)));
         actionBar.addTab(actionBar.newTab()
-                .setText("Plans")
-                .setTabListener(new TabListener<PlansFragment>(
-                        this, "plans", PlansFragment.class)));
+                .setText(getString(R.string.unsettled_schedules))
+                .setTabListener(new TabListener<UnsettledEventsFragment>(
+                        this, "unsettled_events", UnsettledEventsFragment.class)));
     }
 
 
