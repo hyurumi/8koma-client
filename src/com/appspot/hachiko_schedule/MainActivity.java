@@ -55,9 +55,7 @@ public class MainActivity extends Activity {
     }
 
     private void startCreatingEvent() {
-        Intent intent = new Intent(this, NotImplementedActivity.class);
-        intent.putExtra(NotImplementedActivity.EXTRA_KEY_DETAILED_MESSAGE,
-                "新しいイベント作る画面を作る");
+        Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
         startActivity(intent);
     }
 
