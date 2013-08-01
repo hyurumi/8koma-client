@@ -4,19 +4,13 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.*;
 
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import com.appspot.hachiko_schedule.fragments.FriendsFragment;
-import com.appspot.hachiko_schedule.fragments.PlansFragment;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
+import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -46,6 +40,32 @@ public class MainActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_create_event:
+                startCreatingEvent();
+                return true;
+            case R.id.action_config:
+                launchMenuActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startCreatingEvent() {
+        Intent intent = new Intent(this, NotImplementedActivity.class);
+        intent.putExtra(NotImplementedActivity.EXTRA_KEY_DETAILED_MESSAGE,
+                "新しいイベント作る画面を作る");
+        startActivity(intent);
+    }
+
+    private void launchMenuActivity() {
+        Intent intent = new Intent(this, NotImplementedActivity.class);
+        intent.putExtra(NotImplementedActivity.EXTRA_KEY_DETAILED_MESSAGE, "設定画面的なやつ");
+        startActivity(intent);
+    }
 
     static private class TabListener<T extends Fragment> implements ActionBar.TabListener {
         private Fragment mFragment;
