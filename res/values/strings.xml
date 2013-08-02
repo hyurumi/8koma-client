@@ -7,8 +7,14 @@
   <string name="action_config">設定</string>
   <string name="hint_on_search_friends">友達の名前</string>
   <string name="search_friends_text_to_invite">誘いたい人を選びましょう</string>
+  <string name="create_event_detail_text">予定の詳細を入力してください</string>
+  <string name="confirm_button_label">確認</string>
+  <string name="other_label">その他</string>
+  <string name="memo_label">メモ</string>
+  <string name="map_label">地図</string>
+  <string name="attachment_label">ファイル添付</string>
     <string name="with_who_label">誰と？</string>
-    <string name="what_label">何を?</string>
+    <string name="what_label">何を？</string>
     <string name="when_label">いつ？</string>
     <string name="days_after_label">日後ごろ</string>
     <string name="minutes">分</string>

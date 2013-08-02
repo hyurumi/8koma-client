@@ -1,6 +1,7 @@
 package com.appspot.hachiko_schedule.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -12,6 +13,12 @@ import com.appspot.hachiko_schedule.R;
 public class NotImplementedActivity extends Activity {
 
     public static final String EXTRA_KEY_DETAILED_MESSAGE = "not implemented detail";
+
+    public static Intent getIntentWithMessage(Context context, String message) {
+        Intent intent = new Intent(context, NotImplementedActivity.class);
+        intent.putExtra(EXTRA_KEY_DETAILED_MESSAGE, message);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

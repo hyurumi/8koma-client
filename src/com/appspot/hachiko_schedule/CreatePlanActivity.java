@@ -1,17 +1,16 @@
 package com.appspot.hachiko_schedule;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +20,7 @@ import java.util.List;
  * {@link Activity} for creating new plan.
  */
 public class CreatePlanActivity extends Activity {
+    private GridView eventIcons;
     private Spinner dayAfterSpinner;
     private Spinner timeWordsSpinner;
     private Spinner durationSpinner;
@@ -32,6 +32,8 @@ public class CreatePlanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
+        eventIcons = (GridView) findViewById(R.id.event_icon_list);
+        eventIcons.setAdapter(new EventIconsAdapter());
         dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);
         timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
@@ -53,7 +55,8 @@ public class CreatePlanActivity extends Activity {
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreatePlanActivity.this.finish();
+                startActivity(NotImplementedActivity.getIntentWithMessage(
+                        CreatePlanActivity.this, "確認ページをつくる"));
             }
         });
     }
@@ -111,6 +114,36 @@ public class CreatePlanActivity extends Activity {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             // Do nothing
+        }
+    }
+
+    private final class EventIconsAdapter extends BaseAdapter {
+        private final int[] EVENT_ICONS = new int[] {
+                R.drawable.ic_beer, R.drawable.ic_business, R.drawable.ic_cafe, R.drawable.ic_movie,
+                R.drawable.ic_school, R.drawable.ic_shopping};
+
+        public int getCount() {
+            return EVENT_ICONS.length;
+        }
+
+        public Object getItem(int position) {
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageView;
+            if (convertView == null) {
+                imageView = new ImageView(CreatePlanActivity.this);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView = (ImageView) convertView;
+            }
+            imageView.setImageResource(EVENT_ICONS[position]);
+            return imageView;
         }
     }
 }
