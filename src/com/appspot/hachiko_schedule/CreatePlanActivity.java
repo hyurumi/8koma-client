@@ -2,6 +2,7 @@ package com.appspot.hachiko_schedule;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
+import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 import com.google.common.base.Preconditions;
@@ -32,8 +34,9 @@ public class CreatePlanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
-        eventIcons = (GridView) findViewById(R.id.event_icon_list);
-        eventIcons.setAdapter(new EventIconsAdapter());
+
+        initEventIcons();
+
         dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);
         timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
@@ -59,6 +62,12 @@ public class CreatePlanActivity extends Activity {
                         CreatePlanActivity.this, "確認ページをつくる"));
             }
         });
+    }
+
+    private void initEventIcons() {
+        eventIcons = (GridView) findViewById(R.id.event_icon_list);
+        eventIcons.setAdapter(new EventIconsAdapter());
+        eventIcons.setOnItemClickListener(new EventIconClickListener());
     }
 
     private void showFriendsName(Parcelable[] friends) {
@@ -135,15 +144,29 @@ public class CreatePlanActivity extends Activity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
+            BorderedImageView imageView;
             if (convertView == null) {
-                imageView = new ImageView(CreatePlanActivity.this);
+                imageView = new BorderedImageView(CreatePlanActivity.this);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setBorderColor(Color.WHITE);
             } else {
-                imageView = (ImageView) convertView;
+                imageView = (BorderedImageView) convertView;
             }
             imageView.setImageResource(EVENT_ICONS[position]);
             return imageView;
+        }
+    }
+
+    private class EventIconClickListener implements AdapterView.OnItemClickListener {
+        private BorderedImageView selectedImageView;
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (selectedImageView != null) {
+                selectedImageView.setBorderColor(Color.WHITE);
+            }
+            selectedImageView = (BorderedImageView) view;
+            selectedImageView.setBorderColor(Color.BLACK);
         }
     }
 }
