@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
@@ -222,9 +223,14 @@ public class CreatePlanActivity extends Activity {
     }
 
     private final class EventIconsAdapter extends BaseAdapter {
-        private final int[] EVENT_ICONS = new int[] {
-                R.drawable.ic_beer, R.drawable.ic_business, R.drawable.ic_cafe, R.drawable.ic_movie,
-                R.drawable.ic_school, R.drawable.ic_shopping};
+        // TODO: fix here
+        // アイコン素材集めるのがめんどいので，アイコンが存在する6つだけ表示している
+        private final int[] EVENT_ICONS = new int[6];
+        {
+            for (int i = 0; i < 6; i++) {
+                EVENT_ICONS[i] = EventCategory.values()[i].getIconResourceId();
+            }
+        }
 
         public int getCount() {
             return EVENT_ICONS.length;

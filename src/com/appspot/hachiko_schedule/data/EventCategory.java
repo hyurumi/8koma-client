@@ -7,15 +7,28 @@ import com.appspot.hachiko_schedule.R;
  * カフェとか焼肉とか
  */
 public enum EventCategory {
-    COFFEE(R.drawable.cafe),
-    GRILLED_BEEF(R.drawable.grilled_beaf),
-    // TODO: find appropriate icon
-    UNKNOWN(0);
+    // 0 になってるとこはリソースが無いので，良きものをさがしてあてる
+    COFFEE("カフェ", R.drawable.ic_cafe, R.drawable.cafe),
+    BUSINESS("ミーティング", R.drawable.ic_business, 0),
+    BEER("飲み会", R.drawable.ic_beer, 0),
+    MOVIE("映画", R.drawable.ic_movie, 0),
+    SCHOOL("お勉強", R.drawable.ic_school, 0),
+    SHOPPING("お買い物", R.drawable.ic_shopping, 0),
+    GRILLED_BEEF("焼肉", 0, R.drawable.grilled_beaf),
+    UNKNOWN(null, 0, 0);
 
-    private final int iconIdentifier;
+    private final String simpleDescription;
+    private final int iconResourceId;
+    private final int thumbnailResourceId;
 
-    private EventCategory(int iconIdentifier) {
-        this.iconIdentifier = iconIdentifier;
+    private EventCategory(String simpleDescription, int iconResourceId, int thumbnailResourceId) {
+        this.simpleDescription = simpleDescription;
+        this.iconResourceId = iconResourceId;
+        this.thumbnailResourceId = thumbnailResourceId;
+    }
+
+    public String getSimpleDescription() {
+        return simpleDescription;
     }
 
     /**
@@ -25,6 +38,10 @@ public enum EventCategory {
         if (this.equals(UNKNOWN)) {
             throw new UnsupportedOperationException("No icon for type unknown");
         }
-        return iconIdentifier;
+        return iconResourceId;
+    }
+
+    public int getThumbnailResourceId() {
+        return thumbnailResourceId;
     }
 }

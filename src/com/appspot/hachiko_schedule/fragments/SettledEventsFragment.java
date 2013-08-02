@@ -80,7 +80,7 @@ public class SettledEventsFragment extends ListFragment {
             TextView date = findViewById(listItem, R.id.event_date);
 
             SettledEvent event = events[position];
-            icon.setImageResource(event.getCategory().getIconResourceId());
+            icon.setImageResource(event.getCategory().getThumbnailResourceId());
             title.setText(event.getTitle());
             participants.setText(Joiner.on(", ").join(event.getParticipants()));
             SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm〜");
