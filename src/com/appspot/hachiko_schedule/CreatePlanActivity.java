@@ -1,9 +1,11 @@
 package com.appspot.hachiko_schedule;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +15,15 @@ import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.NotImplementedActivity;
+import com.appspot.hachiko_schedule.util.SwipeToDismissTouchListener;
 import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
 
 /**
  * {@link Activity} for creating new plan.
@@ -29,6 +36,8 @@ public class CreatePlanActivity extends Activity {
     private ViewGroup schedulesContainer;
     private Button inviteButton;
     private ScheduleSuggester scheduleSuggester = new ScheduleSuggester();
+    private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
+    private Handler hander = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +135,56 @@ public class CreatePlanActivity extends Activity {
         });
     }
 
-    private class OnSpinnerItemSelectedListener
-            implements Spinner.OnItemSelectedListener {
+    private View addNewScheduleTextView(Timeslot schedule) {
+        TextView scheduleView = new TextView(CreatePlanActivity.this);
+        SimpleDateFormat startDateFormat = new SimpleDateFormat("MM/dd HH:mm");
+        SimpleDateFormat endDateFormat = new SimpleDateFormat("HH:mm");
+        scheduleView.setText(startDateFormat.format(schedule.getStartDate())
+                + " - " + endDateFormat.format(schedule.getEndDate()));
+        viewToTimeslots.put(scheduleView, schedule);
+
+        // TODO: DPIを考慮した実装 (setPaddingの引数はpx指定)
+        scheduleView.setPadding(15, 7, 5, 7);
+        scheduleView.setBackgroundColor(Color.WHITE);
+        scheduleView.setOnTouchListener(new SwipeToDismissTouchListener(
+                CreatePlanActivity.this,
+                new SwipeToDismissTouchListener.SwipeAndDismissEventListenerAdapter() {
+                    @Override
+                    public void onSwipeEndAnimationEnd(View view, boolean removed) {
+                        if (removed) {
+                            Timeslot inconvenientTimeslot = viewToTimeslots.get(view);
+                            removeView(view);
+                            scheduleSuggester.notifyInconvenientTimeslot(inconvenientTimeslot);
+                            HachikoLogger.debug("swipe end");
+                            tryToAddNewScheduleTextViewWithDelayAndAnimation(300);
+                        }
+                    }
+                }));
+        schedulesContainer.addView(scheduleView);
+        return scheduleView;
+    }
+
+    private void tryToAddNewScheduleTextViewWithDelayAndAnimation(int delayInMillis) {
+        hander.postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Timeslot nextRecommended = scheduleSuggester.popNextRecommendedTimeslot();
+                        if (nextRecommended != null) {
+                            View view = addNewScheduleTextView(nextRecommended);
+                            AnimatorSet set = new AnimatorSet();
+                            set.play(ObjectAnimator.ofFloat(view, View.SCALE_X, 0f, 1f))
+                                    .with(ObjectAnimator.ofFloat(view, View.SCALE_Y, 0f, 1f));
+                            set.setDuration(700);
+                            set.start();
+                        }
+                    }
+                },
+                delayInMillis);
+    }
+
+    private class OnSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
+
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // reschedule.
@@ -146,14 +203,8 @@ public class CreatePlanActivity extends Activity {
                     Integer.parseInt(daysAfter)
             );
             for (Timeslot schedule: schedules) {
-                TextView scheduleView = new TextView(CreatePlanActivity.this);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
-                scheduleView.setText(dateFormat.format(schedule.getStartDate())
-                        + " - " + dateFormat.format(schedule.getEndDate()));
-                schedulesContainer.addView(scheduleView);
+                addNewScheduleTextView(schedule);
             }
-            schedulesContainer.setVisibility(View.VISIBLE);
-            inviteButton.setVisibility(View.VISIBLE);
         }
 
         @Override

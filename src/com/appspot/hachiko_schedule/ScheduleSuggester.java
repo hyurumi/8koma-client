@@ -9,6 +9,8 @@ import java.util.*;
  * This class suggests appropriate schedule based on user information.
  */
 public class ScheduleSuggester {
+    private Queue<Timeslot> spareTimeslots = new LinkedList<Timeslot>();
+
     public List<Timeslot> suggestTimeSlot(
             TimeWords timeWords, int DurationMin, int scheduleCanStartAfterDays) {
         // TODO: consider calendar
@@ -33,6 +35,24 @@ public class ScheduleSuggester {
             start.add(Calendar.DAY_OF_MONTH, 1);
             end.add(Calendar.DAY_OF_MONTH, 1);
         }
+        spareTimeslots.clear();
+        for (int i = 0; i < 2; i++) {
+            spareTimeslots.add(new Timeslot(start.getTime(), end.getTime(), false));
+            start.add(Calendar.DAY_OF_MONTH, 1);
+            end.add(Calendar.DAY_OF_MONTH, 1);
+        }
         return timeSlots;
+    }
+
+    public void notifyInconvenientTimeslot(Timeslot timeslot) {
+        // TODO: implement here
+        assert timeslot != null;
+    }
+
+    public Timeslot popNextRecommendedTimeslot() {
+        if (spareTimeslots.isEmpty()) {
+            return null;
+        }
+        return spareTimeslots.poll();
     }
 }
