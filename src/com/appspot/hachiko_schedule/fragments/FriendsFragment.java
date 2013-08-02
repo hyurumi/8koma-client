@@ -3,14 +3,12 @@ package com.appspot.hachiko_schedule.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.Friend;
-import com.google.common.primitives.Longs;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,8 +62,6 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public void onPause() {
-        gridView.clearChoices();
-        selectedFriendNameViews.clear();
         super.onPause();
     }
 
