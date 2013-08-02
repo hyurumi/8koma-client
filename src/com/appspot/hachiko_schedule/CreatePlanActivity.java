@@ -34,7 +34,8 @@ public class CreatePlanActivity extends Activity {
     private Spinner timeWordsSpinner;
     private Spinner durationSpinner;
     private ViewGroup schedulesContainer;
-    private Button inviteButton;
+    private int numberOfSuggestedSchedulesOnView;
+    private Button confirmButton;
     private ScheduleSuggester scheduleSuggester = new ScheduleSuggester();
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
@@ -50,7 +51,7 @@ public class CreatePlanActivity extends Activity {
         timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
         schedulesContainer = (ViewGroup) findViewById(R.id.schedules);
-        inviteButton = (Button) findViewById(R.id.invite_button);
+        confirmButton = (Button) findViewById(R.id.invite_button);
 
         dayAfterSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
         timeWordsSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
@@ -64,7 +65,7 @@ public class CreatePlanActivity extends Activity {
 
         debugQueryEvents();
 
-        inviteButton.setOnClickListener(new View.OnClickListener() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(NotImplementedActivity.getIntentWithMessage(
@@ -154,6 +155,10 @@ public class CreatePlanActivity extends Activity {
                         if (removed) {
                             Timeslot inconvenientTimeslot = viewToTimeslots.get(view);
                             removeView(view);
+                            numberOfSuggestedSchedulesOnView--;
+                            if (numberOfSuggestedSchedulesOnView == 0) {
+                                confirmButton.setEnabled(false);
+                            }
                             scheduleSuggester.notifyInconvenientTimeslot(inconvenientTimeslot);
                             HachikoLogger.debug("swipe end");
                             tryToAddNewScheduleTextViewWithDelayAndAnimation(300);
@@ -161,6 +166,8 @@ public class CreatePlanActivity extends Activity {
                     }
                 }));
         schedulesContainer.addView(scheduleView);
+        confirmButton.setEnabled(true);
+        numberOfSuggestedSchedulesOnView++;
         return scheduleView;
     }
 
@@ -205,6 +212,7 @@ public class CreatePlanActivity extends Activity {
             for (Timeslot schedule: schedules) {
                 addNewScheduleTextView(schedule);
             }
+            numberOfSuggestedSchedulesOnView = schedules.size();
         }
 
         @Override
