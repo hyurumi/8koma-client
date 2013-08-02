@@ -3,6 +3,7 @@ package com.appspot.hachiko_schedule;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,14 +16,11 @@ import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 import com.appspot.hachiko_schedule.util.SwipeToDismissTouchListener;
 import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
 
@@ -35,8 +33,10 @@ public class CreatePlanActivity extends Activity {
     private Spinner timeWordsSpinner;
     private Spinner durationSpinner;
     private ViewGroup schedulesContainer;
-    private int numberOfSuggestedSchedulesOnView;
+    private Set<Timeslot> suggestingTimeslots = new HashSet<Timeslot>();
+    private int selectedEventId = -1;
     private Button confirmButton;
+    private Parcelable[] friends;
     private ScheduleSuggester scheduleSuggester = new ScheduleSuggester();
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
@@ -58,8 +58,7 @@ public class CreatePlanActivity extends Activity {
         timeWordsSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
         durationSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
 
-        Parcelable[] friends =
-                getIntent().getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
+        friends = getIntent().getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
         Preconditions.checkNotNull(friends);
         Preconditions.checkState(friends.length != 0);
         showFriendsName(friends);
@@ -69,8 +68,7 @@ public class CreatePlanActivity extends Activity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(NotImplementedActivity.getIntentWithMessage(
-                        CreatePlanActivity.this, "確認ページをつくる"));
+                transitToConfirmView();
             }
         });
 
@@ -155,9 +153,9 @@ public class CreatePlanActivity extends Activity {
                     public void onSwipeEndAnimationEnd(View view, boolean removed) {
                         if (removed) {
                             Timeslot inconvenientTimeslot = viewToTimeslots.get(view);
+                            suggestingTimeslots.remove(inconvenientTimeslot);
                             removeView(view);
-                            numberOfSuggestedSchedulesOnView--;
-                            if (numberOfSuggestedSchedulesOnView == 0) {
+                            if (suggestingTimeslots.isEmpty()) {
                                 confirmButton.setEnabled(false);
                             }
                             scheduleSuggester.notifyInconvenientTimeslot(inconvenientTimeslot);
@@ -168,7 +166,7 @@ public class CreatePlanActivity extends Activity {
                 }));
         schedulesContainer.addView(scheduleView);
         confirmButton.setEnabled(true);
-        numberOfSuggestedSchedulesOnView++;
+        suggestingTimeslots.add(schedule);
         return scheduleView;
     }
 
@@ -191,6 +189,17 @@ public class CreatePlanActivity extends Activity {
                 delayInMillis);
     }
 
+    private void transitToConfirmView() {
+        Intent intent = new Intent(this, ConfirmNewEventActivity.class);
+        intent.putExtra(Constants.EXTRA_KEY_FRIENDS, friends);
+        intent.putExtra(Constants.EXTRA_KEY_EVENT_CANDIDATE_SCHEDULES,
+                suggestingTimeslots.toArray(new Parcelable[0]));
+        if (selectedEventId > 0) {
+            intent.putExtra(Constants.EXTRA_KEY_EVENT_TYPE, selectedEventId);
+        }
+        startActivity(intent);
+    }
+
     private class OnSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
 
         @Override
@@ -210,10 +219,10 @@ public class CreatePlanActivity extends Activity {
                     Integer.parseInt(duration),
                     Integer.parseInt(daysAfter)
             );
+            suggestingTimeslots.clear();
             for (Timeslot schedule: schedules) {
                 addNewScheduleTextView(schedule);
             }
-            numberOfSuggestedSchedulesOnView = schedules.size();
         }
 
         @Override
@@ -268,6 +277,7 @@ public class CreatePlanActivity extends Activity {
             }
             selectedImageView = (BorderedImageView) view;
             selectedImageView.setBorderColor(Color.BLACK);
+            selectedEventId = position;
         }
     }
 }

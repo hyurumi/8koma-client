@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 
+import android.widget.Toast;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.util.NotImplementedActivity;
@@ -31,6 +32,21 @@ public class MainActivity extends Activity {
                 .setText(getString(R.string.unsettled_schedules))
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         this, "unsettled_events", UnsettledEventsFragment.class)));
+        checkNewEvent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        checkNewEvent(intent);
+    }
+
+    private void checkNewEvent(Intent intent) {
+        if (intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false)) {
+            Toast.makeText(this,
+                    "新しいイベントが登録されました！(データ記憶する部分はまだ作ってないので表示は変わりません...)",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -26,6 +26,10 @@
                       android:name="android.support.PARENT_ACTIVITY"
                       android:value=".MainActivity" />
         </activity>
+        <activity android:name=".ConfirmNewEventActivity"
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+        </activity>
         <activity android:name=".GuestPlanDetailActivity"
                   android:label="@string/app_name">
         </activity>

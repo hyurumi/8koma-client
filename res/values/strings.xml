@@ -40,4 +40,7 @@
         <item>180</item>
     </string-array>
     <string name="invite_button_label">この日程で誘う</string>
+  <string name="confirm_new_event_text">予定の内容を確認しましょう</string>
+  <string name="confirm_new_event_back">戻る</string>
+  <string name="confirm_new_event_ok">招待を送信</string>
 </resources>
