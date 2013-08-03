@@ -1,5 +1,9 @@
 package com.appspot.hachiko_schedule.util;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
@@ -141,17 +145,19 @@ public class SwipeToDismissTouchListener implements View.OnTouchListener {
             remove = false;
         }
         long duration = (int) ((1 - fractionCovered) * SWIPE_DURATION_MSEC);
-        view.animate()
-                .setDuration(duration)
-                .alpha(remove ? 0 : 1)
-                .translationX(endX)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        resetAlphaAndTranslation(view);
-                        swipeAndDismissEventListener.onSwipeEndAnimationEnd(view, remove);
-                    }
-                });
+        Animator animator = ObjectAnimator.ofPropertyValuesHolder(view,
+                PropertyValuesHolder.ofFloat("alpha", remove ? 0f : 1f),
+                PropertyValuesHolder.ofFloat("translationX", endX));
+        animator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                resetAlphaAndTranslation(view);
+                swipeAndDismissEventListener.onSwipeEndAnimationEnd(view, remove);
+            }
+        });
+        animator.start();
+
         swipeAndDismissEventListener.onSwipeEndAnimationStarted(view);
     }
 
