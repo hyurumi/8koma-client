@@ -2,6 +2,8 @@ package com.appspot.hachiko_schedule.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -15,16 +17,20 @@ import android.widget.LinearLayout;
  */
 public class BorderedImageView extends LinearLayout {
     private final ImageView imageView;
+    private final LinearLayout borderView;
     private int borderColor = Color.BLACK;
     private int borderWidth = 1;
 
     public BorderedImageView(Context context) {
         super(context);
-        setBackgroundColor(borderColor);
-        setPadding(borderWidth, borderWidth, borderWidth, borderWidth);
+        setGravity(Gravity.CENTER_HORIZONTAL);
+        borderView = new LinearLayout(context);
+        borderView.setBackgroundColor(borderColor);
+        borderView.setPadding(borderWidth, borderWidth, borderWidth, borderWidth);
         imageView = new ImageView(context);
         imageView.setBackgroundColor(Color.WHITE);
-        addView(imageView);
+        addView(borderView);
+        borderView.addView(imageView);
     }
 
     public void setImageResource(int resourceId) {
@@ -37,13 +43,13 @@ public class BorderedImageView extends LinearLayout {
 
     public BorderedImageView setBorderColor(int borderColor) {
         this.borderColor = borderColor;
-        setBackgroundColor(borderColor);
+        borderView.setBackgroundColor(borderColor);
         return this;
     }
 
     public BorderedImageView setBorderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
-        setPadding(borderWidth, borderWidth, borderWidth, borderWidth);
+        borderView.setPadding(borderWidth, borderWidth, borderWidth, borderWidth);
         return this;
     }
 }
