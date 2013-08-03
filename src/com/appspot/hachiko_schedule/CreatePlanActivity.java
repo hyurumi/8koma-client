@@ -12,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.data.EventCategory;
+import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.data.Friend;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.appspot.hachiko_schedule.util.SwipeToDismissTouchListener;
+import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;

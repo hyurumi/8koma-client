@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule;
 
+import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.google.common.collect.ImmutableMap;
 

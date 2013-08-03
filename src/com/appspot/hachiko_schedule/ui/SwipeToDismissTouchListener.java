@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.util;
+package com.appspot.hachiko_schedule.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
