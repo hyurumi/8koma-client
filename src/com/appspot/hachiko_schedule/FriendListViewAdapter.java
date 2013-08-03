@@ -8,81 +8,51 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.view.*;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class that stands between cursor from Contacts and our own GridView.
  */
-public class FriendListViewAdapter extends BaseAdapter {
-    private Context context;
+public class FriendListViewAdapter extends ArrayAdapter<FriendListViewAdapter.Entry> {
+    private LayoutInflater inflater;
+    private Set<String> filteredItem = new HashSet<String>();
     private List<Entry> entries;
-    private Set<Integer> positionOfIconsWithFilter = new HashSet<Integer>();
 
-    public FriendListViewAdapter(Context context) {
-        this.context = context;
-        ContactManager contactManager = new ContactManager(context);
-        Cursor cursor = contactManager.queryAllFriends();
-        if (cursor == null) {
-            throw new IllegalStateException("cursor must not be null");
-        }
-
-        entries = new ArrayList<Entry>();
-        int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-        int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
-        while( cursor.moveToNext()){
-            String displayName = cursor.getString(nameIndex);
-            if (displayName.matches("^[a-zA-Z0-9_\\+@\\/\\(\\)\\-\\.\\s]+$")) {
-                continue;
-            }
-            String uriString = cursor.getString(thumbnailIndex);
-            entries.add(
-                    new Entry(cursor.getString(nameIndex),
-                    uriString == null ? null : Uri.parse(uriString)));
-        }
-        cursor.close();
-    }
-
-    @Override
-    public int getCount() {
-        return entries.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return entries.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public Entry getItemById(long id) {
-        return entries.get((int) id);
+    public FriendListViewAdapter(Context context, int resource, List<Entry> entries) {
+        super(context, resource, entries);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.entries = entries;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater viewInflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = viewInflater.inflate(R.layout.list_item_friend, null);
-        Entry entry = entries.get(position);
+        View view = inflater.inflate(R.layout.list_item_friend, null);
+        Entry entry = getItem(position);
         ((TextView) view.findViewById(R.id.friend_name)).setText(entry.displayName);
         ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(entry.photoUri);
-        WindowManager windowManager =
-                (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Point displaySize = new Point();
-        if (positionOfIconsWithFilter.contains(position)) {
-            applyFilterToIcon(true, view, position);
-        }
+        applyFilterToIcon(filteredItem.contains(entry.displayName), view, position);
         return view;
+    }
+
+    /**
+     * あるViewがクリックされたことを知らせる
+     *
+     * @return クリックの結果要素が選択された状態になればtrue
+     */
+    public boolean notifySelect(View view, int position) {
+        String key = ((TextView) view.findViewById(R.id.friend_name)).getText().toString();
+        boolean isSelected = filteredItem.contains(key);
+        applyFilterToIcon(!isSelected, view, position);
+        return !isSelected;
     }
 
     public void applyFilterToIcon(boolean apply, View wrapperView, int position) {
@@ -91,12 +61,21 @@ public class FriendListViewAdapter extends BaseAdapter {
         if (apply) {
             imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
             textView.setBackgroundColor(Color.GRAY);
-            positionOfIconsWithFilter.add(position);
+            filteredItem.add(textView.getText().toString());
         } else {
             imageView.clearColorFilter();
             textView.setBackgroundColor(Color.WHITE);
-            positionOfIconsWithFilter.remove(position);
+            filteredItem.remove(textView.getText().toString());
         }
+    }
+
+    public Collection<Entry> getSelectedEntries() {
+        return Collections2.filter(entries, new Predicate<Entry>() {
+            @Override
+            public boolean apply(com.appspot.hachiko_schedule.FriendListViewAdapter.Entry entry) {
+                return filteredItem.contains(entry.displayName);
+            }
+        });
     }
 
     public static class Entry {
@@ -114,6 +93,12 @@ public class FriendListViewAdapter extends BaseAdapter {
 
         public Uri getPhotoUri() {
             return photoUri;
+        }
+
+        // Note: toString()の値が(ArrayAdapterにデフォルト実装の)Filterでも使われる
+        @Override
+        public String toString() {
+            return displayName;
         }
     }
 }

@@ -10,10 +10,7 @@ import android.widget.*;
 import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.Friend;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Friend list where user can choose friends to invite.
@@ -43,9 +40,8 @@ public class FriendsFragment extends Fragment {
             public void onClick(View v) {
                 Set<Friend> friendsToInvite = new HashSet<Friend>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
-                for (Long friendId: selectedFriendNameViews.keySet()) {
-                    FriendListViewAdapter.Entry item = adapter.getItemById(friendId);
-                    friendsToInvite.add(new Friend(item.getDisplayName(), "DummyPhoneNo", "Dummy email"));
+                for (FriendListViewAdapter.Entry entry: adapter.getSelectedEntries()) {
+                    friendsToInvite.add(new Friend(entry.getDisplayName(),  "DummyPhoneNo", "Dummy email"));
                 }
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,
@@ -54,7 +50,9 @@ public class FriendsFragment extends Fragment {
             }
         });
         // TODO: implement a means for managing user info with their name.
-        adapter = new FriendListViewAdapter(getActivity());
+        ContactManager manager = new ContactManager(getActivity());
+        adapter = new FriendListViewAdapter(getActivity(), R.layout.list_item_friend,
+                manager.getListOfContactEntries());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
         return view;
@@ -69,17 +67,16 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (selectedFriendNameViews.containsKey(id)) {
-                View unselectedFriendNameView = selectedFriendNameViews.get(id);
-                selectedFriendsNameContainer.removeView(unselectedFriendNameView);
-                selectedFriendNameViews.remove(id);
-                adapter.applyFilterToIcon(false, view, position);
-            } else {
+            if (adapter.notifySelect(view, position)) {
+
                 addSelectedFriendNameView(
                         id,
                         ((FriendListViewAdapter.Entry)
                                 listView.getItemAtPosition(position)).getDisplayName());
-                adapter.applyFilterToIcon(true, view, position);
+            } else {
+                View unselectedFriendNameView = selectedFriendNameViews.get(id);
+                selectedFriendsNameContainer.removeView(unselectedFriendNameView);
+                selectedFriendNameViews.remove(id);
             }
             boolean shouldEnable = !selectedFriendNameViews.isEmpty();
             createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
