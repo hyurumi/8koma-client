@@ -15,6 +15,8 @@ import com.appspot.hachiko_schedule.util.NotImplementedActivity;
  */
 public class MainActivity extends Activity {
 
+    private static final String KEY_SELECTED_TAB = "selected_tab";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,23 @@ public class MainActivity extends Activity {
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         "unsettled_events", UnsettledEventsFragment.class)));
         checkNewEvent(getIntent());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_SELECTED_TAB,getActionBar().getSelectedNavigationIndex());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            int lastSelectedTabIndex = savedInstanceState.getInt(KEY_SELECTED_TAB, -1);
+            if (lastSelectedTabIndex >= 0) {
+                getActionBar().selectTab(getActionBar().getTabAt(lastSelectedTabIndex));
+            }
+        }
     }
 
     @Override
