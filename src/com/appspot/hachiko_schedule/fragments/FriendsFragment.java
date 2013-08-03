@@ -19,10 +19,10 @@ import java.util.Set;
  * Friend list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
-    private FriendGridViewAdapter adapter;
+    private FriendListViewAdapter adapter;
     private Map<Long, View> selectedFriendNameViews = new HashMap<Long, View>();
 
-    private GridView gridView;
+    private ListView listView;
     private View createPlanButtonWrapper;
     private HorizontalScrollView selectedFriendsNamesScrollView;
     private ViewGroup selectedFriendsNameContainer;
@@ -36,7 +36,7 @@ public class FriendsFragment extends Fragment {
                 = (HorizontalScrollView) view.findViewById(R.id.selected_friends_wrapper_scrollable);
         selectedFriendsNameContainer = (ViewGroup) view.findViewById(R.id.selected_friends);
         createPlanButton = (Button) view.findViewById(R.id.new_plan_button);
-        gridView = (GridView) view.findViewById(R.id.contact_list);
+        listView = (ListView) view.findViewById(R.id.contact_list);
 
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +44,7 @@ public class FriendsFragment extends Fragment {
                 Set<Friend> friendsToInvite = new HashSet<Friend>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
                 for (Long friendId: selectedFriendNameViews.keySet()) {
-                    FriendGridViewAdapter.Entry item = adapter.getItemById(friendId);
+                    FriendListViewAdapter.Entry item = adapter.getItemById(friendId);
                     friendsToInvite.add(new Friend(item.getDisplayName(), "DummyPhoneNo", "Dummy email"));
                 }
                 intent.putExtra(
@@ -54,9 +54,9 @@ public class FriendsFragment extends Fragment {
             }
         });
         // TODO: implement a means for managing user info with their name.
-        adapter = new FriendGridViewAdapter(getActivity());
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new OnFriendItemClickListener());
+        adapter = new FriendListViewAdapter(getActivity());
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new OnFriendItemClickListener());
         return view;
     }
 
@@ -77,8 +77,8 @@ public class FriendsFragment extends Fragment {
             } else {
                 addSelectedFriendNameView(
                         id,
-                        ((FriendGridViewAdapter.Entry)
-                                gridView.getItemAtPosition(position)).getDisplayName());
+                        ((FriendListViewAdapter.Entry)
+                                listView.getItemAtPosition(position)).getDisplayName());
                 adapter.applyFilterToIcon(true, view, position);
             }
             boolean shouldEnable = !selectedFriendNameViews.isEmpty();

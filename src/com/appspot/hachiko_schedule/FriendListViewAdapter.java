@@ -20,14 +20,12 @@ import java.util.Set;
 /**
  * Class that stands between cursor from Contacts and our own GridView.
  */
-public class FriendGridViewAdapter extends BaseAdapter {
-    private static final int NUM_OF_COLUMNS = 4;
-
+public class FriendListViewAdapter extends BaseAdapter {
     private Context context;
     private List<Entry> entries;
     private Set<Integer> positionOfIconsWithFilter = new HashSet<Integer>();
 
-    public FriendGridViewAdapter(Context context) {
+    public FriendListViewAdapter(Context context) {
         this.context = context;
         ContactManager contactManager = new ContactManager(context);
         Cursor cursor = contactManager.queryAllFriends();
@@ -74,15 +72,13 @@ public class FriendGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater viewInflater =
                     (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = viewInflater.inflate(R.layout.grid_item_friend, null);
+        View view = viewInflater.inflate(R.layout.list_item_friend, null);
         Entry entry = entries.get(position);
         ((TextView) view.findViewById(R.id.friend_name)).setText(entry.displayName);
         ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(entry.photoUri);
         WindowManager windowManager =
                 (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point displaySize = new Point();
-        windowManager.getDefaultDisplay().getSize(displaySize);
-        view.setMinimumHeight(displaySize.x / NUM_OF_COLUMNS - 10);
         if (positionOfIconsWithFilter.contains(position)) {
             applyFilterToIcon(true, view, position);
         }
@@ -90,12 +86,15 @@ public class FriendGridViewAdapter extends BaseAdapter {
     }
 
     public void applyFilterToIcon(boolean apply, View wrapperView, int position) {
-        ImageView imageView = (ImageView) (wrapperView.findViewById(R.id.friend_picture));
+        ImageView imageView = (ImageView) wrapperView.findViewById(R.id.friend_picture);
+        TextView textView = (TextView) wrapperView.findViewById(R.id.friend_name);
         if (apply) {
             imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
+            textView.setBackgroundColor(Color.GRAY);
             positionOfIconsWithFilter.add(position);
         } else {
             imageView.clearColorFilter();
+            textView.setBackgroundColor(Color.WHITE);
             positionOfIconsWithFilter.remove(position);
         }
     }
