@@ -8,16 +8,6 @@
     android:orientation="vertical"
     android:background="#f7f7f7">
 
-  <TextView
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:paddingTop="5dp"
-      android:paddingBottom="5dp"
-      android:paddingLeft="10dp"
-      android:text="@string/create_event_detail_text"
-      android:id="@+id/create_event_detail_text"
-      android:background="#d7d7d7"/>
-
   <ScrollView
       android:layout_height="fill_parent"
       android:layout_width="fill_parent"

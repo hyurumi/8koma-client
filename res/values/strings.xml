@@ -5,9 +5,8 @@
   <string name="unsettled_schedules">調整中</string>
   <string name="action_create_event">新しい予定</string>
   <string name="action_config">設定</string>
-  <string name="hint_on_search_friends">友達の名前</string>
-  <string name="search_friends_text_to_invite">誘いたい人を選びましょう</string>
-  <string name="create_event_detail_text">予定の詳細を入力してください</string>
+  <string name="hint_on_search_friends">誘いたい人の名前</string>
+  <string name="create_event_detail_text">詳細を入力</string>
   <string name="confirm_button_label">確認</string>
   <string name="other_label">その他</string>
   <string name="memo_label">メモ</string>
@@ -40,7 +39,7 @@
         <item>180</item>
     </string-array>
     <string name="invite_button_label">この日程で誘う</string>
-  <string name="confirm_new_event_text">予定の内容を確認しましょう</string>
+  <string name="confirm_new_event_text">予定を確認</string>
   <string name="confirm_new_event_back">戻る</string>
   <string name="confirm_new_event_ok">招待を送信</string>
 </resources>

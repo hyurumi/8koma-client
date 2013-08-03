@@ -21,7 +21,7 @@ public class ConfirmNewEventActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_new_event);
-
+        setTitle(R.string.confirm_new_event_text);
         Intent intent = getIntent();
         Parcelable[] friends = intent.getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
         Parcelable[] timeslots =

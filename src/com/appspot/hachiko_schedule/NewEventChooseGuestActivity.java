@@ -18,7 +18,6 @@ public class NewEventChooseGuestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event_choose_guest);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         ListView friendListView = (ListView) findViewById(R.id.contact_list);
         // 安全でないキャスト… ListView#setFilterTextを直に叩くと出てくるポップアップを表示したくないため，
         // Filterを直に触っている．たぶんListViewのサブクラスをよしなにつくるほうがベター

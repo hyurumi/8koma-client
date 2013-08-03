@@ -6,15 +6,6 @@
         android:layout_height="match_parent"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:text="@string/search_friends_text_to_invite"
-            android:id="@+id/search_friends_text"
-            android:background="#d7d7d7"/>
     <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -42,6 +33,5 @@
     <ListView android:id="@+id/contact_list"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:layout_below="@id/search_friends_text"
               android:layout_above="@id/new_plan_button_wrapper" />
 </RelativeLayout>

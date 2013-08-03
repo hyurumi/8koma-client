@@ -45,7 +45,7 @@ public class CreatePlanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
-
+        setTitle(R.string.create_event_detail_text);
         initEventIcons();
 
         dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);

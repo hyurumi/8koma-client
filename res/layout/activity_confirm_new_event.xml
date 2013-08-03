@@ -4,15 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingTop="5dp"
-      android:paddingBottom="5dp"
-      android:paddingLeft="10dp"
-      android:text="@string/confirm_new_event_text"
-      android:id="@+id/confirm_new_event_text"
-      android:background="#d7d7d7"/>
+
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -35,7 +27,6 @@
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@id/confirm_new_event_text"
       android:layout_above="@id/confirm_new_event_buttons"
       android:id="@+id/scrollView">
     <LinearLayout
