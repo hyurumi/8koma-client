@@ -2,12 +2,15 @@ package com.appspot.hachiko_schedule;
 
 import android.app.*;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.*;
 
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.setup.SetupCalendarActivity;
 import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 
 /**
@@ -20,7 +23,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (!isSetup()) {
+            Intent intent = new Intent(this, SetupCalendarActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab()
@@ -32,6 +40,13 @@ public class MainActivity extends Activity {
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         "unsettled_events", UnsettledEventsFragment.class)));
         checkNewEvent(getIntent());
+    }
+
+    private boolean isSetup() {
+        SharedPreferences prefs = HachikoPreferences.getDefault(this);
+        return prefs.getBoolean(
+                HachikoPreferences.KEY_IS_CALENDAR_SETUP,
+                HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT);
     }
 
     @Override
