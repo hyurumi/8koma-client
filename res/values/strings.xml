@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hachiko</string>
+  <string name="app_name">Hachiko</string>
   <string name="settled_schedules">確定済み</string>
   <string name="unsettled_schedules">調整中</string>
   <string name="action_create_event">新しい予定</string>
@@ -12,33 +12,33 @@
   <string name="memo_label">メモ</string>
   <string name="map_label">地図</string>
   <string name="attachment_label">ファイル添付</string>
-    <string name="with_who_label">誰と？</string>
-    <string name="what_label">何を？</string>
-    <string name="when_label">いつ？</string>
-    <string name="days_after_label">日後ごろ</string>
-    <string name="minutes">分</string>
-    <string-array name="positive_num_list">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </string-array>
-    <string-array name="time_words">
-        <item>朝</item>
-        <item>昼</item>
-        <item>夜</item>
-    </string-array>
-    <string-array name="duration">
-        <item>30</item>
-        <item>60</item>
-        <item>90</item>
-        <item>120</item>
-        <item>150</item>
-        <item>180</item>
-    </string-array>
-    <string name="invite_button_label">この日程で誘う</string>
+  <string name="with_who_label">誰と？</string>
+  <string name="what_label">何を？</string>
+  <string name="when_label">いつ？</string>
+  <string name="days_after_label">日後ごろ</string>
+  <string name="minutes">分</string>
+  <string-array name="positive_num_list">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+  </string-array>
+  <string-array name="time_words">
+    <item>朝</item>
+    <item>昼</item>
+    <item>夜</item>
+  </string-array>
+  <string-array name="duration">
+    <item>30</item>
+    <item>60</item>
+    <item>90</item>
+    <item>120</item>
+    <item>150</item>
+    <item>180</item>
+  </string-array>
+  <string name="invite_button_label">この日程で誘う</string>
   <string name="confirm_new_event_text">予定を確認</string>
   <string name="confirm_new_event_back">戻る</string>
   <string name="confirm_new_event_ok">招待を送信</string>
