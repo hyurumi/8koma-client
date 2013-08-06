@@ -35,8 +35,8 @@ public class SettledEventsFragment extends ListFragment {
                 ImmutableList.of("ひろし", "たけし", "ゆうた"), new Date(), 120),
                 new SettledEvent("カフェ会", EventCategory.COFFEE,
                         ImmutableList.of("Yuta Sasaki", "西川茂雄"), new Date(), 190),
-                new SettledEvent("一人で網と向かい合う", EventCategory.GRILLED_BEEF,
-                        ImmutableList.of("ひろし"), new Date(), 100),
+                new SettledEvent("網と向かい合う", EventCategory.GRILLED_BEEF,
+                        ImmutableList.of("ひろし", "しんや"), new Date(), 100),
     };
 
     @Override
