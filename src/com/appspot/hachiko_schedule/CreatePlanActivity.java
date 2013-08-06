@@ -38,7 +38,7 @@ public class CreatePlanActivity extends Activity {
     private int selectedEventId = -1;
     private Button confirmButton;
     private Parcelable[] friends;
-    private ScheduleSuggester scheduleSuggester = new ScheduleSuggester();
+    private ScheduleSuggester scheduleSuggester;
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
 
@@ -49,6 +49,7 @@ public class CreatePlanActivity extends Activity {
         setTitle(R.string.create_event_detail_text);
         initEventIcons();
 
+        scheduleSuggester = new ScheduleSuggester(this);
         dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);
         timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
@@ -92,13 +93,13 @@ public class CreatePlanActivity extends Activity {
     }
 
     private void debugQueryEvents() {
-        List<Timeslot> events = new EventManager(this).queryAllForecomingEvent();
+        List<Timeslot> events = new EventManager(this).queryAllForthcomingEvent();
         HachikoLogger.debug(events.size() + " events are registered");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         for (Timeslot event: events) {
             HachikoLogger.debug(dateFormat.format(event.getStartDate())
-                    + "-" + timeFormat.format(event.getEndDate()));
+                    + "-" + timeFormat.format(event.getEndDate()) + event.isAllDay());
         }
     }
 

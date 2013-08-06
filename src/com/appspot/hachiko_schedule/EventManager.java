@@ -3,12 +3,11 @@ package com.appspot.hachiko_schedule;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import com.appspot.hachiko_schedule.data.CalendarIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
 import java.util.*;
 
@@ -16,9 +15,11 @@ import java.util.*;
  * Utility class to retrieve events data from calendar.
  */
 public class EventManager {
+    private Context context;
     private final ContentResolver contentResolver;
 
     public EventManager(Context context) {
+        this.context = context;
         this.contentResolver = context.getContentResolver();
     }
 
@@ -26,17 +27,32 @@ public class EventManager {
      * @return List of events contains all events which start in the future,
      * ordered
      */
-    public List<Timeslot> queryAllForecomingEvent() {
+    public List<Timeslot> queryAllForthcomingEvent() {
         final String[] EVENT_PROJECTION = {Events.DTSTART, Events.DTEND, Events.ALL_DAY};
         final int PROJECTION_DATE_START_INDEX = 0;
         final int PROJECTION_DATE_END_INDEX = 1;
         final int PROJECTION_IS_ALL_DAY_INDEX = 2;
-        String selection = "(" + Events.DTSTART + " > ?)";
+
+        Set<String> calendars = HachikoPreferences.getDefault(context)
+                .getStringSet(HachikoPreferences.KEY_CALENDARS_TO_USE, HachikoPreferences.CALENDARS_TO_USE_DEFAULT);
+        StringBuilder selection = new StringBuilder();
+        selection.append("(").append(Events.DTSTART).append(" > ?) AND (")
+                .append(Events.CALENDAR_ID).append(" IN (");
+        boolean first = true;
+        for (String calendarIdentifier: calendars) {
+            if (first) {
+                first = false;
+            } else {
+                selection.append(',');
+            }
+            selection.append(CalendarIdentifier.decode(calendarIdentifier).getId());
+        }
+        selection.append("))");
 
         Cursor cursor = contentResolver.query(
                 CalendarContract.Events.CONTENT_URI,
                 EVENT_PROJECTION,
-                selection,
+                selection.toString(),
                 new String[]{Long.toString(new Date().getTime())},
                 Events.DTSTART);
 
