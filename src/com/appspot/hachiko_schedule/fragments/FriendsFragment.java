@@ -2,6 +2,7 @@ package com.appspot.hachiko_schedule.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,12 @@ public class FriendsFragment extends Fragment {
         private void addSelectedFriendNameView(long friendId, String friendName) {
             TextView friendNameView = new TextView(getActivity());
             friendNameView.setText(friendName);
-            friendNameView.setPadding(5, 3, 10, 3);
+            friendNameView.setPadding(7, 5, 10, 5);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = 20;
+            friendNameView.setLayoutParams(params);
+            friendNameView.setBackgroundColor(Color.rgb(230, 230, 230));
             selectedFriendsNameContainer.addView(friendNameView);
             selectedFriendsNamesScrollView.post(new Runnable() {
                 @Override

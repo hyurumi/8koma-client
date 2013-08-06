@@ -22,7 +22,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/selected_friends_wrapper_scrollable"
-                android:layout_toLeftOf="@id/new_plan_button">
+                android:layout_toLeftOf="@id/new_plan_button"
+                android:layout_centerVertical="true">
             <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
