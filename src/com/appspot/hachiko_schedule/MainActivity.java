@@ -10,8 +10,8 @@ import android.widget.Toast;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupCalendarActivity;
-import com.appspot.hachiko_schedule.util.NotImplementedActivity;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -107,8 +107,7 @@ public class MainActivity extends Activity {
     }
 
     private void launchMenuActivity() {
-        Intent intent = new Intent(this, NotImplementedActivity.class);
-        intent.putExtra(NotImplementedActivity.EXTRA_KEY_DETAILED_MESSAGE, "設定画面的なやつ");
+        Intent intent = new Intent(this, MainPreferenceActivity.class);
         startActivity(intent);
     }
 
