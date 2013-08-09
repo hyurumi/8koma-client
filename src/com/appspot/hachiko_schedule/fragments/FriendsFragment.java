@@ -51,7 +51,7 @@ public class FriendsFragment extends Fragment {
             }
         });
         // TODO: implement a means for managing user info with their name.
-        ContactManager manager = new ContactManager(getActivity());
+        ContactManager manager = ContactManager.getInstance(getActivity());
         adapter = new FriendListViewAdapter(getActivity(), R.layout.list_item_friend,
                 manager.getListOfContactEntries());
         listView.setAdapter(adapter);

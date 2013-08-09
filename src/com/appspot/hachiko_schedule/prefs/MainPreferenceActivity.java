@@ -5,10 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
+import android.preference.*;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
@@ -24,9 +21,12 @@ public class MainPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences prefs = HachikoPreferences.getDefault(MainPreferenceActivity.this);
-        PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(this);
+        PreferenceManager preferenceManager = getPreferenceManager();
+        preferenceManager.setSharedPreferencesName(HachikoPreferences.getPreferencesName());
+        PreferenceScreen screen = preferenceManager.createPreferenceScreen(this);
 
         setupCalendarPrefs(screen, prefs);
+        setupContactPrefs(screen, prefs);
         setPreferenceScreen(screen);
     }
 
@@ -73,6 +73,21 @@ public class MainPreferenceActivity extends PreferenceActivity {
             calendar.addPreference(resetCalendarSetup);
         }
         return calendar;
+    }
+
+    private PreferenceCategory setupContactPrefs(
+            PreferenceScreen screen, SharedPreferences prefs) {
+        if (Constants.IS_DEVELOPER) {
+            final PreferenceCategory contacts = new PreferenceCategory(this);
+            screen.addPreference(contacts);
+            contacts.setTitle("コンタクト設定");
+            CheckBoxPreference useDummyContact = new CheckBoxPreference(this);
+            useDummyContact.setTitle("ダミーの電話帳データを使う");
+            useDummyContact.setKey(HachikoPreferences.KEY_USE_FAKE_CONTACT);
+            contacts.addPreference(useDummyContact);
+            return contacts;
+        }
+        return null;
     }
 
     private void showCalendarChooseDialog() {

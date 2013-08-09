@@ -7,6 +7,8 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.widget.ArrayAdapter;
+import com.appspot.hachiko_schedule.dev.FakeContactManager;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,17 @@ public class ContactManager {
 
     private Context context;
 
-    public ContactManager(Context context) {
+    protected ContactManager(Context context) {
         this.context = context;
+    }
+
+    public static ContactManager getInstance(Context context) {
+        if (HachikoPreferences.getDefault(context).getBoolean(
+                HachikoPreferences.KEY_USE_FAKE_CONTACT,
+                HachikoPreferences.USE_FAKE_CONTACT_DEFAULT)) {
+            return new FakeContactManager(context);
+        }
+        return new ContactManager(context);
     }
 
     public List<FriendListViewAdapter.Entry> getListOfContactEntries() {
