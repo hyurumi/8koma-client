@@ -24,59 +24,6 @@ public class ContactManager {
         this.context = context;
     }
 
-    /**
-     * @return cursor that point the first element or null if no element found.
-     */
-    public Cursor queryAllFriends() {
-        Cursor c = context.getContentResolver().query(
-                ContactsContract.Data.CONTENT_URI,
-                new String[] {
-                        Contacts.DISPLAY_NAME,
-                        Contacts.PHOTO_THUMBNAIL_URI,
-                        CommonDataKinds.StructuredName.PHONETIC_GIVEN_NAME,
-                        CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME,
-                        CommonDataKinds.Email.ADDRESS
-                },
-                ContactsContract.Data.MIMETYPE + "==\'vnd.android.cursor.item/name\'",
-                null,
-                CommonDataKinds.StructuredName.DISPLAY_NAME);
-        if (c.moveToFirst()) {
-            return c;
-        }
-        return null;
-    }
-
-    /**
-     * Query all friends info from contacts and set it to given adapter.
-     */
-    public void queryAllFriendsAndSet(ArrayAdapter<String> adapter) {
-        Cursor cursor = context.getContentResolver().query(
-                ContactsContract.Data.CONTENT_URI,
-                new String[] {
-                        Contacts.DISPLAY_NAME,
-                        CommonDataKinds.StructuredName.PHONETIC_GIVEN_NAME,
-                        CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME,
-                        CommonDataKinds.Email.ADDRESS
-                },
-                ContactsContract.Data.MIMETYPE + "==\'vnd.android.cursor.item/name\'",
-                null,
-                CommonDataKinds.StructuredName.DISPLAY_NAME);
-
-        if(cursor.moveToFirst()){
-            int displayNameIndex = cursor.getColumnIndex( Contacts.DISPLAY_NAME );
-
-            while( cursor.moveToNext()){
-                String displayName = cursor.getString(displayNameIndex);
-                if (displayName.matches(EXCLUDE_PATTERN)) {
-                    continue;
-                }
-
-                adapter.add(cursor.getString(displayNameIndex));
-            }
-        }
-        cursor.close();
-    }
-
     public List<FriendListViewAdapter.Entry> getListOfContactEntries() {
         List entries = new ArrayList<FriendListViewAdapter.Entry>();
         Cursor cursor = queryAllFriends();
@@ -94,5 +41,27 @@ public class ContactManager {
         }
         cursor.close();
         return entries;
+    }
+
+    /**
+     * @return cursor that point the first element or null if no element found.
+     */
+    private Cursor queryAllFriends() {
+        Cursor c = context.getContentResolver().query(
+                ContactsContract.Data.CONTENT_URI,
+                new String[] {
+                        Contacts.DISPLAY_NAME,
+                        Contacts.PHOTO_THUMBNAIL_URI,
+                        CommonDataKinds.StructuredName.PHONETIC_GIVEN_NAME,
+                        CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME,
+                        CommonDataKinds.Email.ADDRESS
+                },
+                ContactsContract.Data.MIMETYPE + "==\'vnd.android.cursor.item/name\'",
+                null,
+                CommonDataKinds.StructuredName.DISPLAY_NAME);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        return null;
     }
 }
