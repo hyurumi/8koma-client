@@ -12,6 +12,7 @@ import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupCalendarActivity;
+import com.appspot.hachiko_schedule.setup.SetupManager;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -23,9 +24,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!isSetup()) {
-            Intent intent = new Intent(this, SetupCalendarActivity.class);
-            startActivity(intent);
+        Intent intentForSetup = new SetupManager(this).intentForRequiredSetupIfAny();
+        if (intentForSetup != null) {
+            startActivity(intentForSetup);
             finish();
             return;
         }
@@ -40,13 +41,6 @@ public class MainActivity extends Activity {
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         "unsettled_events", UnsettledEventsFragment.class)));
         checkNewEvent(getIntent());
-    }
-
-    private boolean isSetup() {
-        SharedPreferences prefs = HachikoPreferences.getDefault(this);
-        return prefs.getBoolean(
-                HachikoPreferences.KEY_IS_CALENDAR_SETUP,
-                HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT);
     }
 
     @Override

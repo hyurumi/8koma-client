@@ -61,7 +61,10 @@ public class SetupCalendarActivity extends Activity {
     }
 
     private void transitToNextActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
+        if (intent == null) {
+            intent = new Intent(this, MainActivity.class);
+        }
         startActivity(intent);
     }
 
