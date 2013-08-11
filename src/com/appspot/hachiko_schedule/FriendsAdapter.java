@@ -1,33 +1,27 @@
 package com.appspot.hachiko_schedule;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.graphics.Point;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.view.*;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import java.util.*;
 
 /**
  * Class that stands between cursor from Contacts and our own GridView.
  */
-public class FriendListViewAdapter extends ArrayAdapter<FriendListViewAdapter.Entry> {
+public class FriendsAdapter extends ArrayAdapter<FriendsAdapter.Entry> {
     private LayoutInflater inflater;
     private Set<String> filteredItem = new HashSet<String>();
     private List<Entry> entries;
 
-    public FriendListViewAdapter(Context context, int resource, List<Entry> entries) {
+    public FriendsAdapter(Context context, int resource, List<Entry> entries) {
         super(context, resource, entries);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.entries = entries;
@@ -72,7 +66,7 @@ public class FriendListViewAdapter extends ArrayAdapter<FriendListViewAdapter.En
     public Collection<Entry> getSelectedEntries() {
         return Collections2.filter(entries, new Predicate<Entry>() {
             @Override
-            public boolean apply(com.appspot.hachiko_schedule.FriendListViewAdapter.Entry entry) {
+            public boolean apply(FriendsAdapter.Entry entry) {
                 return filteredItem.contains(entry.displayName);
             }
         });

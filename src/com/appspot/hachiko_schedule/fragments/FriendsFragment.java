@@ -17,7 +17,7 @@ import java.util.*;
  * Friend list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
-    private FriendListViewAdapter adapter;
+    private FriendsAdapter adapter;
     private Map<Long, View> selectedFriendNameViews = new HashMap<Long, View>();
 
     private ListView listView;
@@ -41,7 +41,7 @@ public class FriendsFragment extends Fragment {
             public void onClick(View v) {
                 Set<Friend> friendsToInvite = new HashSet<Friend>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
-                for (FriendListViewAdapter.Entry entry: adapter.getSelectedEntries()) {
+                for (FriendsAdapter.Entry entry: adapter.getSelectedEntries()) {
                     friendsToInvite.add(new Friend(entry.getDisplayName(),  "DummyPhoneNo", "Dummy email"));
                 }
                 intent.putExtra(
@@ -52,7 +52,7 @@ public class FriendsFragment extends Fragment {
         });
         // TODO: implement a means for managing user info with their name.
         ContactManager manager = ContactManager.getInstance(getActivity());
-        adapter = new FriendListViewAdapter(getActivity(), R.layout.list_item_friend,
+        adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend,
                 manager.getListOfContactEntries());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
@@ -72,7 +72,7 @@ public class FriendsFragment extends Fragment {
 
                 addSelectedFriendNameView(
                         id,
-                        ((FriendListViewAdapter.Entry)
+                        ((FriendsAdapter.Entry)
                                 listView.getItemAtPosition(position)).getDisplayName());
             } else {
                 View unselectedFriendNameView = selectedFriendNameViews.get(id);

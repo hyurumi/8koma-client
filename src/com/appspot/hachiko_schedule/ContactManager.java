@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.CommonDataKinds;
-import android.widget.ArrayAdapter;
 import com.appspot.hachiko_schedule.dev.FakeContactManager;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
@@ -35,8 +34,8 @@ public class ContactManager {
         return new ContactManager(context);
     }
 
-    public List<FriendListViewAdapter.Entry> getListOfContactEntries() {
-        List entries = new ArrayList<FriendListViewAdapter.Entry>();
+    public List<FriendsAdapter.Entry> getListOfContactEntries() {
+        List entries = new ArrayList<FriendsAdapter.Entry>();
         Cursor cursor = queryAllFriends();
         int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
@@ -47,7 +46,7 @@ public class ContactManager {
             }
             String uriString = cursor.getString(thumbnailIndex);
             entries.add(
-                    new FriendListViewAdapter.Entry(cursor.getString(nameIndex),
+                    new FriendsAdapter.Entry(cursor.getString(nameIndex),
                             uriString == null ? null : Uri.parse(uriString)));
         }
         cursor.close();
