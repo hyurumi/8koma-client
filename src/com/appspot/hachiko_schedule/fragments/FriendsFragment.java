@@ -11,6 +11,7 @@ import android.widget.*;
 import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
+import com.appspot.hachiko_schedule.data.FriendItem;
 
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class FriendsFragment extends Fragment {
             public void onClick(View v) {
                 Set<FriendIdentifier> friendsToInvite = new HashSet<FriendIdentifier>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
-                for (FriendsAdapter.Entry entry: adapter.getSelectedEntries()) {
+                for (FriendItem entry: adapter.getSelectedEntries()) {
                     // TODO: put meaningful ID
                     friendsToInvite.add(
                             new FriendIdentifier(/* dummy Id */0, entry.getDisplayName()));
@@ -75,8 +76,7 @@ public class FriendsFragment extends Fragment {
 
                 addSelectedFriendNameView(
                         id,
-                        ((FriendsAdapter.Entry)
-                                listView.getItemAtPosition(position)).getDisplayName());
+                        ((FriendItem) listView.getItemAtPosition(position)).getDisplayName());
             } else {
                 View unselectedFriendNameView = selectedFriendNameViews.get(id);
                 selectedFriendsNameContainer.removeView(unselectedFriendNameView);

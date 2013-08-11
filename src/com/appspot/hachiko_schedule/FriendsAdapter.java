@@ -3,11 +3,11 @@ package com.appspot.hachiko_schedule;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.net.Uri;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.appspot.hachiko_schedule.data.FriendItem;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -16,12 +16,12 @@ import java.util.*;
 /**
  * Class that stands between cursor from Contacts and our own GridView.
  */
-public class FriendsAdapter extends ArrayAdapter<FriendsAdapter.Entry> {
+public class FriendsAdapter extends ArrayAdapter<FriendItem> {
     private LayoutInflater inflater;
     private Set<String> filteredItem = new HashSet<String>();
-    private List<Entry> entries;
+    private List<FriendItem> entries;
 
-    public FriendsAdapter(Context context, int resource, List<Entry> entries) {
+    public FriendsAdapter(Context context, int resource, List<FriendItem> entries) {
         super(context, resource, entries);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.entries = entries;
@@ -30,10 +30,10 @@ public class FriendsAdapter extends ArrayAdapter<FriendsAdapter.Entry> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.list_item_friend, null);
-        Entry entry = getItem(position);
-        ((TextView) view.findViewById(R.id.friend_name)).setText(entry.displayName);
-        ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(entry.photoUri);
-        applyFilterToIcon(filteredItem.contains(entry.displayName), view, position);
+        FriendItem item = getItem(position);
+        ((TextView) view.findViewById(R.id.friend_name)).setText(item.getDisplayName());
+        ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
+        applyFilterToIcon(filteredItem.contains(item.getDisplayName()), view, position);
         return view;
     }
 
@@ -63,36 +63,12 @@ public class FriendsAdapter extends ArrayAdapter<FriendsAdapter.Entry> {
         }
     }
 
-    public Collection<Entry> getSelectedEntries() {
-        return Collections2.filter(entries, new Predicate<Entry>() {
+    public Collection<FriendItem> getSelectedEntries() {
+        return Collections2.filter(entries, new Predicate<FriendItem>() {
             @Override
-            public boolean apply(FriendsAdapter.Entry entry) {
-                return filteredItem.contains(entry.displayName);
+            public boolean apply(FriendItem entry) {
+                return filteredItem.contains(entry.getDisplayName());
             }
         });
-    }
-
-    public static class Entry {
-        private String displayName;
-        private Uri photoUri;
-
-        public Entry(String displayName, Uri photoUri) {
-            this.displayName = displayName;
-            this.photoUri = photoUri;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public Uri getPhotoUri() {
-            return photoUri;
-        }
-
-        // Note: toString()の値が(ArrayAdapterにデフォルト実装の)Filterでも使われる
-        @Override
-        public String toString() {
-            return displayName;
-        }
     }
 }

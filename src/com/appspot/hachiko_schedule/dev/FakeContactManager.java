@@ -5,6 +5,7 @@ import android.content.res.XmlResourceParser;
 import com.appspot.hachiko_schedule.ContactManager;
 import com.appspot.hachiko_schedule.FriendsAdapter;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.FriendItem;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class FakeContactManager extends ContactManager {
     }
 
     @Override
-    public List<FriendsAdapter.Entry> getListOfContactEntries() {
-        List<FriendsAdapter.Entry> listOfContacts
-                = new ArrayList<FriendsAdapter.Entry>();
+    public List<FriendItem> getListOfContactEntries() {
+        List<FriendItem> listOfContacts
+                = new ArrayList<FriendItem>();
         XmlResourceParser parser = context.getResources().getXml(R.xml.dummy_people_100);
         try {
             int eventType = parser.getEventType();
@@ -35,7 +36,7 @@ public class FakeContactManager extends ContactManager {
                 if (eventType == XmlPullParser.START_TAG && NAME_TAG.equals(parser.getName())) {
                     displayName = parser.nextText();
                 } else if (eventType == XmlPullParser.END_TAG && RECORD_TAG.equals(parser.getName())) {
-                    listOfContacts.add(new FriendsAdapter.Entry(displayName, null));
+                    listOfContacts.add(new FriendItem(displayName, null));
                 }
                 eventType = parser.next();
             }
