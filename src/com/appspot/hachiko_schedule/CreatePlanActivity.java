@@ -12,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.data.EventCategory;
+import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
-import com.appspot.hachiko_schedule.data.Friend;
+import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
@@ -86,7 +87,7 @@ public class CreatePlanActivity extends Activity {
     private void showFriendsName(Parcelable[] friends) {
         StringBuilder friendsNameToInvite = new StringBuilder();
         for (Parcelable friend: friends) {
-            friendsNameToInvite.append(((Friend) friend).getName()).append(" ");
+            friendsNameToInvite.append(((FriendIdentifier) friend).getName()).append(" ");
         }
         ((TextView) findViewById(R.id.friends_name_to_invite))
                 .setText(friendsNameToInvite.toString());

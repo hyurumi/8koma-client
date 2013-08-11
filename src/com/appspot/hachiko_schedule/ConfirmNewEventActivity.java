@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.data.EventCategory;
-import com.appspot.hachiko_schedule.data.Friend;
+import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
 
 import java.text.SimpleDateFormat;
@@ -69,7 +69,7 @@ public class ConfirmNewEventActivity extends Activity {
     private void showFriendsName(Parcelable[] friends) {
         StringBuilder friendsNameToInvite = new StringBuilder();
         for (Parcelable friend: friends) {
-            friendsNameToInvite.append(((Friend) friend).getName()).append(" ");
+            friendsNameToInvite.append(((FriendIdentifier) friend).getName()).append(" ");
         }
         ((TextView) findViewById(R.id.friends_name_to_invite))
                 .setText(friendsNameToInvite.toString());

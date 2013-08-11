@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.*;
-import com.appspot.hachiko_schedule.data.Friend;
+import com.appspot.hachiko_schedule.data.FriendIdentifier;
+import com.appspot.hachiko_schedule.data.FriendIdentifier;
 
 import java.util.*;
 
 /**
- * Friend list where user can choose friends to invite.
+ * FriendIdentifier list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
     private FriendsAdapter adapter;
@@ -39,14 +40,16 @@ public class FriendsFragment extends Fragment {
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Set<Friend> friendsToInvite = new HashSet<Friend>();
+                Set<FriendIdentifier> friendsToInvite = new HashSet<FriendIdentifier>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
                 for (FriendsAdapter.Entry entry: adapter.getSelectedEntries()) {
-                    friendsToInvite.add(new Friend(entry.getDisplayName(),  "DummyPhoneNo", "Dummy email"));
+                    // TODO: put meaningful ID
+                    friendsToInvite.add(
+                            new FriendIdentifier(/* dummy Id */0, entry.getDisplayName()));
                 }
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,
-                        friendsToInvite.toArray(new Friend[0]));
+                        friendsToInvite.toArray(new FriendIdentifier[0]));
                 startActivityForResult(intent, 0);
             }
         });
