@@ -8,6 +8,7 @@ import android.view.*;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.facebook.Session;
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
                 if (pickFriendsWhenSessionOpened && state.isOpened()) {
                     pickFriendsWhenSessionOpened = false;
 
-                    startCreatingEvent();
+                    startCreatingEventWithFbFriends();
                 }
             }
         });
@@ -101,7 +102,14 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_create_event:
-                startCreatingEvent();
+                if (HachikoPreferences.getDefault(this).getBoolean(
+                        HachikoPreferences.KEY_USE_FB_CONTACT,
+                        HachikoPreferences.USE_FB_CONTACT_DEFAULT
+                )) {
+                    startCreatingEventWithFbFriends();
+                } else {
+                    startCreatingEventWithContacts();
+                }
                 return true;
             case R.id.action_config:
                 launchMenuActivity();
@@ -120,7 +128,7 @@ public class MainActivity extends Activity {
                     if (pickFriendsWhenSessionOpened && state.isOpened()) {
                         pickFriendsWhenSessionOpened = false;
 
-                        startCreatingEvent();
+                        startCreatingEventWithFbFriends();
                     }
                 }
             });
@@ -129,13 +137,18 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    private void startCreatingEvent() {
+    private void startCreatingEventWithFbFriends() {
         if (ensureOpenSession()) {
             Intent intent = new Intent(this, NewEventChooseFbFriendActivity.class);
             startActivity(intent);
         } else {
             pickFriendsWhenSessionOpened = true;
         }
+    }
+
+    private void startCreatingEventWithContacts() {
+        Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
+        startActivity(intent);
     }
 
     private void launchMenuActivity() {

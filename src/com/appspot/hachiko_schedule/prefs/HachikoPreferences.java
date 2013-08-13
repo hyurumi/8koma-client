@@ -30,8 +30,11 @@ public class HachikoPreferences {
     public static final Set<String> CALENDARS_TO_USE_DEFAULT = Collections.emptySet();
     public static final String KEY_CALENDARS_NOT_TO_USE = "calendars_not_to_use";
     public static final Set<String> CALENDARS_NOT_TO_USE_DEFAULT = Collections.emptySet();
+    public static final String KEY_USE_FB_CONTACT = "use_fb_contact";
+    public static final boolean USE_FB_CONTACT_DEFAULT = true;
     public static final String KEY_USE_FAKE_CONTACT = "use_fake_contact";
     public static final boolean USE_FAKE_CONTACT_DEFAULT = false;
+
     /**
      * 一度でもFBの認証をしたかどうか．実際のログイン状態とは必ずしも一致しない．
      */
