@@ -2,17 +2,17 @@ package com.appspot.hachiko_schedule;
 
 import android.app.*;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.*;
 
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
 import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
-import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
-import com.appspot.hachiko_schedule.setup.SetupCalendarActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -20,6 +20,8 @@ import com.appspot.hachiko_schedule.setup.SetupManager;
 public class MainActivity extends Activity {
 
     private static final String KEY_SELECTED_TAB = "selected_tab";
+    private boolean pickFriendsWhenSessionOpened;
+    private UiLifecycleHelper lifecycleHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,20 @@ public class MainActivity extends Activity {
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         "unsettled_events", UnsettledEventsFragment.class)));
         checkNewEvent(getIntent());
+
+        lifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                if (pickFriendsWhenSessionOpened && state.isOpened()) {
+                    pickFriendsWhenSessionOpened = false;
+
+                    startCreatingEvent();
+                }
+            }
+        });
+        lifecycleHelper.onCreate(savedInstanceState);
+
+        ensureOpenSession();
     }
 
     @Override
@@ -95,9 +111,31 @@ public class MainActivity extends Activity {
         }
     }
 
+    private boolean ensureOpenSession() {
+        if (Session.getActiveSession() == null ||
+                !Session.getActiveSession().isOpened()) {
+            Session.openActiveSession(this, true, new Session.StatusCallback() {
+                @Override
+                public void call(Session session, SessionState state, Exception exception) {
+                    if (pickFriendsWhenSessionOpened && state.isOpened()) {
+                        pickFriendsWhenSessionOpened = false;
+
+                        startCreatingEvent();
+                    }
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
     private void startCreatingEvent() {
-        Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
-        startActivity(intent);
+        if (ensureOpenSession()) {
+            Intent intent = new Intent(this, NewEventChooseFbFriendActivity.class);
+            startActivity(intent);
+        } else {
+            pickFriendsWhenSessionOpened = true;
+        }
     }
 
     private void launchMenuActivity() {

@@ -6,31 +6,9 @@
         android:layout_height="match_parent"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
-    <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:id="@+id/new_plan_button_wrapper"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/new_plan_button"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/ic_go_to_today"/>
-        <HorizontalScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selected_friends_wrapper_scrollable"
-                android:layout_toLeftOf="@id/new_plan_button"
-                android:layout_centerVertical="true">
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/selected_friends">
-            </LinearLayout>
-        </HorizontalScrollView>
-    </RelativeLayout>
+    <include
+        layout="@layout/selected_friends_container"
+        android:id="@+id/new_plan_button_wrapper" />
     <ListView android:id="@+id/contact_list"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
