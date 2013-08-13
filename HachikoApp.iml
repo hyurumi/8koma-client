@@ -15,6 +15,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="guava-14.0.1" level="project" />
     <orderEntry type="module" module-name="facebook" />
+    <orderEntry type="library" name="android-support-v4" level="project" />
   </component>
 </module>
 
