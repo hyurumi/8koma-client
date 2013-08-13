@@ -12,6 +12,7 @@ import com.facebook.model.GraphUser;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,6 +32,11 @@ public class HachikoFbFriendPickerFragment extends SimplifiedPickerFragment<Grap
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
         setSelectionStrategy(createSelectionStrategy());
+    }
+
+    @Override
+    public List<GraphUser> getSelectedGraphObjects() {
+        return super.getSelectedGraphObjects();
     }
 
     @Override
