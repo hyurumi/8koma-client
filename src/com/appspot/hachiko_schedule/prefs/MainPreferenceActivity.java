@@ -3,14 +3,13 @@ package com.appspot.hachiko_schedule.prefs;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.*;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
-
-import java.util.Set;
 
 /**
  * メイン画面から飛べる設定
@@ -27,6 +26,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
 
         setupCalendarPrefs(screen, prefs);
         setupContactPrefs(screen, prefs);
+        setupDebugPrefs(screen, prefs);
         setPreferenceScreen(screen);
     }
 
@@ -95,6 +95,28 @@ public class MainPreferenceActivity extends PreferenceActivity {
             return contacts;
         }
         return null;
+    }
+    private void setupDebugPrefs(PreferenceScreen screen, SharedPreferences prefs) {
+        if (!Constants.IS_DEVELOPER) {
+            return;
+        }
+
+        final PreferenceCategory debugs = new PreferenceCategory(this);
+        screen.addPreference(debugs);
+        debugs.setTitle("デバッグ");
+        Preference restartHachiko = new Preference(this);
+        restartHachiko.setTitle("Hachikoを再起動");
+        restartHachiko.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                return true;
+            }
+        });
+        debugs.addPreference(restartHachiko);
     }
 
     private void showCalendarChooseDialog() {
