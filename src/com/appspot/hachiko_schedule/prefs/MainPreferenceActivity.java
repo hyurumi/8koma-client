@@ -15,27 +15,24 @@ import com.appspot.hachiko_schedule.R;
  * メイン画面から飛べる設定
  */
 public class MainPreferenceActivity extends PreferenceActivity {
+    private SharedPreferences prefs;
+    private PreferenceScreen screen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = HachikoPreferences.getDefault(MainPreferenceActivity.this);
+        prefs = HachikoPreferences.getDefault(MainPreferenceActivity.this);
         PreferenceManager preferenceManager = getPreferenceManager();
         preferenceManager.setSharedPreferencesName(HachikoPreferences.getPreferencesName());
-        PreferenceScreen screen = preferenceManager.createPreferenceScreen(this);
+        screen = preferenceManager.createPreferenceScreen(this);
 
-        setupCalendarPrefs(screen, prefs);
-        setupContactPrefs(screen, prefs);
-        setupDebugPrefs(screen, prefs);
+        setupCalendarPrefs();
+        setupContactPrefs();
+        setupDebugPrefs();
         setPreferenceScreen(screen);
     }
 
-    private PreferenceCategory setupCalendarPrefs(
-            PreferenceScreen screen, SharedPreferences prefs) {
-        final PreferenceCategory calendar = new PreferenceCategory(this);
-        screen.addPreference(calendar);
-        calendar.setTitle("カレンダー設定");
-
+    private void setupCalendarPrefs() {
         Preference calendarsToUse = new Preference(this);
         calendarsToUse.setTitle(R.string.prefs_set_calendars);
         calendarsToUse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -45,7 +42,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return false;
             }
         });
-        calendar.addPreference(calendarsToUse);
+        final PreferenceCategory calendarPrefs = newPreferenceCategory("カレンダー設定", calendarsToUse);
 
         if (Constants.IS_DEVELOPER && prefs.getBoolean(
                 HachikoPreferences.KEY_IS_CALENDAR_SETUP, HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT)) {
@@ -66,44 +63,34 @@ public class MainPreferenceActivity extends PreferenceActivity {
                             MainPreferenceActivity.this,
                             "OK, アプリを再起動してください",
                             Toast.LENGTH_SHORT).show();
-                    calendar.removePreference(resetCalendarSetup);
+                    calendarPrefs.removePreference(resetCalendarSetup);
                     return false;
                 }
             });
-            calendar.addPreference(resetCalendarSetup);
+            calendarPrefs.addPreference(resetCalendarSetup);
         }
-        return calendar;
     }
 
-    private PreferenceCategory setupContactPrefs(
-            PreferenceScreen screen, SharedPreferences prefs) {
-        final PreferenceCategory contacts = new PreferenceCategory(this);
-        screen.addPreference(contacts);
-        contacts.setTitle("コンタクト設定");
+    private void setupContactPrefs() {
         CheckBoxPreference useFbContact = new CheckBoxPreference(this);
         useFbContact.setTitle("Facebookの連絡帳データを利用する");
         useFbContact.setSummary("チェックされてない場合は端末の電話帳データを利用");
         useFbContact.setDefaultValue(HachikoPreferences.USE_FAKE_CONTACT_DEFAULT);
         useFbContact.setKey(HachikoPreferences.KEY_USE_FB_CONTACT);
-        contacts.addPreference(useFbContact);
+        PreferenceCategory contactPrefs = newPreferenceCategory("コンタクト設定", useFbContact);
 
         if (Constants.IS_DEVELOPER) {
             CheckBoxPreference useDummyContact = new CheckBoxPreference(this);
             useDummyContact.setTitle("ダミーの電話帳データを使う");
             useDummyContact.setKey(HachikoPreferences.KEY_USE_FAKE_CONTACT);
-            contacts.addPreference(useDummyContact);
-            return contacts;
+            contactPrefs.addPreference(useDummyContact);
         }
-        return null;
     }
-    private void setupDebugPrefs(PreferenceScreen screen, SharedPreferences prefs) {
+    private void setupDebugPrefs() {
         if (!Constants.IS_DEVELOPER) {
             return;
         }
 
-        final PreferenceCategory debugs = new PreferenceCategory(this);
-        screen.addPreference(debugs);
-        debugs.setTitle("デバッグ");
         Preference restartHachiko = new Preference(this);
         restartHachiko.setTitle("Hachikoを再起動");
         restartHachiko.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -116,7 +103,17 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
-        debugs.addPreference(restartHachiko);
+        newPreferenceCategory("デバッグ", restartHachiko);
+    }
+
+    private PreferenceCategory newPreferenceCategory(String title, Preference... preferences) {
+        PreferenceCategory category = new PreferenceCategory(this);
+        screen.addPreference(category);
+        category.setTitle(title);
+        for (Preference preference: preferences) {
+            category.addPreference(preference);
+        }
+        return category;
     }
 
     private void showCalendarChooseDialog() {
