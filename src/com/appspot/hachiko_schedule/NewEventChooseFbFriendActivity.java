@@ -92,10 +92,12 @@ public class NewEventChooseFbFriendActivity extends FragmentActivity {
                     return graphUser.getId();
                 }
             });
-            Collection<String> idsToAddView = Sets.difference(
-                    selectedUsers.keySet(), selectedFriendNameViews.keySet());
-            Collection<String> idsToRemove = Sets.difference(
-                    selectedFriendNameViews.keySet(), selectedUsers.keySet());
+            // Sets.differenceは元のCollectionのviewを返すだけなので，ここでコピーしないと，別スレッドから
+            // selectedFriendsNameViewを操作されたときにConcurrentErrorになる
+            Collection<String> idsToAddView = new ArrayList<String>(Sets.difference(
+                    selectedUsers.keySet(), selectedFriendNameViews.keySet()));
+            Collection<String> idsToRemove = new ArrayList<String>(Sets.difference(
+                    selectedFriendNameViews.keySet(), selectedUsers.keySet()));
             for (String id : idsToAddView) {
                 addSelectedFriendNameView(id, selectedUsers.get(id).getName());
             }
