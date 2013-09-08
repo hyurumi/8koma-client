@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.plans;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.MainActivity;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;

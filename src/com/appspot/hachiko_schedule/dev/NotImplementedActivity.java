@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.util;
+package com.appspot.hachiko_schedule.dev;
 
 import android.app.Activity;
 import android.content.Context;

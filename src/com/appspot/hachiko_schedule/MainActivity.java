@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.*;
 
 import android.widget.Toast;
-import com.appspot.hachiko_schedule.fragments.SettledEventsFragment;
-import com.appspot.hachiko_schedule.fragments.UnsettledEventsFragment;
+import com.appspot.hachiko_schedule.plans.SettledEventsFragment;
+import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
+import com.appspot.hachiko_schedule.friends.NewEventChooseFbFriendActivity;
+import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;

@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.friends;
 
 import android.content.Context;
 import android.database.Cursor;

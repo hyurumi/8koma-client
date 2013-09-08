@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.friends;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,7 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
+import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.HachikoFbFriendPickerFragment;
 import com.facebook.widget.SimplifiedPickerFragment;

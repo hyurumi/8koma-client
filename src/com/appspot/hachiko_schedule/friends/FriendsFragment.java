@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.fragments;
+package com.appspot.hachiko_schedule.friends;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
-import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
+import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 
 import java.util.*;
 

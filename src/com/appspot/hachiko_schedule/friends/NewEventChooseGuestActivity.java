@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.friends;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.*;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 /**

@@ -2,8 +2,7 @@ package com.appspot.hachiko_schedule.dev;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import com.appspot.hachiko_schedule.ContactManager;
-import com.appspot.hachiko_schedule.FriendsAdapter;
+import com.appspot.hachiko_schedule.friends.ContactManager;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import org.xmlpull.v1.XmlPullParser;

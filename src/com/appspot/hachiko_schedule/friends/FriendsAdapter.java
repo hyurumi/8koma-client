@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.friends;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;

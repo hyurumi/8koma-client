@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.plans;
 
 import android.content.Context;
 import com.appspot.hachiko_schedule.data.TimeWords;

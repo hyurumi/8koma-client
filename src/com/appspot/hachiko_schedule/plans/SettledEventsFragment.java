@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.fragments;
+package com.appspot.hachiko_schedule.plans;
 
 import android.app.ListFragment;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.SettledEvent;
-import com.appspot.hachiko_schedule.util.NotImplementedActivity;
+import com.appspot.hachiko_schedule.dev.NotImplementedActivity;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 

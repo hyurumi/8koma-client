@@ -2,13 +2,11 @@ package com.appspot.hachiko_schedule.setup;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.appspot.hachiko_schedule.EventManager;
+import com.appspot.hachiko_schedule.plans.EventManager;
 import com.appspot.hachiko_schedule.MainActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CalendarIdentifier;

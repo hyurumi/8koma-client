@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.fragments;
+package com.appspot.hachiko_schedule.plans;
 
 import android.app.ListFragment;
 import android.content.Context;

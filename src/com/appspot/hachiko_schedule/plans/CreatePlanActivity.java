@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.plans;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -11,11 +11,12 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
-import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.ui.BorderedImageView;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
