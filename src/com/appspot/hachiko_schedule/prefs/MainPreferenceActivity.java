@@ -28,6 +28,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
 
         setupCalendarPrefs();
         setupContactPrefs();
+        setupNetworkPrefs();
         setupDebugPrefs();
         setPreferenceScreen(screen);
     }
@@ -86,6 +87,20 @@ public class MainPreferenceActivity extends PreferenceActivity {
             contactPrefs.addPreference(useDummyContact);
         }
     }
+
+    private void setupNetworkPrefs() {
+        if (!Constants.IS_DEVELOPER) {
+            return;
+        }
+
+        CheckBoxPreference useFakeHttpStack = new CheckBoxPreference(this);
+        useFakeHttpStack.setTitle("ダミーの通信を利用");
+        useFakeHttpStack.setSummary("FakeHttpRequestクラスを利用して偽の通信結果を返す");
+        useFakeHttpStack.setDefaultValue(HachikoPreferences.USE_FAKE_REQUEST_QUEUE_DEFAULT);
+        useFakeHttpStack.setKey(HachikoPreferences.KEY_USE_FAKE_REQUEST_QUEUE);
+        newPreferenceCategory("ネットワーク", useFakeHttpStack);
+    }
+
     private void setupDebugPrefs() {
         if (!Constants.IS_DEVELOPER) {
             return;

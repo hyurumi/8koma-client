@@ -20,6 +20,11 @@ public class HachikoPreferences {
         return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
     }
 
+    public static boolean getBooleanFromDefaultPref(
+            Context context, String key, boolean defaultValue) {
+        return getDefault(context).getBoolean(key, defaultValue);
+    }
+
     public static String getPreferencesName() {
         return PREFERENCES_NAME;
     }
@@ -34,6 +39,8 @@ public class HachikoPreferences {
     public static final boolean USE_FB_CONTACT_DEFAULT = true;
     public static final String KEY_USE_FAKE_CONTACT = "use_fake_contact";
     public static final boolean USE_FAKE_CONTACT_DEFAULT = false;
+    public static final String KEY_USE_FAKE_REQUEST_QUEUE = "use_fake_request_queue";
+    public static final boolean USE_FAKE_REQUEST_QUEUE_DEFAULT = false;
 
     /**
      * 一度でもFBの認証をしたかどうか．実際のログイン状態とは必ずしも一致しない．
