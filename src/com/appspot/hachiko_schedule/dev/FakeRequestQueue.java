@@ -1,6 +1,8 @@
 package com.appspot.hachiko_schedule.dev;
 
-import com.android.volley.*;
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.NoCache;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -11,6 +13,7 @@ import com.appspot.hachiko_schedule.util.HachikoLogger;
 public class FakeRequestQueue extends RequestQueue {
     public FakeRequestQueue() {
         super(new NoCache(), new BasicNetwork(new FakeHttpStack()));
+        start();
     }
 
     @Override

@@ -20,6 +20,7 @@ public class HachikoApp extends Application {
         super.onCreate();
         appContext = getApplicationContext();
         requestQueue = Volley.newRequestQueue(appContext);
+        requestQueue.start();
     }
 
     public static RequestQueue defaultRequestQueue() {
