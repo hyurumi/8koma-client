@@ -1,21 +1,30 @@
 package com.appspot.hachiko_schedule;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
-
+import android.provider.CalendarContract;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-import com.appspot.hachiko_schedule.plans.SettledEventsFragment;
-import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.friends.NewEventChooseFbFriendActivity;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
+import com.appspot.hachiko_schedule.plans.SettledEventsFragment;
+import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * {@link Activity} that is displayed on launch.
@@ -113,6 +122,9 @@ public class MainActivity extends Activity {
                     startCreatingEventWithContacts();
                 }
                 return true;
+            case R.id.action_launch_calendar_app:
+                launchCalendarApp();
+                return true;
             case R.id.action_config:
                 launchMenuActivity();
                 return true;
@@ -150,6 +162,16 @@ public class MainActivity extends Activity {
 
     private void startCreatingEventWithContacts() {
         Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
+        startActivity(intent);
+    }
+
+    private void launchCalendarApp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        long time = calendar.getTime().getTime();
+        Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+        builder.appendPath("time").appendPath(Long.toString(time));
+        Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         startActivity(intent);
     }
 
