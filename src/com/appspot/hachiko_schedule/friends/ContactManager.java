@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.CommonDataKinds;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.dev.FakeContactManager;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -37,7 +36,7 @@ public class ContactManager {
 
     public List<FriendItem> getListOfContactEntries() {
         List entries = new ArrayList<FriendItem>();
-        Cursor cursor = queryAllFriends();
+        Cursor cursor = queryAllContacts();
         int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
         while( cursor.moveToNext()){
@@ -57,19 +56,18 @@ public class ContactManager {
     /**
      * @return cursor that point the first element or null if no element found.
      */
-    private Cursor queryAllFriends() {
+    private Cursor queryAllContacts() {
         Cursor c = context.getContentResolver().query(
-                ContactsContract.Data.CONTENT_URI,
+                Contacts.CONTENT_URI,
                 new String[] {
+                        ContactsContract.Contacts._ID,
                         Contacts.DISPLAY_NAME,
-                        Contacts.PHOTO_THUMBNAIL_URI,
-                        CommonDataKinds.StructuredName.PHONETIC_GIVEN_NAME,
-                        CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME,
-                        CommonDataKinds.Email.ADDRESS
+                        Contacts.HAS_PHONE_NUMBER,
+                        Contacts.PHOTO_THUMBNAIL_URI
                 },
-                ContactsContract.Data.MIMETYPE + "==\'vnd.android.cursor.item/name\'",
                 null,
-                CommonDataKinds.StructuredName.DISPLAY_NAME);
+                null,
+                Contacts.DISPLAY_NAME);
         if (c.moveToFirst()) {
             return c;
         }
