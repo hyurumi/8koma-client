@@ -7,6 +7,7 @@
   <string name="prefs_set_calendars_dialog">利用するカレンダー</string>
   <string name="setup_ask_fb_login">友達一覧を取得するため Facebookへのログインが必要です</string>
   <string name="setup_login_confirmed">ログイン情報が取得できました</string>
+  <string name="setup_user_registering">Hachikoを快適にお使いいただくための準備をしています...</string>
   <string name="setup_login_confirm">次へ進む</string>
   <string name="settled_schedules">確定済み</string>
   <string name="unsettled_schedules">調整中</string>

@@ -40,12 +40,6 @@
           android:layout_height="wrap_content"
           android:text="@string/setup_login_confirmed"
           android:layout_gravity="center_horizontal"/>
-      <Button
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/setup_login_confirm"
-          android:id="@+id/setup_login_done_button"
-          android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
   </LinearLayout>
