@@ -10,7 +10,7 @@
       android:layout_height="wrap_content"
       android:id="@+id/new_plan_button"
       android:layout_alignParentRight="true"
-      android:background="@drawable/ic_go_to_today"/>
+      android:background="@drawable/ic_navigation_forward"/>
   <HorizontalScrollView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
