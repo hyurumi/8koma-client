@@ -10,6 +10,18 @@ import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
 public class HachikoLogger {
     private static final String DEFAULT_TAG = "HachikoApp";
 
+    static public int info(String msg) {
+        return Log.i(DEFAULT_TAG, msg);
+    }
+
+    static public int verbose(String msg) {
+        return Log.v(DEFAULT_TAG, msg);
+    }
+
+    static public int error(String msg, Throwable throwable) {
+        return Log.e(DEFAULT_TAG, msg, throwable);
+    }
+
     static public int debug(String msg) {
         if (!IS_DEVELOPER) {
             return 0;
