@@ -2,6 +2,8 @@ package com.appspot.hachiko_schedule;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.appspot.hachiko_schedule.dev.FakeRequestQueue;
@@ -32,4 +34,20 @@ public class HachikoApp extends Application {
         }
         return requestQueue;
     }
+
+    /**
+     * @return own app version as registered obtained by {@link PackageManager}.
+     */
+    public static int getAppVersionCode() {
+        try {
+            PackageInfo packageInfo = appContext.getPackageManager()
+                    .getPackageInfo(appContext.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+
 }

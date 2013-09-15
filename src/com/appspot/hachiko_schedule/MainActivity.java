@@ -19,6 +19,7 @@ import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
+import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -32,6 +33,7 @@ import java.util.Date;
 public class MainActivity extends Activity {
 
     private static final String KEY_SELECTED_TAB = "selected_tab";
+    private GoogleCloudMessagingHelper googleCloudMessagingHelper;
     private boolean pickFriendsWhenSessionOpened;
     private UiLifecycleHelper lifecycleHelper;
 
@@ -44,6 +46,15 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
+        googleCloudMessagingHelper = new GoogleCloudMessagingHelper(this);
+        if (!googleCloudMessagingHelper.checkPlayServices()) {
+            return;
+        }
+        String registrationId = googleCloudMessagingHelper.getRegistrationId();
+        if (registrationId.isEmpty()) {
+            googleCloudMessagingHelper.registerInBackground();
+        }
+
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab()

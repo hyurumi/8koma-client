@@ -10,6 +10,10 @@ import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
 public class HachikoLogger {
     private static final String DEFAULT_TAG = "HachikoApp";
 
+    static public int info(Object... objects) {
+        return Log.i(DEFAULT_TAG, appendAsString(objects));
+    }
+
     static public int info(String msg) {
         return Log.i(DEFAULT_TAG, msg);
     }
@@ -20,6 +24,10 @@ public class HachikoLogger {
 
     static public int error(String msg, Throwable throwable) {
         return Log.e(DEFAULT_TAG, msg, throwable);
+    }
+
+    static public int error(String msg) {
+        return Log.e(DEFAULT_TAG, msg);
     }
 
     static public int debug(String msg) {
@@ -33,11 +41,15 @@ public class HachikoLogger {
         if (!IS_DEVELOPER) {
             return 0;
         }
+        return Log.d(DEFAULT_TAG, appendAsString(objects));
+    }
+
+    static private String appendAsString(Object... objects) {
         StringBuilder builder = new StringBuilder();
         for (Object obj: objects) {
             builder.append(obj).append(' ');
         }
-        return Log.d(DEFAULT_TAG, builder.toString());
+        return builder.toString();
     }
 
     static public int debugWithSeparator(char ch, Object... objects) {

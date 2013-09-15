@@ -29,6 +29,8 @@ public class HachikoPreferences {
         return PREFERENCES_NAME;
     }
 
+    public static final String KEY_APP_VERSION = "app_version";
+    public static final int APP_VERSION_DEFAULT = 0;
     public static final String KEY_IS_CALENDAR_SETUP = "is_calendar_setup";
     public static final boolean IS_CALENDAR_SETUP_DEFAULT = false;
     public static final String KEY_CALENDARS_TO_USE = "calendars_to_use";
@@ -40,7 +42,10 @@ public class HachikoPreferences {
     public static final String KEY_USE_FAKE_CONTACT = "use_fake_contact";
     public static final boolean USE_FAKE_CONTACT_DEFAULT = false;
     public static final String KEY_USE_FAKE_REQUEST_QUEUE = "use_fake_request_queue";
-    public static final boolean USE_FAKE_REQUEST_QUEUE_DEFAULT = false;
+    public static final boolean USE_FAKE_REQUEST_QUEUE_DEFAULT = true;
+
+    public static final String KEY_GCM_REGISTRATION_ID = "gcm_registration_id";
+    public static final String GCM_REGISTRATION_ID_DEFAULT = "";
 
     /**
      * 一度でもFBの認証をしたかどうか．実際のログイン状態とは必ずしも一致しない．
