@@ -3,6 +3,7 @@ package com.appspot.hachiko_schedule.dev;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.StringRequest;
 import com.google.common.collect.Lists;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -52,6 +53,9 @@ public class FakeHttpStack implements HttpStack {
 
     private HttpEntity createEntity(Request request) throws UnsupportedEncodingException {
         // TODO: きめうちの値を返すのではなく，例えばrequest.getUrl()とかを見て，適切な値を返す
+        if (request instanceof StringRequest) {
+            return new StringEntity("100");
+        }
         return new StringEntity(" {\"a\":1,\"b\":2,\"c\":3,\"d\":4,\"e\":5}");
     }
 }

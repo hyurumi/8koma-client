@@ -7,22 +7,22 @@ import android.os.Bundle;
 import android.view.View;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.MainActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.UserAPI;
+import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.appspot.hachiko_schedule.util.LocalProfileHelper;
-import com.facebook.Request;
+import com.appspot.hachiko_schedule.util.MapUtils;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ログイン用Activity, 今のとこFacebookログインのみ対応(かつログイン強制)
@@ -66,42 +66,37 @@ public class LoginActivity extends Activity {
         loginButton.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
         afterLoginOptionView.setVisibility(loggedIn ? View.VISIBLE : View.GONE);
         if (loggedIn && !registerRequestSent) {
-            Request.newMeRequest(session ,new Request.GraphUserCallback() {
-                @Override
-                public void onCompleted(GraphUser user, com.facebook.Response response) {
-                    sendUserInfoForRegistration(Long.parseLong(user.getId()));
-                }
-            }).executeAsync();
+            sendNewUserRegistrationRequest(session.getAccessToken());
         } else {
             indicatorView.setVisibility(View.GONE);
         }
     }
 
-    private void sendUserInfoForRegistration(long fbId) {
+    private void sendNewUserRegistrationRequest(String fbToken) {
         registerRequestSent = true;
-        JSONObject params = new JSONObject();
+        Map<String, String> params = new HashMap<String, String>();
         LocalProfileHelper localProfileHelper = new LocalProfileHelper(this);
-        try {
-            JSONUtils.putOrIgnoreNull(params, "fbid", fbId);
-            JSONUtils.putOrIgnoreNull(params, "name", localProfileHelper.getDisplayName());
-            JSONUtils.putOrIgnoreNull(params, "phone", localProfileHelper.getMyOwnPhoneNumber());
-            JSONUtils.putOrIgnoreNull(params, "email", localProfileHelper.getMyOwnEmail());
-        } catch (JSONException e) {
-            HachikoLogger.error("JSON exception", e);
-        }
-        JsonObjectRequest request = new JsonObjectRequest(
-                UserAPI.REGISTER.getMethod(),
-                UserAPI.REGISTER.getUrl(),
+        MapUtils.putOrIgnoreNull(params, "UserName", localProfileHelper.getDisplayName());
+        MapUtils.putOrIgnoreNull(params, "PhoneNumber", localProfileHelper.getMyOwnPhoneNumber());
+        MapUtils.putOrIgnoreNull(params, "Email", localProfileHelper.getMyOwnEmail());
+        MapUtils.putOrIgnoreNull(params, "FacebookToken", fbToken);
+        StringRequest request = VolleyRequestFactory.newStringRequest(
+                UserAPI.REGISTER,
                 params,
-                new Response.Listener<JSONObject>() {
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        HachikoLogger.debug("会員登録成功");
-                        HachikoLogger.debug(jsonObject);
+                    public void onResponse(String myHachikoId) {
+                        HachikoLogger.debug("会員登録成功 ID: " + myHachikoId);
+                        HachikoPreferences.getDefaultEditor(LoginActivity.this)
+                                .putString(HachikoPreferences.KEY_MY_HACHIKO_ID, myHachikoId);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         HachikoPreferences.getDefaultEditor(LoginActivity.this)
                                 .putBoolean(HachikoPreferences.KEY_FB_LOGGED_IN, true)
                                 .commit();
+
+                        // TODO: cookieに含まれる認証情報をよしなに処理
+                        // TODO: 電話帳アップロード
+
                         startActivity(intent);
                     }
                 },
