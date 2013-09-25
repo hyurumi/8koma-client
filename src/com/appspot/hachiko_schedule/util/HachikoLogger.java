@@ -1,6 +1,7 @@
 package com.appspot.hachiko_schedule.util;
 
 import android.util.Log;
+import com.android.volley.VolleyError;
 
 import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
 
@@ -22,12 +23,21 @@ public class HachikoLogger {
         return Log.v(DEFAULT_TAG, msg);
     }
 
+    static public int error(String msg) {
+        return Log.e(DEFAULT_TAG, msg);
+    }
+
     static public int error(String msg, Throwable throwable) {
         return Log.e(DEFAULT_TAG, msg, throwable);
     }
 
-    static public int error(String msg) {
-        return Log.e(DEFAULT_TAG, msg);
+    static public int error(String msg, VolleyError volleyError) {
+        if (volleyError != null && volleyError.networkResponse != null) {
+            return Log.e(DEFAULT_TAG, msg + " [" + volleyError.networkResponse.statusCode + "] "
+            + new String(volleyError.networkResponse.data), volleyError);
+        } else {
+            return Log.e(DEFAULT_TAG, msg + " null response ", volleyError);
+        }
     }
 
     static public int debug(String msg) {
