@@ -16,6 +16,8 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
+import com.appspot.hachiko_schedule.util.GmailSendHelper;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.text.SimpleDateFormat;
 
@@ -26,8 +28,8 @@ public class ConfirmNewEventActivity extends Activity {
         setContentView(R.layout.activity_confirm_new_event);
         setTitle(R.string.confirm_new_event_text);
         Intent intent = getIntent();
-        Parcelable[] friends = intent.getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
-        Parcelable[] timeslots =
+        final Parcelable[] friends = intent.getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
+        final Parcelable[] timeslots =
                 intent.getParcelableArrayExtra(Constants.EXTRA_KEY_EVENT_CANDIDATE_SCHEDULES);
         int eventType = intent.getIntExtra(Constants.EXTRA_KEY_EVENT_TYPE, -1);
         showFriendsName(friends);
@@ -47,6 +49,7 @@ public class ConfirmNewEventActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        sendInvitations(friends, timeslots);
                         Intent intent = new Intent(ConfirmNewEventActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
@@ -54,6 +57,38 @@ public class ConfirmNewEventActivity extends Activity {
                     }
                 }
         );
+    }
+
+    private void sendInvitations(Parcelable[] friends, Parcelable[] timeslots) {
+        for (Parcelable friendParcelable: friends) {
+            FriendIdentifier friend = (FriendIdentifier) friendParcelable;
+            if (friend.getEmail() != null) {
+                sendEmailInvitationByEmail(friend, timeslots);
+            } else {
+                // TODO:
+                HachikoLogger.debug("Not implemented: send invitation by hachiko server");
+            }
+        }
+    }
+
+    private void sendEmailInvitationByEmail(FriendIdentifier friend, Parcelable[] timeslots) {
+        // TODO: テンプレートエンジンの利用を検討, MiniTemplatorとか。
+        StringBuilder emailBuilder = new StringBuilder();
+        emailBuilder.append(friend.getName()).append("さん、")
+                .append(System.getProperty("line.separator"))
+                .append("以下の時間帯で招待が届きました")
+                .append(System.getProperty("line.separator"));
+        for (Parcelable timeslotParcel: timeslots) {
+            Timeslot timeslot = (Timeslot) timeslotParcel;
+            emailBuilder.append(timeslot.getStartDate())
+                    .append(" - ")
+                    .append(timeslot.getEndDate())
+                    .append(System.getProperty("line.separator"));
+        }
+        GmailSendHelper gmailSendHelper = new GmailSendHelper(this);
+        HachikoLogger.debug("Email sent to ", friend.getEmail());
+        gmailSendHelper.sendHtmlMailAsync(
+                "Hachiko invitation", emailBuilder.toString(), friend.getEmail());
     }
 
     private void showEventInfo(int eventType) {

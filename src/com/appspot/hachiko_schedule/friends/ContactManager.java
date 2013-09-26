@@ -51,9 +51,16 @@ public class ContactManager {
                 continue;
             }
             String uriString = cursor.getString(thumbnailIndex);
-            entries.add(
-                    new FriendItem(cursor.getString(nameIndex),
-                            uriString == null ? null : Uri.parse(uriString)));
+            String email = queryPrimaryEmailAddress(cursor.getString(
+                    cursor.getColumnIndex(Contacts._ID)));
+            if (email == null) {
+                continue;
+            }
+
+            entries.add(new FriendItem(
+                    cursor.getString(nameIndex),
+                    uriString == null ? null : Uri.parse(uriString),
+                    email));
         }
         cursor.close();
         return entries;
@@ -107,7 +114,7 @@ public class ContactManager {
             if (primaryPhoneNumber == null) {
                 continue;
             }
-            String email = queryPrimaryEmailNumber(userId);
+            String email = queryPrimaryEmailAddress(userId);
             if (email == null) {
                 continue;
             }
@@ -132,7 +139,7 @@ public class ContactManager {
                 userId);
     }
 
-    private String queryPrimaryEmailNumber(String userId) {
+    private String queryPrimaryEmailAddress(String userId) {
         return queryPrimaryData(
                 CommonDataKinds.Email.CONTENT_URI,
                 CommonDataKinds.Email.ADDRESS,

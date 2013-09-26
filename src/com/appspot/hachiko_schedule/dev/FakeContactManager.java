@@ -35,7 +35,7 @@ public class FakeContactManager extends ContactManager {
                 if (eventType == XmlPullParser.START_TAG && NAME_TAG.equals(parser.getName())) {
                     displayName = parser.nextText();
                 } else if (eventType == XmlPullParser.END_TAG && RECORD_TAG.equals(parser.getName())) {
-                    listOfContacts.add(new FriendItem(displayName, null));
+                    listOfContacts.add(new FriendItem(displayName, null, "hoge@fuga.js"));
                 }
                 eventType = parser.next();
             }

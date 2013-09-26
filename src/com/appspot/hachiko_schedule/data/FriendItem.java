@@ -8,10 +8,12 @@ import android.net.Uri;
 public class FriendItem {
     private String displayName;
     private Uri photoUri;
+    private String emailAddress;
 
-    public FriendItem (String displayName, Uri photoUri) {
+    public FriendItem (String displayName, Uri photoUri, String emailAddress) {
         this.displayName = displayName;
         this.photoUri = photoUri;
+        this.emailAddress = emailAddress;
     }
 
     public String getDisplayName() {
@@ -20,6 +22,10 @@ public class FriendItem {
 
     public Uri getPhotoUri() {
         return photoUri;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
     // Note: toString()の値が(ArrayAdapterにデフォルト実装の)Filterでも使われる

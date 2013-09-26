@@ -9,11 +9,13 @@ import com.google.common.base.Preconditions;
  */
 public class FriendIdentifier implements Parcelable {
     long id;
+    String email;
     String name;
 
-    public FriendIdentifier(long id, String name) {
+    public FriendIdentifier(long id, String email, String name) {
         Preconditions.checkNotNull(name);
         this.id = id;
+        this.email = email;
         this.name = name;
     }
 
@@ -25,9 +27,14 @@ public class FriendIdentifier implements Parcelable {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeString(email);
         dest.writeString(name);
     }
 
@@ -42,6 +49,7 @@ public class FriendIdentifier implements Parcelable {
         public FriendIdentifier createFromParcel(Parcel source) {
             return new FriendIdentifier(
                     source.readLong(),
+                    source.readString(),
                     source.readString()
             );
         }

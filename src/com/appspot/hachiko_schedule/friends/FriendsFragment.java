@@ -46,7 +46,8 @@ public class FriendsFragment extends Fragment {
                 for (FriendItem entry: adapter.getSelectedEntries()) {
                     // TODO: put meaningful ID
                     friendsToInvite.add(
-                            new FriendIdentifier(/* dummy Id */0, entry.getDisplayName()));
+                            new FriendIdentifier(/* dummy Id */0, entry.getEmailAddress(),
+                                    entry.getDisplayName()));
                 }
                 intent.putExtra(
                         Constants.EXTRA_KEY_FRIENDS,

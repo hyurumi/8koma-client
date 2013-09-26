@@ -70,7 +70,7 @@ public class NewEventChooseFbFriendActivity extends FragmentActivity {
                                 // TODO: consider
                                 // 1) this cast is appropriate?
                                 // 2) using FB id is appropriate?
-                                new FriendIdentifier(Long.parseLong(user.getId()), user.getName()));
+                                new FriendIdentifier(Long.parseLong(user.getId()), null, user.getName()));
                     }
                     intent.putExtra(
                             Constants.EXTRA_KEY_FRIENDS,
