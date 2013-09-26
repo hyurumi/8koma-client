@@ -5,8 +5,6 @@
   <string name="setup_calendar_confirm">次へ進む</string>
   <string name="prefs_set_calendars">利用するカレンダーの設定</string>
   <string name="prefs_set_calendars_dialog">利用するカレンダー</string>
-  <string name="setup_ask_fb_login">友達一覧を取得するため Facebookへのログインが必要です</string>
-  <string name="setup_login_confirmed">ログイン情報が取得できました</string>
   <string name="setup_user_registering">Hachikoを快適にお使いいただくための準備をしています...</string>
   <string name="setup_login_confirm">次へ進む</string>
   <string name="settled_schedules">確定済み</string>
@@ -51,7 +49,4 @@
   <string name="confirm_new_event_text">予定を確認</string>
   <string name="confirm_new_event_back">戻る</string>
   <string name="confirm_new_event_ok">招待を送信</string>
-
-  <!-- This number is used by Facebook SDK -->
-  <string name="app_id">188818854629051</string>
 </resources>

@@ -34,11 +34,7 @@
                 android:label="@string/app_name"
                 android:theme="@android:style/Theme.Holo.Light">
       </activity>
-        <activity android:name=".setup.LoginActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light">
-        </activity>
-        <activity android:name=".plans.CreatePlanActivity"
+      <activity android:name=".plans.CreatePlanActivity"
                 android:label="@string/app_name"
                 android:theme="@android:style/Theme.Holo.Light">
         </activity>
@@ -46,11 +42,7 @@
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        <activity android:name=".friends.NewEventChooseFbFriendActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
-        <activity android:name=".plans.ConfirmNewEventActivity"
+      <activity android:name=".plans.ConfirmNewEventActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Holo.Light">
         </activity>
@@ -62,11 +54,6 @@
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Holo.Light">
         </activity>
-        <!-- For facebook sdk -->
-        <activity android:name="com.facebook.LoginActivity"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:label="@string/app_name">
-        </activity>
         <receiver
             android:name=".push.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
@@ -76,6 +63,5 @@
             </intent-filter>
         </receiver>
         <service android:name=".push.GcmIntentService" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
     </application>
 </manifest>

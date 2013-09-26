@@ -12,17 +12,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-import com.appspot.hachiko_schedule.friends.NewEventChooseFbFriendActivity;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.plans.SettledEventsFragment;
 import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
-import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
-import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
+import com.appspot.hachiko_schedule.setup.SetupManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,8 +29,6 @@ public class MainActivity extends Activity {
 
     private static final String KEY_SELECTED_TAB = "selected_tab";
     private GoogleCloudMessagingHelper googleCloudMessagingHelper;
-    private boolean pickFriendsWhenSessionOpened;
-    private UiLifecycleHelper lifecycleHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +59,6 @@ public class MainActivity extends Activity {
                 .setTabListener(new TabListener<UnsettledEventsFragment>(
                         "unsettled_events", UnsettledEventsFragment.class)));
         checkNewEvent(getIntent());
-
-        lifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
-            @Override
-            public void call(Session session, SessionState state, Exception exception) {
-                if (pickFriendsWhenSessionOpened && state.isOpened()) {
-                    pickFriendsWhenSessionOpened = false;
-
-                    startCreatingEventWithFbFriends();
-                }
-            }
-        });
-        lifecycleHelper.onCreate(savedInstanceState);
-
-        ensureOpenSession();
     }
 
     @Override
@@ -124,14 +103,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_create_event:
-                if (HachikoPreferences.getDefault(this).getBoolean(
-                        HachikoPreferences.KEY_USE_FB_CONTACT,
-                        HachikoPreferences.USE_FB_CONTACT_DEFAULT
-                )) {
-                    startCreatingEventWithFbFriends();
-                } else {
-                    startCreatingEventWithContacts();
-                }
+                startCreatingEvent();
                 return true;
             case R.id.action_launch_calendar_app:
                 launchCalendarApp();
@@ -144,34 +116,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean ensureOpenSession() {
-        if (Session.getActiveSession() == null ||
-                !Session.getActiveSession().isOpened()) {
-            Session.openActiveSession(this, true, new Session.StatusCallback() {
-                @Override
-                public void call(Session session, SessionState state, Exception exception) {
-                    if (pickFriendsWhenSessionOpened && state.isOpened()) {
-                        pickFriendsWhenSessionOpened = false;
-
-                        startCreatingEventWithFbFriends();
-                    }
-                }
-            });
-            return false;
-        }
-        return true;
-    }
-
-    private void startCreatingEventWithFbFriends() {
-        if (ensureOpenSession()) {
-            Intent intent = new Intent(this, NewEventChooseFbFriendActivity.class);
-            startActivity(intent);
-        } else {
-            pickFriendsWhenSessionOpened = true;
-        }
-    }
-
-    private void startCreatingEventWithContacts() {
+    private void startCreatingEvent() {
         Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
         startActivity(intent);
     }
