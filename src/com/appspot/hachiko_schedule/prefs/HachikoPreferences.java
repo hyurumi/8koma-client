@@ -10,6 +10,7 @@ import java.util.Set;
  * {@link SharedPreferences}のラッパと，keyに使う定数たち
  */
 public class HachikoPreferences {
+    protected static final String PREFERENCES_PREFIX = "Hachiko";
     private static final String PREFERENCES_NAME = "Hachiko";
 
     public static SharedPreferences getDefault(Context context) {
