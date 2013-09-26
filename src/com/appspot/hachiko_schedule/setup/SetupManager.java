@@ -28,10 +28,6 @@ public class SetupManager {
                 HachikoPreferences.KEY_IS_CALENDAR_SETUP,
                 HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT)) {
             return new Intent(context, SetupCalendarActivity.class);
-        } else if (!prefs.getBoolean(
-                HachikoPreferences.KEY_FB_LOGGED_IN,
-                HachikoPreferences.FB_LOGGED_IN_DEFAULT)) {
-            return new Intent(context, LoginActivity.class);
         }
 
         return null;

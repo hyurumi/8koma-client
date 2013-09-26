@@ -73,18 +73,11 @@ public class MainPreferenceActivity extends PreferenceActivity {
     }
 
     private void setupContactPrefs() {
-        CheckBoxPreference useFbContact = new CheckBoxPreference(this);
-        useFbContact.setTitle("Facebookの連絡帳データを利用する");
-        useFbContact.setSummary("チェックされてない場合は端末の電話帳データを利用");
-        useFbContact.setDefaultValue(HachikoPreferences.USE_FAKE_CONTACT_DEFAULT);
-        useFbContact.setKey(HachikoPreferences.KEY_USE_FB_CONTACT);
-        PreferenceCategory contactPrefs = newPreferenceCategory("コンタクト設定", useFbContact);
-
         if (Constants.IS_DEVELOPER) {
             CheckBoxPreference useDummyContact = new CheckBoxPreference(this);
             useDummyContact.setTitle("ダミーの電話帳データを使う");
             useDummyContact.setKey(HachikoPreferences.KEY_USE_FAKE_CONTACT);
-            contactPrefs.addPreference(useDummyContact);
+            newPreferenceCategory("コンタクト設定", useDummyContact);
         }
     }
 
