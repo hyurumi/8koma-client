@@ -5,14 +5,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.MainActivity;
+import com.appspot.hachiko_schedule.apis.UserAPI;
+import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class GoogleAuthActivity extends Activity {
     private static final int CHOOSE_ACCOUNT_RESULT_CODE = 1001;
@@ -91,6 +99,8 @@ public class GoogleAuthActivity extends Activity {
                     token = GoogleAuthUtil.getToken(
                             GoogleAuthActivity.this, authPreferences.getAccountName(), SCOPE);
                     authPreferences.setToken(token);
+                    sendRegisterRequest(
+                            authPreferences.getAccountName(), authPreferences.getToken());
                 } catch (IOException transientEx) {
                     HachikoLogger.error("Google auth network error?", transientEx);
                 } catch (UserRecoverableAuthException recoverableException) {
@@ -107,12 +117,34 @@ public class GoogleAuthActivity extends Activity {
             @Override
             protected void onPostExecute(String token) {
                 HachikoLogger.debug("Token obtained: ", token);
-                transitToNextActivity();
             }
 
         };
         task.execute();
     }
+
+    private void sendRegisterRequest(String gmail, String authToken) {
+        Map<String, String> params = ImmutableMap.of("gmail", gmail, "google_token", authToken);
+        StringRequest request = VolleyRequestFactory.newStringRequest(
+                UserAPI.REGISTER,
+                params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("Registration completed");
+                        transitToNextActivity();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("Hachiko registration error", volleyError);
+                    }
+                }
+        );
+        HachikoApp.defaultRequestQueue().add(request);
+    }
+
 
     /**
      * call this method if your token expired, or you want to request a new

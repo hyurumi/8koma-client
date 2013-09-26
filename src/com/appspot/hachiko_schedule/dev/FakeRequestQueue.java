@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.dev;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -50,6 +51,11 @@ public class FakeRequestQueue extends RequestQueue {
     public Request add(Request request) {
         HachikoLogger.debug(
                 "New request ", request.getUrl(), " is added with priority ", request.getPriority());
+        try {
+            HachikoLogger.debug(new String(request.getBody()));
+        } catch (AuthFailureError e) {
+            // cannot do anything
+        }
         return super.add(request);
     }
 }
