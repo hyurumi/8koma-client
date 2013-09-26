@@ -4,17 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.apis.UserAPI;
+import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class GoogleCloudMessagingHelper {
     private final Activity activity;
+    // TODO: 実環境に合わせてここを更新
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final static String SENDER_ID = "715637255810";
 
@@ -91,7 +99,24 @@ public class GoogleCloudMessagingHelper {
 
     private void sendRegistrationIdToServer(String gcmRegistrationId) {
         HachikoLogger.debug(gcmRegistrationId);
-        // TODO: implement here.
+        Map<String, String> params = ImmutableMap.of("registration_id", gcmRegistrationId);
+        StringRequest request = VolleyRequestFactory.newStringRequest(
+                UserAPI.REGISTER_GCM_ID,
+                params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("Registration ID successfully sent to server");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("GCM registration ID send error", volleyError);
+                    }
+                }
+        );
+        HachikoApp.defaultRequestQueue().add(request);
     }
 
     private void storeRegistrationId(String registrationID) {
