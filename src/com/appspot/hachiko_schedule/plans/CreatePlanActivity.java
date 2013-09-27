@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -112,7 +113,8 @@ public class CreatePlanActivity extends Activity {
         viewToTimeslots.put(scheduleView, schedule);
 
         // TODO: DPIを考慮した実装 (setPaddingの引数はpx指定)
-        scheduleView.setPadding(15, 7, 5, 7);
+        scheduleView.setPadding(20, 15, 7, 15);
+        scheduleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         scheduleView.setBackgroundColor(Color.WHITE);
         scheduleView.setOnTouchListener(new SwipeToDismissTouchListener(
                 CreatePlanActivity.this,
