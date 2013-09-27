@@ -3,6 +3,8 @@ package com.appspot.hachiko_schedule.plans;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.MainActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
@@ -70,7 +73,42 @@ public class CreatePlanActivity extends Activity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transitToConfirmView();
+                StringBuilder title = new StringBuilder();
+                for (int i = 0; i < friends.length; i++) {
+                    title.append(((FriendIdentifier) friends[i]).getName());
+                    if (i != friends.length - 1) {
+                        title.append(", ");
+                    } else {
+                        title.append("に招待を送信する");
+                    }
+                }
+                StringBuilder content = new StringBuilder();
+                content.append(eventTitleView.getText().toString())
+                        .append(System.getProperty("line.separator"))
+                        .append("候補日:")
+                        .append(System.getProperty("line.separator"));
+                SimpleDateFormat startDateFormat = new SimpleDateFormat("MM/dd HH:mm");
+                SimpleDateFormat endDateFormat = new SimpleDateFormat("HH:mm");
+                for (Timeslot timeslot: suggestingTimeslots) {
+                    content.append(startDateFormat.format(timeslot.getStartDate()))
+                            .append(" - ")
+                            .append(endDateFormat.format(timeslot.getEndDate()))
+                            .append(System.getProperty("line.separator"));
+
+                }
+                AlertDialog dialog = new AlertDialog.Builder(CreatePlanActivity.this)
+                        .setTitle(title.toString())
+                        .setMessage(content.toString())
+                        .setPositiveButton("送信", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(CreatePlanActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
+                                startActivity(intent);
+                            }
+                        }).create();
+                dialog.show();
             }
         });
      }
@@ -148,15 +186,6 @@ public class CreatePlanActivity extends Activity {
                     }
                 },
                 delayInMillis);
-    }
-
-    private void transitToConfirmView() {
-        Intent intent = new Intent(this, ConfirmNewEventActivity.class);
-        intent.putExtra(Constants.EXTRA_KEY_FRIENDS, friends);
-        intent.putExtra(Constants.EXTRA_KEY_EVENT_CANDIDATE_SCHEDULES,
-                suggestingTimeslots.toArray(new Parcelable[0]));
-        intent.putExtra(Constants.EXTRA_KEY_EVENT_TITLE, eventTitleView.getText().toString());
-        startActivity(intent);
     }
 
     private class OnSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
