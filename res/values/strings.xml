@@ -15,10 +15,6 @@
   <string name="hint_on_search_friends">誘いたい人の名前</string>
   <string name="create_event_detail_text">詳細を入力</string>
   <string name="confirm_button_label">確認</string>
-  <string name="other_label">その他</string>
-  <string name="memo_label">メモ</string>
-  <string name="map_label">地図</string>
-  <string name="attachment_label">ファイル添付</string>
   <string name="with_who_label">誰と？</string>
   <string name="what_label">何を？</string>
   <string name="when_label">いつ？</string>

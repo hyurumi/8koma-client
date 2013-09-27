@@ -112,70 +112,23 @@
         </LinearLayout>
       </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="10dp">
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingLeft="20dp"
-              android:id="@+id/schedules"/>
-        </LinearLayout>
-
       <LinearLayout
           android:orientation="vertical"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="3dp"
           android:layout_marginBottom="10dp">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/other_label"/>
-
-        <include layout="@layout/horizontal_line"/>
-
+            android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical">
-
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/memo_label"
-              android:id="@+id/create_event_add_note"
-              android:layout_marginTop="3dp"
-              android:layout_marginBottom="5dp"/>
-
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/map_label"
-              android:id="@+id/create_event_add_map"
-              android:layout_marginTop="3dp"
-              android:layout_marginBottom="5dp"/>
-
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/attachment_label"
-              android:id="@+id/create_event_add_files"
-              android:layout_marginTop="3dp"
-              android:layout_marginBottom="5dp"/>
-        </LinearLayout>
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:id="@+id/schedules"/>
       </LinearLayout>
-
       <LinearLayout
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"

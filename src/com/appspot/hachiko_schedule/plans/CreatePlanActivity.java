@@ -75,8 +75,6 @@ public class CreatePlanActivity extends Activity {
                 transitToConfirmView();
             }
         });
-
-        initOtherOptions();
      }
 
     private void initEventIcons() {
@@ -103,40 +101,6 @@ public class CreatePlanActivity extends Activity {
             HachikoLogger.debug(dateFormat.format(event.getStartDate())
                     + "-" + timeFormat.format(event.getEndDate()) + event.isAllDay());
         }
-    }
-
-    private void initOtherOptions() {
-        findViewById(R.id.create_event_add_note).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(
-                        CreatePlanActivity.this,
-                        "未実装: メモが追加出来るようになる予定",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-        findViewById(R.id.create_event_add_map).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CreatePlanActivity.this,
-                        "未実装: 地図が追加出来るようになる予定",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-
-        findViewById(R.id.create_event_add_files).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CreatePlanActivity.this,
-                        "未実装: ファイルが追加出来るようになる予定",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
     }
 
     private View addNewScheduleTextView(Timeslot schedule) {
