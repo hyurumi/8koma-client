@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.Constants;
-import com.appspot.hachiko_schedule.MainActivity;
+import com.appspot.hachiko_schedule.EventListActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
@@ -102,7 +102,7 @@ public class CreatePlanActivity extends Activity {
                         .setPositiveButton("送信", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(CreatePlanActivity.this, MainActivity.class);
+                                Intent intent = new Intent(CreatePlanActivity.this, EventListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
                                 startActivity(intent);

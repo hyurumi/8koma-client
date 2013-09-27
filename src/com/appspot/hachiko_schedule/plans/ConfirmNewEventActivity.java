@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.Constants;
-import com.appspot.hachiko_schedule.MainActivity;
+import com.appspot.hachiko_schedule.EventListActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
@@ -48,7 +48,7 @@ public class ConfirmNewEventActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         sendInvitations(friends, timeslots);
-                        Intent intent = new Intent(ConfirmNewEventActivity.this, MainActivity.class);
+                        Intent intent = new Intent(ConfirmNewEventActivity.this, EventListActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
                         startActivity(intent);

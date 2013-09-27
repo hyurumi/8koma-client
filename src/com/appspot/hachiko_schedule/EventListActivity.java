@@ -22,10 +22,7 @@ import com.appspot.hachiko_schedule.setup.SetupManager;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * {@link Activity} that is displayed on launch.
- */
-public class MainActivity extends Activity {
+public class EventListActivity extends Activity {
 
     private static final String KEY_SELECTED_TAB = "selected_tab";
     private GoogleCloudMessagingHelper googleCloudMessagingHelper;
@@ -154,7 +151,7 @@ public class MainActivity extends Activity {
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             mFragment = getFragmentManager().findFragmentByTag(mTag);
             if (mFragment == null) {
-                mFragment = Fragment.instantiate(MainActivity.this, mClass.getName());
+                mFragment = Fragment.instantiate(EventListActivity.this, mClass.getName());
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {
                 ft.attach(mFragment);

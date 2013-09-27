@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.appspot.hachiko_schedule.EventListActivity;
 import com.appspot.hachiko_schedule.plans.EventManager;
-import com.appspot.hachiko_schedule.MainActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CalendarIdentifier;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -61,7 +61,7 @@ public class SetupCalendarActivity extends Activity {
     private void transitToNextActivity() {
         Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
         if (intent == null) {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, EventListActivity.class);
         }
         startActivity(intent);
     }
