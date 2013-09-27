@@ -8,10 +8,10 @@ import android.os.Bundle;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.appspot.hachiko_schedule.EventListActivity;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
+import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.android.gms.auth.GoogleAuthException;
@@ -47,7 +47,7 @@ public class GoogleAuthActivity extends Activity {
     private void transitToNextActivity() {
         Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
         if (intent == null) {
-            intent = new Intent(this, EventListActivity.class);
+            intent = new Intent(this, NewEventChooseGuestActivity.class);
         }
         startActivity(intent);
     }
