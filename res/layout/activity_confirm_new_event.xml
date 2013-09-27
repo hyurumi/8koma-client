@@ -62,23 +62,11 @@
             android:layout_height="wrap_content"
             android:text="@string/what_label"/>
         <include layout="@layout/horizontal_line"/>
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical">
-          <ImageView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/confirm_event_event_category_img" />
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="予定の種類(例:飲み会)が表示されていません．"
-              android:gravity="center_vertical"
-              android:id="@+id/confirm_event_event_category_text" />
-        </LinearLayout>
+            android:text="予定の種類(例:飲み会)が表示されていません．"
+            android:id="@+id/confirm_event_event_title" />
       </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

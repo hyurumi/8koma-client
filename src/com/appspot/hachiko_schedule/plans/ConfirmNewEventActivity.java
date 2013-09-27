@@ -8,12 +8,10 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.MainActivity;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.util.GmailSendHelper;
@@ -31,9 +29,9 @@ public class ConfirmNewEventActivity extends Activity {
         final Parcelable[] friends = intent.getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
         final Parcelable[] timeslots =
                 intent.getParcelableArrayExtra(Constants.EXTRA_KEY_EVENT_CANDIDATE_SCHEDULES);
-        int eventType = intent.getIntExtra(Constants.EXTRA_KEY_EVENT_TYPE, -1);
         showFriendsName(friends);
-        showEventInfo(eventType);
+        ((TextView) findViewById(R.id.confirm_event_event_title))
+                .setText(intent.getStringExtra(Constants.EXTRA_KEY_EVENT_TITLE));
         showTimeslots(timeslots);
 
         ((Button) findViewById(R.id.confirm_new_event_back)).setOnClickListener(
@@ -89,18 +87,6 @@ public class ConfirmNewEventActivity extends Activity {
         HachikoLogger.debug("Email sent to ", friend.getEmail());
         gmailSendHelper.sendHtmlMailAsync(
                 "Hachiko invitation", emailBuilder.toString(), friend.getEmail());
-    }
-
-    private void showEventInfo(int eventType) {
-        if (eventType < 0) {
-            return;
-        }
-
-        EventCategory eventCategory = EventCategory.values()[eventType];
-        ((ImageView) findViewById(R.id.confirm_event_event_category_img))
-                .setImageResource(eventCategory.getIconResourceId());
-        ((TextView) findViewById(R.id.confirm_event_event_category_text))
-                .setText(eventCategory.getSimpleDescription());
     }
 
     // TODO: fix. 以下20行くらいCreatePlanActivityからのひどいコピペ

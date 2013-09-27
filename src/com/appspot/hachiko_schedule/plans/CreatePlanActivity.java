@@ -14,13 +14,11 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.data.EventCategory;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
-import com.appspot.hachiko_schedule.ui.BorderedImageView;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;
@@ -32,13 +30,12 @@ import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
  * {@link Activity} for creating new plan.
  */
 public class CreatePlanActivity extends Activity {
-    private GridView eventIcons;
     private Spinner dayAfterSpinner;
     private Spinner timeWordsSpinner;
     private Spinner durationSpinner;
+    private EditText eventTitleView;
     private ViewGroup schedulesContainer;
     private Set<Timeslot> suggestingTimeslots = new HashSet<Timeslot>();
-    private int selectedEventId = -1;
     private Button confirmButton;
     private Parcelable[] friends;
     private ScheduleSuggester scheduleSuggester;
@@ -50,9 +47,9 @@ public class CreatePlanActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
         setTitle(R.string.create_event_detail_text);
-        initEventIcons();
 
         scheduleSuggester = new ScheduleSuggester(this);
+        eventTitleView = (EditText) findViewById(R.id.what_to_do);
         dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);
         timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
@@ -77,12 +74,6 @@ public class CreatePlanActivity extends Activity {
             }
         });
      }
-
-    private void initEventIcons() {
-        eventIcons = (GridView) findViewById(R.id.event_icon_list);
-        eventIcons.setAdapter(new EventIconsAdapter());
-        eventIcons.setOnItemClickListener(new EventIconClickListener());
-    }
 
     private void showFriendsName(Parcelable[] friends) {
         StringBuilder friendsNameToInvite = new StringBuilder();
@@ -164,9 +155,7 @@ public class CreatePlanActivity extends Activity {
         intent.putExtra(Constants.EXTRA_KEY_FRIENDS, friends);
         intent.putExtra(Constants.EXTRA_KEY_EVENT_CANDIDATE_SCHEDULES,
                 suggestingTimeslots.toArray(new Parcelable[0]));
-        if (selectedEventId > 0) {
-            intent.putExtra(Constants.EXTRA_KEY_EVENT_TYPE, selectedEventId);
-        }
+        intent.putExtra(Constants.EXTRA_KEY_EVENT_TITLE, eventTitleView.getText().toString());
         startActivity(intent);
     }
 
@@ -198,56 +187,6 @@ public class CreatePlanActivity extends Activity {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             // Do nothing
-        }
-    }
-
-    private final class EventIconsAdapter extends BaseAdapter {
-        // TODO: fix here
-        // アイコン素材集めるのがめんどいので，アイコンが存在する6つだけ表示している
-        private final int[] EVENT_ICONS = new int[6];
-        {
-            for (int i = 0; i < 6; i++) {
-                EVENT_ICONS[i] = EventCategory.values()[i].getIconResourceId();
-            }
-        }
-
-        public int getCount() {
-            return EVENT_ICONS.length;
-        }
-
-        public Object getItem(int position) {
-            return null;
-        }
-
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            BorderedImageView imageView;
-            if (convertView == null) {
-                imageView = new BorderedImageView(CreatePlanActivity.this);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setBorderColor(Color.WHITE);
-            } else {
-                imageView = (BorderedImageView) convertView;
-            }
-            imageView.setImageResource(EVENT_ICONS[position]);
-            return imageView;
-        }
-    }
-
-    private class EventIconClickListener implements AdapterView.OnItemClickListener {
-        private BorderedImageView selectedImageView;
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (selectedImageView != null) {
-                selectedImageView.setBorderColor(Color.WHITE);
-            }
-            selectedImageView = (BorderedImageView) view;
-            selectedImageView.setBorderColor(Color.BLACK);
-            selectedEventId = position;
         }
     }
 }

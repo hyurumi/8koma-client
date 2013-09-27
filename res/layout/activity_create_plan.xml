@@ -53,13 +53,11 @@
 
         <include layout="@layout/horizontal_line"/>
 
-        <GridView
-            android:id="@+id/event_icon_list"
+        <EditText
+            android:id="@+id/what_to_do"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numColumns="6"
-            android:verticalSpacing="2dp"
-            android:horizontalSpacing="2dp"/>
+            android:text="@string/what_to_do_default" />
       </LinearLayout>
 
       <LinearLayout
