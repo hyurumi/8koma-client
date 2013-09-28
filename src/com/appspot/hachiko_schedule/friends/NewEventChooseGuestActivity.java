@@ -3,9 +3,10 @@ package com.appspot.hachiko_schedule.friends;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.widget.*;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ListView;
+import android.widget.SearchView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
@@ -19,23 +20,15 @@ public class NewEventChooseGuestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event_choose_guest);
+        SearchView searchView = (SearchView) findViewById(R.id.search_friend);
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchTextListener());
+        searchView.setSubmitButtonEnabled(false);
+
         ListView friendListView = (ListView) findViewById(R.id.contact_list);
         // 安全でないキャスト… ListView#setFilterTextを直に叩くと出てくるポップアップを表示したくないため，
         // Filterを直に触っている．たぶんListViewのサブクラスをよしなにつくるほうがベター
         filter = ((Filterable) friendListView.getAdapter()).getFilter();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.new_plan_serch_friends, menu);
-        SearchView searchView
-                = (SearchView) menu.findItem(R.id.action_search_friends).getActionView();
-        searchView.setIconifiedByDefault(false);
-        searchView.setQueryHint(getString(R.string.hint_on_search_friends));
-        searchView.setOnQueryTextListener(new SearchTextListener());
-        searchView.setSubmitButtonEnabled(false);
-        return super.onCreateOptionsMenu(menu);
     }
 
     private class SearchTextListener implements SearchView.OnQueryTextListener {
