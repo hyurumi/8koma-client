@@ -7,7 +7,6 @@ import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 
 /**
  * Viewを横スワイプで削除，を実現するための{@link android.view.View.OnTouchListener}. 下リンクの実装をもとに
@@ -19,7 +18,7 @@ import android.view.ViewConfiguration;
  *
  * {@see https://www.youtube.com/watch?v=NewCSg2JKLk}
  */
-public class SwipeToDismissTouchListener implements View.OnTouchListener {
+public class SwipeToDismissTouchListener extends HorizontalSwipeListener {
 
     /**
      * スワイプとそれに伴うアニメーションを監視するためのリスナ
@@ -67,12 +66,7 @@ public class SwipeToDismissTouchListener implements View.OnTouchListener {
     // 要素を画面幅と同じだけ動かすのにかかる時間でアニメーション速度を指定
     private static final int SWIPE_DURATION_MSEC = 250;
 
-    private final Context context;
     private SwipeAndDismissEventListener swipeAndDismissEventListener;
-    private boolean itemPressed = false;
-    private boolean swiping = false;
-    private float downX;
-    private int swipeSlop = -1;
 
     public SwipeToDismissTouchListener(Context context) {
         this(context, new SwipeAndDismissEventListenerAdapter());
@@ -80,64 +74,31 @@ public class SwipeToDismissTouchListener implements View.OnTouchListener {
 
     public SwipeToDismissTouchListener(
             Context context, SwipeAndDismissEventListener swipeAndDismissEventListener) {
-        this.context = context;
+        super(context);
         this.swipeAndDismissEventListener = swipeAndDismissEventListener;
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (swipeSlop < 0) {
-            swipeSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        }
+    protected void onSwipeMove(View v, MotionEvent e) {
+        float deltaXAbs = Math.abs(e.getX() + v.getTranslationX() - getSwipeStartX());
+        v.setAlpha(1 - deltaXAbs / v.getWidth());
+    }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (itemPressed) {
-                    return false;
-                }
-                itemPressed = true;
-                downX = event.getX();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                resetAlphaAndTranslation(v);
-                itemPressed = false;
-                break;
-            case MotionEvent.ACTION_MOVE:{
-                float x = event.getX() + v.getTranslationX();
-                float deltaXAbs = Math.abs(x - downX);
-                if (!swiping && deltaXAbs > swipeSlop) {
-                    swiping = true;
-                    swipeAndDismissEventListener.onSwipeStart(v);
-                }
-                if (swiping) {
-                    v.setTranslationX(x -downX);
-                    v.setAlpha(1 - deltaXAbs / v.getWidth());
-                }
-                break;
-            }
-            case MotionEvent.ACTION_UP:{
-                if (swiping) {
-                    executeSwipeAnimation(v, event.getX());
-                }
-                itemPressed = false;
-                break;
-            }
-            default:
-                return false;
-        }
-
+    @Override
+    protected boolean onSwipeEnd(View v, MotionEvent e) {
+        executeSwipeAnimation(v, e.getX());
         return true;
     }
 
     private void executeSwipeAnimation(final View view, float eventX) {
         float x = eventX + view.getTranslationX();
-        float deltaXAbs = Math.abs(x - downX);
+        float deltaXAbs = Math.abs(x - getSwipeStartX());
         float fractionCovered;
         float endX;
         final boolean remove;
         if (deltaXAbs / view.getWidth() > DELTA_TO_DISMISS_THRESHOLD) {
             fractionCovered = deltaXAbs / view.getWidth();
-            endX = x < downX ? -view.getWidth() : view.getWidth();
+            endX = x < getSwipeStartX() ? -view.getWidth() : view.getWidth();
             remove = true;
         } else {
             fractionCovered = 1 - (deltaXAbs / view.getWidth());
@@ -148,6 +109,7 @@ public class SwipeToDismissTouchListener implements View.OnTouchListener {
         Animator animator = ObjectAnimator.ofPropertyValuesHolder(view,
                 PropertyValuesHolder.ofFloat("alpha", remove ? 0f : 1f),
                 PropertyValuesHolder.ofFloat("translationX", endX));
+        animator.setDuration(duration);
         animator.addListener(new AnimatorListenerAdapter() {
 
             @Override
