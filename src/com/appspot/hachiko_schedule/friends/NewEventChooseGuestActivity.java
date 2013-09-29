@@ -11,7 +11,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.SearchView;
-import com.appspot.hachiko_schedule.EventListActivity;
+import com.appspot.hachiko_schedule.plans.EventListActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.util.HachikoLogger;

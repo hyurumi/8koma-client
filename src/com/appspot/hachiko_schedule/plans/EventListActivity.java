@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule;
+package com.appspot.hachiko_schedule.plans;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
-import com.appspot.hachiko_schedule.plans.SettledEventsFragment;
-import com.appspot.hachiko_schedule.plans.UnsettledEventsFragment;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
 import com.appspot.hachiko_schedule.setup.SetupManager;
