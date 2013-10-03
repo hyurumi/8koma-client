@@ -139,12 +139,30 @@ public class ContactManager {
                 userId);
     }
 
+    /**
+     * '主要な'Eメールアドレスを引っ張る．主要とは，1) Gmailである，2) 1件めのデータである のいずれか
+     */
     private String queryPrimaryEmailAddress(String userId) {
-        return queryPrimaryData(
+        Cursor cursor = context.getContentResolver().query(
                 CommonDataKinds.Email.CONTENT_URI,
-                CommonDataKinds.Email.ADDRESS,
-                CommonDataKinds.Email.CONTACT_ID,
-                userId);
+                new String[]{CommonDataKinds.Email.ADDRESS},
+                CommonDataKinds.Email.CONTACT_ID + " = ?",
+                new String[]{userId},
+                null);
+        String ret = null;
+        while (cursor.moveToNext()) {
+            String data = cursor.getString(cursor.getColumnIndex(CommonDataKinds.Email.ADDRESS));
+            if (data != null) {
+                if (ret == null) {
+                    ret = data;
+                } else if (data.contains("@gmail.com")) {
+                    cursor.close();
+                    return data;
+                }
+            }
+        }
+        cursor.close();
+        return ret;
     }
 
     private String queryPrimaryData(Uri uri, String key, String leftOp, String userId) {
