@@ -14,6 +14,7 @@ import android.widget.SearchView;
 import com.appspot.hachiko_schedule.plans.EventListActivity;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
+import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 /**
@@ -25,6 +26,13 @@ public class NewEventChooseGuestActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intentForSetup = new SetupManager(this).intentForRequiredSetupIfAny();
+        if (intentForSetup != null) {
+            startActivity(intentForSetup);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_new_event_choose_guest);
         SearchView searchView = (SearchView) findViewById(R.id.search_friend);
         searchView.setIconifiedByDefault(false);
