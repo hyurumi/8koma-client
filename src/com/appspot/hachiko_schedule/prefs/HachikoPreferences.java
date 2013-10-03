@@ -38,11 +38,13 @@ public class HachikoPreferences {
     public static final Set<String> CALENDARS_TO_USE_DEFAULT = Collections.emptySet();
     public static final String KEY_CALENDARS_NOT_TO_USE = "calendars_not_to_use";
     public static final Set<String> CALENDARS_NOT_TO_USE_DEFAULT = Collections.emptySet();
+    public static final String KEY_SESSION_KEY = "session_key";
+    public static final String KEY_SESSION_EXPIRES = "session_expires";
     public static final String KEY_MY_HACHIKO_ID = "my_hachiko_id";
     public static final String KEY_USE_FAKE_CONTACT = "use_fake_contact";
     public static final boolean USE_FAKE_CONTACT_DEFAULT = false;
     public static final String KEY_USE_FAKE_REQUEST_QUEUE = "use_fake_request_queue";
-    public static final boolean USE_FAKE_REQUEST_QUEUE_DEFAULT = true;
+    public static final boolean USE_FAKE_REQUEST_QUEUE_DEFAULT = false;
 
     public static final String KEY_GCM_REGISTRATION_ID = "gcm_registration_id";
     public static final String GCM_REGISTRATION_ID_DEFAULT = "";

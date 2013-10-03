@@ -7,27 +7,30 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
-import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.common.collect.ImmutableMap;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class GoogleAuthActivity extends Activity {
     private static final int CHOOSE_ACCOUNT_RESULT_CODE = 1001;
     private static final int REQUEST_AUTH_RESULT_CODE = 1002;
+    private static final String PROFILE_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
+    private static final String OWN_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     private static final String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
     private static final String EMAIL_SCOPE = "https://mail.google.com/";
-    private static final String SCOPE = "oauth2:" + CALENDAR_SCOPE + " " + EMAIL_SCOPE;
+    private static final String SCOPE = "oauth2:" + PROFILE_SCOPE + " " + OWN_EMAIL_SCOPE + " "
+            + CALENDAR_SCOPE + " " + EMAIL_SCOPE;
     private static final String COM_GOOGLE = "com.google";
 
     private GoogleAuthPreferences authPreferences;
@@ -124,21 +127,25 @@ public class GoogleAuthActivity extends Activity {
     }
 
     private void sendRegisterRequest(String gmail, String authToken) {
-        Map<String, String> params = ImmutableMap.of("gmail", gmail, "google_token", authToken);
-        StringRequest request = VolleyRequestFactory.newStringRequest(
-                UserAPI.REGISTER,
+        JSONObject params = JSONUtils.jsonObject("gmail", gmail, "google_token", authToken);
+        HachikoLogger.debug("register__req");
+        JsonRequest request = VolleyRequestFactory.registerRequest(
+                this,
                 params,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        HachikoLogger.debug("Registration completed");
+                        HachikoLogger.debug("Registration completed: ", s);
+                        HachikoPreferences.getDefaultEditor(getApplicationContext())
+                                .putString(HachikoPreferences.KEY_MY_HACHIKO_ID, s)
+                                .commit();
                         transitToNextActivity();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HachikoLogger.error("Hachiko registration error", volleyError);
+                        HachikoLogger.error("Hachiko registration error ", volleyError);
                     }
                 }
         );

@@ -1,10 +1,13 @@
 package com.appspot.hachiko_schedule.apis;
 
+import android.content.Context;
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.google.common.base.Joiner;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -33,5 +36,19 @@ public class VolleyRequestFactory {
             default:
                 throw new UnsupportedOperationException("Unknown request type " + api.getMethod());
         }
+    }
+
+    static public JSONStringRequest registerRequest(
+            final Context context, JSONObject params,
+            Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        return new JSONStringRequest(
+                UserAPI.REGISTER.getMethod(), UserAPI.REGISTER.getUrl(), params,
+                responseListener, errorListener) {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                new HachikoCookieManager(context).saveSessionCookie(response);
+                return super.parseNetworkResponse(response);
+            }
+        };
     }
 }
