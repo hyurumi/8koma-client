@@ -6,6 +6,8 @@ import com.android.volley.NetworkResponse;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HachikoCookieManager {
@@ -45,5 +47,31 @@ public class HachikoCookieManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return セッションIDを付与して返す
+     */
+    public Map<String, String> addSessionCookie(Map<String, String> headers) {
+        String sessionId = HachikoPreferences.getDefault(context)
+                .getString(HachikoPreferences.KEY_SESSION_KEY, "");
+        if (sessionId.length() == 0) {
+            HachikoLogger.error("Session isn't available");
+            return headers;
+        }
+        if (headers == null || headers.equals(Collections.emptyMap())) {
+            headers = new HashMap<String, String>();
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(SESSION_KEY);
+        builder.append("=");
+        builder.append(sessionId);
+        if (headers.containsKey(COOKIE_KEY)) {
+            builder.append("; ");
+            builder.append(headers.get(COOKIE_KEY));
+        }
+        headers.put(COOKIE_KEY, builder.toString());
+        return headers;
     }
 }
