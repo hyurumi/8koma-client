@@ -94,6 +94,19 @@ public class UserTableHelper {
         return email;
     }
 
+    public long getHachikoId(long localContactId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("select " + HACHIKO_ID + " from " + USER_TABLE_NAME + " where "
+                + LOCAL_CONTACT_ID + "=" + localContactId + " LIMIT 1;", null);
+        if (!c.moveToFirst()) {
+            c.close();
+            return 0L;
+        }
+        long hachikoId = c.getLong(c.getColumnIndex(HACHIKO_ID));
+        c.close();
+        return hachikoId;
+    }
+
     public String getUserName() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("select " + HACHIKO_ID + " from " + USER_TABLE_NAME + ";", null);

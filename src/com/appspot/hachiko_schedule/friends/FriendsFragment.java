@@ -11,7 +11,9 @@ import android.widget.*;
 import com.appspot.hachiko_schedule.*;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.*;
 
@@ -43,10 +45,14 @@ public class FriendsFragment extends Fragment {
             public void onClick(View v) {
                 Set<FriendIdentifier> friendsToInvite = new HashSet<FriendIdentifier>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
+                UserTableHelper tableHelper = new UserTableHelper(getActivity());
                 for (FriendItem entry: adapter.getSelectedEntries()) {
-                    // TODO: put meaningful ID
-                    friendsToInvite.add(
-                            new FriendIdentifier(/* dummy Id */0, entry.getEmailAddress(),
+                    long hachikoId = tableHelper.getHachikoId(entry.getLocalContactId());
+                    if (hachikoId == 0) {
+                        //TODO: たぶんサーバからHachikoID（まだ）取得できてないので，ちゃんと対応する必要
+                        HachikoLogger.error("Invlaid hachiko ID!!");
+                    }
+                    friendsToInvite.add(new FriendIdentifier(hachikoId, entry.getEmailAddress(),
                                     entry.getDisplayName()));
                 }
                 intent.putExtra(

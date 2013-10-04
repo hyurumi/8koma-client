@@ -8,15 +8,19 @@ import com.google.common.base.Preconditions;
  * サーバとの通信に使われる，友達を識別するためのクラス
  */
 public class FriendIdentifier implements Parcelable {
-    long id;
+    long hachikoId;
     String email;
     String name;
 
-    public FriendIdentifier(long id, String email, String name) {
+    public FriendIdentifier(long hachikoId, String email, String name) {
         Preconditions.checkNotNull(name);
-        this.id = id;
+        this.hachikoId = hachikoId;
         this.email = email;
         this.name = name;
+    }
+
+    public long getHachikoId() {
+        return hachikoId;
     }
 
     public void setName(String name) {
@@ -33,7 +37,7 @@ public class FriendIdentifier implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeLong(hachikoId);
         dest.writeString(email);
         dest.writeString(name);
     }
