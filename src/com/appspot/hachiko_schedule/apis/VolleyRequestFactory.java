@@ -42,7 +42,7 @@ public class VolleyRequestFactory {
             final Context context, JSONObject params,
             Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
         return new JSONStringRequest(
-                UserAPI.REGISTER.getMethod(), UserAPI.REGISTER.getUrl(), params,
+                context, UserAPI.REGISTER.getMethod(), UserAPI.REGISTER.getUrl(), params,
                 responseListener, errorListener) {
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {

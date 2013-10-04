@@ -1,7 +1,10 @@
 package com.appspot.hachiko_schedule.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateUtils {
 
@@ -13,5 +16,12 @@ public class DateUtils {
         calendar.add(Calendar.DAY_OF_MONTH, days);
         calendar.add(Calendar.HOUR, hours);
         return new Date(calendar.getTimeInMillis());
+    }
+
+    public static String parseAsISO8601(Date date) {
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(date);
     }
 }

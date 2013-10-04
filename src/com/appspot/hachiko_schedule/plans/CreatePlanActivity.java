@@ -14,14 +14,24 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.JSONStringRequest;
+import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
+import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Preconditions;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,6 +53,7 @@ public class CreatePlanActivity extends Activity {
     private ScheduleSuggester scheduleSuggester;
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
+    private long[] friendIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,10 @@ public class CreatePlanActivity extends Activity {
         Preconditions.checkNotNull(friends);
         Preconditions.checkState(friends.length != 0);
         showFriendsName(friends);
+        friendIds = new long[friends.length];
+        for (int i = 0; i < friends.length; i++) {
+            friendIds[i] = ((FriendIdentifier) friends[i]).getHachikoId();
+        }
 
         debugQueryEvents();
 
@@ -101,6 +116,7 @@ public class CreatePlanActivity extends Activity {
                         .setPositiveButton("送信", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                sendCreatePlanRequest();
                                 Intent intent = new Intent(CreatePlanActivity.this, EventListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
@@ -111,6 +127,48 @@ public class CreatePlanActivity extends Activity {
             }
         });
      }
+
+    private void sendCreatePlanRequest() {
+        JSONObject param = new JSONObject();
+        try {
+            JSONArray dates = new JSONArray();
+            for (Timeslot timeslot: suggestingTimeslots) {
+                JSONObject timeslotJson = new JSONObject();
+                timeslotJson.put("start", DateUtils.parseAsISO8601(timeslot.getStartDate()));
+                timeslotJson.put("end", DateUtils.parseAsISO8601(timeslot.getEndDate()));
+                dates.put(timeslotJson);
+            }
+            JSONArray friendIdsJson = new JSONArray();
+            for (long friendId: friendIds) {
+                friendIdsJson.put(friendId);
+            }
+            param.put("friendsId", friendIdsJson);
+            param.put("candidates", dates);
+            param.put("title", eventTitleView.getText().toString());
+        } catch (JSONException e) {
+            HachikoLogger.error("JSON error/Never happen", e);
+            return;
+        }
+        HachikoLogger.debug(param);
+        Request request = new JSONStringRequest(this,
+                PlanAPI.NEW_PLAN.getMethod(),
+                PlanAPI.NEW_PLAN.getUrl(),
+                param,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("plan successfully created");
+                        HachikoLogger.debug(s);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("plan creation error", volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(request);
+    }
 
     private void showFriendsName(Parcelable[] friends) {
         StringBuilder friendsNameToInvite = new StringBuilder();
