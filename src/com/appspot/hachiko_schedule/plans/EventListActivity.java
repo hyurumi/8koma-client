@@ -148,5 +148,15 @@ public class EventListActivity extends Activity {
 
             return convertView;
         }
+
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return false;
+        }
     }
 }
