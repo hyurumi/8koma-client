@@ -43,6 +43,7 @@ public class ContactManager {
     public List<FriendItem> getListOfContactEntries() {
         List entries = new ArrayList<FriendItem>();
         Cursor cursor = queryAllContacts(Contacts.DISPLAY_NAME);
+        int idIndex = cursor.getColumnIndex(Contacts._ID);
         int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
         while( cursor.moveToNext()){
@@ -58,6 +59,7 @@ public class ContactManager {
             }
 
             entries.add(new FriendItem(
+                    cursor.getLong(idIndex),
                     cursor.getString(nameIndex),
                     uriString == null ? null : Uri.parse(uriString),
                     email));

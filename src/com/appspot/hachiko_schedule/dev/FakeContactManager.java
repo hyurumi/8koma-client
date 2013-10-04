@@ -31,11 +31,12 @@ public class FakeContactManager extends ContactManager {
             String displayName = null;
             final String NAME_TAG = "name";
             final String RECORD_TAG = "record";
+            int fakeId = 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && NAME_TAG.equals(parser.getName())) {
                     displayName = parser.nextText();
                 } else if (eventType == XmlPullParser.END_TAG && RECORD_TAG.equals(parser.getName())) {
-                    listOfContacts.add(new FriendItem(displayName, null, "hoge@fuga.js"));
+                    listOfContacts.add(new FriendItem(fakeId++, displayName, null, "hoge@fuga.js"));
                 }
                 eventType = parser.next();
             }

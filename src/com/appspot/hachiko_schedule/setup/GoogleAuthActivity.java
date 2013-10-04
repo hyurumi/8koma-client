@@ -136,6 +136,7 @@ public class GoogleAuthActivity extends Activity {
                     @Override
                     public void onResponse(String s) {
                         HachikoLogger.debug("Registration completed: ", s);
+                        new SetupUserTableTask(getApplicationContext()).execute();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
                                 .putString(HachikoPreferences.KEY_MY_HACHIKO_ID, s)
                                 .commit();

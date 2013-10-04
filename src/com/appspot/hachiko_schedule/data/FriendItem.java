@@ -6,14 +6,20 @@ import android.net.Uri;
  * 友達を表すアイコン画像つきデータクラス
  */
 public class FriendItem {
+    private long localContactId;
     private String displayName;
     private Uri photoUri;
     private String emailAddress;
 
-    public FriendItem (String displayName, Uri photoUri, String emailAddress) {
+    public FriendItem (long localContactId, String displayName, Uri photoUri, String emailAddress) {
+        this.localContactId = localContactId;
         this.displayName = displayName;
         this.photoUri = photoUri;
         this.emailAddress = emailAddress;
+    }
+
+    public long getLocalContactId() {
+        return localContactId;
     }
 
     public String getDisplayName() {
