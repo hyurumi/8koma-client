@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
 
@@ -50,9 +52,14 @@ public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
 
     private JSONArray constructApiParams(List<FriendItem> friends) {
         JSONArray apiParams = new JSONArray();
+        Set<String> knownEmailAddress = new HashSet<String>();
         for (FriendItem friend: friends) {
             JSONObject object = new JSONObject();
             try {
+                if (knownEmailAddress.contains(friend.getEmailAddress())) {
+                    continue;
+                }
+                knownEmailAddress.add(friend.getEmailAddress());
                 object.put("gmail", friend.getEmailAddress());
                 object.put("contactId", friend.getLocalContactId());
                 apiParams.put(object);
