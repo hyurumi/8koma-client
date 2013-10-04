@@ -11,9 +11,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.SearchView;
-import com.appspot.hachiko_schedule.plans.EventListActivity;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.plans.EventListActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
+import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
@@ -32,6 +33,7 @@ public class NewEventChooseGuestActivity extends Activity {
             finish();
             return;
         }
+        initGoogleCloudMessagingIfNecessary();
 
         setContentView(R.layout.activity_new_event_choose_guest);
         SearchView searchView = (SearchView) findViewById(R.id.search_friend);
@@ -63,6 +65,17 @@ public class NewEventChooseGuestActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void initGoogleCloudMessagingIfNecessary() {
+        GoogleCloudMessagingHelper googleCloudMessagingHelper = new GoogleCloudMessagingHelper(this);
+        if (!googleCloudMessagingHelper.checkPlayServices()) {
+            return;
+        }
+        String registrationId = googleCloudMessagingHelper.getRegistrationId();
+        if (registrationId.isEmpty()) {
+            googleCloudMessagingHelper.registerInBackground();
         }
     }
 

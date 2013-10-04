@@ -4,21 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.apis.JSONStringRequest;
 import com.appspot.hachiko_schedule.apis.UserAPI;
-import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.common.collect.ImmutableMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class GoogleCloudMessagingHelper {
     private final Activity activity;
@@ -99,9 +99,16 @@ public class GoogleCloudMessagingHelper {
 
     private void sendRegistrationIdToServer(String gcmRegistrationId) {
         HachikoLogger.debug(gcmRegistrationId);
-        Map<String, String> params = ImmutableMap.of("registration_id", gcmRegistrationId);
-        StringRequest request = VolleyRequestFactory.newStringRequest(
-                UserAPI.REGISTER_GCM_ID,
+        JSONObject params = new JSONObject();
+        try {
+            params.put("registration_id", gcmRegistrationId);
+        } catch (JSONException e) {
+            HachikoLogger.error("registration_id error", e);
+        }
+        Request request = new JSONStringRequest(
+                activity,
+                UserAPI.REGISTER_GCM_ID.getMethod(),
+                UserAPI.REGISTER_GCM_ID.getUrl(),
                 params,
                 new Response.Listener<String>() {
                     @Override

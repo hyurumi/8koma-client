@@ -16,7 +16,6 @@ import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
-import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.google.common.collect.ImmutableList;
 
@@ -35,8 +34,6 @@ public class EventListActivity extends Activity {
             finish();
             return;
         }
-
-        initGoogleCloudMessagingIfNecessary();
 
         setContentView(R.layout.activity_event_list);
         ((ListView) findViewById(R.id.event_list)).setAdapter(new PlanAdapter(this,
@@ -76,17 +73,6 @@ public class EventListActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         checkNewEvent(intent);
-    }
-
-    private void initGoogleCloudMessagingIfNecessary() {
-        GoogleCloudMessagingHelper googleCloudMessagingHelper = new GoogleCloudMessagingHelper(this);
-        if (!googleCloudMessagingHelper.checkPlayServices()) {
-            return;
-        }
-        String registrationId = googleCloudMessagingHelper.getRegistrationId();
-        if (registrationId.isEmpty()) {
-            googleCloudMessagingHelper.registerInBackground();
-        }
     }
 
     private void checkNewEvent(Intent intent) {
