@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendItem;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -21,10 +22,12 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
     private LayoutInflater inflater;
     private Set<String> filteredItem = new HashSet<String>();
     private List<FriendItem> entries;
+    private UserTableHelper userTableHelper;
 
     public FriendsAdapter(Context context, int resource, List<FriendItem> entries) {
         super(context, resource, entries);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        userTableHelper = new UserTableHelper(context);
         this.entries = entries;
     }
 
@@ -34,6 +37,13 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         FriendItem item = getItem(position);
         ((TextView) view.findViewById(R.id.friend_name)).setText(item.getDisplayName());
         ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
+        String emailOrHachikoUser;
+        if (userTableHelper.isHachikoUser(item.getLocalContactId())) {
+            emailOrHachikoUser = getContext().getResources().getString(R.string.hachiko_user);
+        } else {
+            emailOrHachikoUser = userTableHelper.queryPrimaryEmail(item.getLocalContactId());
+        }
+        ((TextView) view.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
         applyFilterToIcon(filteredItem.contains(item.getDisplayName()), view, position);
         return view;
     }
@@ -52,14 +62,15 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
 
     public void applyFilterToIcon(boolean apply, View wrapperView, int position) {
         ImageView imageView = (ImageView) wrapperView.findViewById(R.id.friend_picture);
+        View nameView = wrapperView.findViewById(R.id.friend_name_container);
         TextView textView = (TextView) wrapperView.findViewById(R.id.friend_name);
         if (apply) {
             imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
-            textView.setBackgroundColor(Color.GRAY);
+            nameView.setBackgroundColor(Color.GRAY);
             filteredItem.add(textView.getText().toString());
         } else {
             imageView.clearColorFilter();
-            textView.setBackgroundColor(Color.WHITE);
+            nameView.setBackgroundColor(Color.WHITE);
             filteredItem.remove(textView.getText().toString());
         }
     }

@@ -9,6 +9,7 @@
   <string name="setup_login_confirm">次へ進む</string>
   <string name="settled_schedules">確定済み</string>
   <string name="unsettled_schedules">調整中</string>
+  <string name="hachiko_user">Hachikoユーザ</string>
   <string name="action_launch_calendar_app">外部カレンダーアプリ</string>
   <string name="action_create_event">新しい予定</string>
   <string name="action_config">設定</string>
