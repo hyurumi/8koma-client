@@ -1,0 +1,5 @@
+[
+  {"registered":false,"hachikoId":1, "contactId":76},
+  {"registered":true,"hachikoId":2, "contactId":13},
+  {"registered":true,"hachikoId":3, "contactId":58}
+]

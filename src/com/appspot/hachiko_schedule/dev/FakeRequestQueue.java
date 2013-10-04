@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.dev;
 
+import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -12,8 +13,8 @@ import com.appspot.hachiko_schedule.util.HachikoLogger;
  * {@link FakeHttpStack}を利用して偽の通信結果を返す{@link RequestQueue}.あちこちで適当にログを吐く．
  */
 public class FakeRequestQueue extends RequestQueue {
-    public FakeRequestQueue() {
-        super(new NoCache(), new BasicNetwork(new FakeHttpStack()));
+    public FakeRequestQueue(Context context) {
+        super(new NoCache(), new BasicNetwork(new FakeHttpStack(context)));
         start();
     }
 

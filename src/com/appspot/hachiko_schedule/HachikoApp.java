@@ -15,12 +15,13 @@ import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 public class HachikoApp extends Application {
     private static Context appContext;
     private static RequestQueue requestQueue;
-    private static FakeRequestQueue fakeRequestQueue = new FakeRequestQueue();
+    private static FakeRequestQueue fakeRequestQueue;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
+        fakeRequestQueue = new FakeRequestQueue(appContext);
         requestQueue = Volley.newRequestQueue(appContext);
         requestQueue.start();
     }

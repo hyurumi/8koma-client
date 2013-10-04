@@ -1,10 +1,15 @@
 package com.appspot.hachiko_schedule.dev;
 
+import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.StringRequest;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,6 +20,8 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +33,12 @@ import java.util.Map;
 /**
  * ローカルでのデバッグ用に，メモリ上 or リソース上の値を返す{@link HttpStack}.
  */
-public class FakeHttpStack implements HttpStack {
+class FakeHttpStack implements HttpStack {
+    private final Context context;
+
+    FakeHttpStack(Context context) {
+        this.context = context;
+    }
 
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> stringStringMap)
@@ -51,11 +63,36 @@ public class FakeHttpStack implements HttpStack {
         );
     }
 
+    /**
+     * /res/raw以下のファイルを利用して偽のレスポンスを返す
+     */
     private HttpEntity createEntity(Request request) throws UnsupportedEncodingException {
-        // TODO: きめうちの値を返すのではなく，例えばrequest.getUrl()とかを見て，適切な値を返す
+        String resourceName = constructFakeResponseFileName(request);
+        int resourceId = context.getResources().getIdentifier(
+                resourceName, "raw", context.getApplicationContext().getPackageName());
+        if (resourceId == 0) {
+            HachikoLogger.error("No fake file named " + resourceName);
+        }
+        InputStream stream = context.getResources().openRawResource(resourceId);
+        try {
+            String string = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
+            return new StringEntity(string);
+        } catch (IOException e) {
+            HachikoLogger.error("error reading " + resourceName, e);
+        }
+
+        // 適切なリソースが無いので，適当に返す
         if (request instanceof StringRequest) {
             return new StringEntity("100");
         }
         return new StringEntity(" {\"a\":1,\"b\":2,\"c\":3,\"d\":4,\"e\":5}");
+    }
+
+    private String constructFakeResponseFileName(Request request) {
+        String reqUrl = request.getUrl();
+        String apiName = reqUrl.substring(HachikoAPI.BASE.length()).split("/", 2)[0];
+        // Note: request.getmethod()を参考にしようと思ったが，Method.DEPRECATED_GET_OR_POSTとかややこいので
+        // とりあえずURLのみ見る
+        return "fake_res_" + apiName;
     }
 }
