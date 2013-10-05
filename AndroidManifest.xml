@@ -3,62 +3,80 @@
           package="com.appspot.hachiko_schedule"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17" />
-    <permission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"
-                android:protectionLevel="signature" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-    <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
-    <uses-permission android:name="android.permission.READ_PROFILE"></uses-permission>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-premission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher"
-        android:name="com.appspot.hachiko_schedule.HachikoApp">
-        <activity android:name=".plans.EventListActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light">
-        </activity>
-      <activity android:name=".setup.GoogleAuthActivity"
-                android:label="@string/app_name"
-                android:theme="@android:style/Theme.Holo.Light">
-      </activity>
-      <activity android:name=".setup.SetupCalendarActivity"
-                android:label="@string/app_name"
-                android:theme="@android:style/Theme.Holo.Light">
-      </activity>
-      <activity android:name=".plans.CreatePlanActivity"
-                android:label="@string/app_name"
-                android:theme="@android:style/Theme.Holo.Light"
-                android:windowSoftInputMode="stateHidden">
-        </activity>
-        <activity android:name=".friends.NewEventChooseGuestActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light" >
-          <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-          </intent-filter>
-        </activity>
-      <activity android:name=".prefs.MainPreferenceActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light">
-        </activity>
-        <activity android:name=".dev.NotImplementedActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.Holo.Light">
-        </activity>
-        <receiver
-            android:name=".push.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-              <category android:name="com.example.gcm" />
-            </intent-filter>
-        </receiver>
-        <service android:name=".push.GcmIntentService" />
-    </application>
+
+  <uses-sdk
+      android:minSdkVersion="14"
+      android:targetSdkVersion="17"/>
+  <permission
+      android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"
+      android:protectionLevel="signature"/>
+
+  <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+  <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+  <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+  <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+  <uses-permission android:name="android.permission.READ_PROFILE"></uses-permission>
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+  <uses-premission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"/>
+
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+
+  <application
+      android:label="@string/app_name"
+      android:icon="@drawable/ic_launcher"
+      android:name="com.appspot.hachiko_schedule.HachikoApp">
+    <activity
+        android:name=".plans.EventListActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+    </activity>
+    <activity
+        android:name=".setup.GoogleAuthActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+    </activity>
+    <activity
+        android:name=".setup.SetupCalendarActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+    </activity>
+    <activity
+        android:name=".plans.CreatePlanActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light"
+        android:windowSoftInputMode="stateHidden">
+    </activity>
+    <activity
+        android:name=".friends.NewEventChooseGuestActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity
+        android:name=".prefs.MainPreferenceActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+    </activity>
+    <activity
+        android:name=".dev.NotImplementedActivity"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light">
+    </activity>
+
+    <receiver
+        android:name=".push.GcmBroadcastReceiver"
+        android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+        <category android:name="com.example.gcm"/>
+      </intent-filter>
+    </receiver>
+    <service android:name=".push.GcmIntentService"/>
+  </application>
 </manifest>
