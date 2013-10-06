@@ -131,8 +131,8 @@ public class CreatePlanActivity extends Activity {
             JSONArray dates = new JSONArray();
             for (Timeslot timeslot: suggestingTimeslots) {
                 JSONObject timeslotJson = new JSONObject();
-                timeslotJson.put("start", DateUtils.parseAsISO8601(timeslot.getStartDate()));
-                timeslotJson.put("end", DateUtils.parseAsISO8601(timeslot.getEndDate()));
+                timeslotJson.put("start", DateUtils.formatAsISO8601(timeslot.getStartDate()));
+                timeslotJson.put("end", DateUtils.formatAsISO8601(timeslot.getEndDate()));
                 dates.put(timeslotJson);
             }
             JSONArray friendIdsJson = new JSONArray();
