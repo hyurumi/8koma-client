@@ -14,7 +14,6 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
 /**
@@ -57,7 +56,6 @@ public class UnfixedPlanView extends LinearLayout {
             CandidateDateAnswerView answerView = new CandidateDateAnswerView(getContext());
             answerView.setCandidate(candidateDate);
             candidateDateContainer.addView(answerView);
-            HachikoLogger.debug("add candidate " + candidateDate.getDateText());
         }
         View v = new View(getContext());
         candidateDateContainer.addView(v);

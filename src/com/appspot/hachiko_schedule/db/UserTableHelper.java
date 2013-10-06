@@ -5,6 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Joiner;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Usersテーブルまわりのヘルパ.
@@ -114,6 +120,26 @@ public class UserTableHelper {
         return c.getString(c.getColumnIndex(HACHIKO_ID));
     }
 
+    public List<String> getFriendsNameForHachikoIds(Collection<String> hachikoIds) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("select " + DISPLAY_NAME + " from " + USER_TABLE_NAME + " where "
+                + HACHIKO_ID + " IN (" + Joiner.on(",").join(hachikoIds) + ");", null);
+        if (!c.moveToFirst()) {
+            HachikoLogger.debug("No name found for ids ", hachikoIds);
+            HachikoLogger.debug("select " + DISPLAY_NAME + " from " + USER_TABLE_NAME + " where "
+                    + HACHIKO_ID + " in (" + Joiner.on(",").join(hachikoIds) + ");");
+            return Collections.emptyList();
+        }
+        List<String> names = new ArrayList<String>();
+        do {
+            names.add(c.getString(c.getColumnIndex(DISPLAY_NAME)));
+        } while (c.moveToNext());
+        return names;
+    }
+
+    /**
+     * テーブルの内容をログにはく，デバッグ用
+     */
     public void dumpAll() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("select " + '*' + " from " + USER_TABLE_NAME + ";", null);

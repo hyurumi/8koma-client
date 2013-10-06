@@ -2,11 +2,14 @@ package com.appspot.hachiko_schedule.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.appspot.hachiko_schedule.data.CandidateDate;
+import com.appspot.hachiko_schedule.data.UnfixedPlan;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
-import java.util.List;
+import java.util.*;
 
 public class PlansTableHelper {
     private static final String PLAN_TABLE_NAME = "plans";
@@ -24,6 +27,7 @@ public class PlansTableHelper {
     private static final String NEGETIVE_MEMBER_IDS = "negative_member_ids";
 
     private HachikoDBOpenHelper dbHelper;
+    private UserTableHelper userTableHelper;
 
     public static void onCreateDatabase(SQLiteDatabase database) {
         String createUsersTable = new SQLiteCreateTableBuilder(PLAN_TABLE_NAME)
@@ -49,6 +53,7 @@ public class PlansTableHelper {
 
     public PlansTableHelper(Context context) {
         dbHelper = new HachikoDBOpenHelper(context, null);
+        userTableHelper = new UserTableHelper(context);
     }
 
     /**
@@ -67,6 +72,7 @@ public class PlansTableHelper {
             insertCandidateDate(db, planId, date);
         }
         db.close();
+        HachikoLogger.debug("insert plan:", planValue);
     }
 
     private void insertCandidateDate(SQLiteDatabase db, long planId, CandidateDate candidateDate) {
@@ -76,5 +82,54 @@ public class PlansTableHelper {
         values.put(START_AT_MILLIS, candidateDate.getStartDate().getTime());
         values.put(END_AT_MILLIS, candidateDate.getEndDate().getTime());
         db.insert(CANDIDATE_DATE_TABLE_NAME, null, values);
+        HachikoLogger.debug("insert date:", values);
+    }
+
+    /**
+     * @return すべての未確定な予定を取得
+     */
+    // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
+    public List<UnfixedPlan> queryUnfixedPlans() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME + " WHERE " + IS_FIXED + " == 0;", null);
+        if (!c.moveToFirst()) {
+            c.close();
+            return Collections.emptyList();
+        }
+        List<UnfixedPlan> unfixedPlans = new ArrayList<UnfixedPlan>();
+        do {
+            long planId = c.getLong(c.getColumnIndex(PLAN_ID));
+            String participantIds = c.getString(c.getColumnIndex(FRIEND_IDS));
+            HachikoLogger.debug(participantIds);
+            unfixedPlans.add(new UnfixedPlan(
+                    planId,
+                    c.getString(c.getColumnIndex(TITLE)),
+                    userTableHelper.getFriendsNameForHachikoIds(
+                            Arrays.asList(participantIds.split(","))),
+                    queryCandidateDates(db, planId)
+            ));
+        } while (c.moveToNext());
+        db.close();
+        return unfixedPlans;
+    }
+
+    public List<CandidateDate> queryCandidateDates(SQLiteDatabase db, long planId) {
+        Cursor c = db.rawQuery("select " + ANSWER_ID + "," + START_AT_MILLIS + "," + END_AT_MILLIS
+                + " from " + CANDIDATE_DATE_TABLE_NAME + " WHERE " + PLAN_ID + " == " + planId + ";",
+                null);
+        if (!c.moveToFirst()) {
+            c.close();
+            HachikoLogger.debug("no dates for plan", planId);
+            return Collections.emptyList();
+        }
+        List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
+        do {
+            candidateDates.add(new CandidateDate(
+                    c.getInt(c.getColumnIndex(ANSWER_ID)),
+                    new Date(c.getLong(c.getColumnIndex(START_AT_MILLIS))),
+                    new Date(c.getLong(c.getColumnIndex(END_AT_MILLIS)))
+            ));
+        } while (c.moveToNext());
+        return candidateDates;
     }
 }

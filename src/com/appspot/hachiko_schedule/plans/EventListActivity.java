@@ -8,13 +8,17 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.*;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
+import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
+import com.google.common.collect.ImmutableList;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -32,37 +36,17 @@ public class EventListActivity extends Activity {
         }
 
         setContentView(R.layout.activity_event_list);
-//        ((ListView) findViewById(R.id.event_list)).setAdapter(new PlanAdapter(this,
-//                new UnfixedPlan[] {
-//                        new UnfixedPlan(
-//                                "Hachikoミーティング @ 7号館",
-//                                ImmutableList.of("古見元気", "臼山直人", "竹井悠人"),
-//                                ImmutableList.of(
-//                                        new CandidateDate("10/10 10:00 - 12:00", ImmutableList.of("古見元気", "臼山直人"), ImmutableList.of("竹井悠人")),
-//                                        new CandidateDate("10/11 12:00 - 14:00", ImmutableList.of("古見元気"), ImmutableList.of("臼山直人", "竹井悠人")),
-//                                        new CandidateDate("10/12 10:00 - 12:00", ImmutableList.of("古見元気"), ImmutableList.of("竹井悠人")))
-//                                ),
-//                        new UnfixedPlan(
-//                                "Hachiko開発",
-//                                ImmutableList.of("古見元気", "臼山直人", "竹井悠人", "古見元気", "臼山直人", "竹井悠人", "古見元気", "臼山直人", "竹井悠人"),
-//                                ImmutableList.of(
-//                                        new CandidateDate("10/10 10:00 - 12:00", ImmutableList.of("古見元気", "臼山直人"), ImmutableList.of("竹井悠人")),
-//                                        new CandidateDate("10/11 12:00 - 14:00", ImmutableList.of("古見元気"), ImmutableList.of("臼山直人", "竹井悠人")),
-//                                        new CandidateDate("10/12 10:00 - 12:00", ImmutableList.of("古見元気"), Collections.<String>emptyList()),
-//                                        new CandidateDate("10/10 10:00 - 12:00", ImmutableList.of("古見元気", "臼山直人"), ImmutableList.of("竹井悠人")),
-//                                        new CandidateDate("10/11 12:00 - 14:00", ImmutableList.of("古見元気"), ImmutableList.of("臼山直人", "竹井悠人")))
-//                        ),
-//                        new UnfixedPlan(
-//                                "Hachikoミーティング @ 7号館",
-//                                ImmutableList.of("古見元気", "臼山直人", "竹井悠人"),
-//                                ImmutableList.of(
-//                                        new CandidateDate("10/10 10:00 - 12:00", ImmutableList.of("古見元気", "臼山直人"), ImmutableList.of("竹井悠人")),
-//                                        new CandidateDate("10/11 12:00 - 14:00", ImmutableList.of("古見元気"), ImmutableList.of("臼山直人", "竹井悠人")),
-//                                        new CandidateDate("10/12 10:00 - 12:00", ImmutableList.of("古見元気"), Collections.<String>emptyList()),
-//                                        new CandidateDate("10/10 10:00 - 12:00", ImmutableList.of("古見元気", "臼山直人"), ImmutableList.of("竹井悠人")),
-//                                        new CandidateDate("10/11 12:00 - 14:00", ImmutableList.of("古見元気"), ImmutableList.of("臼山直人", "竹井悠人")))
-//                        )
-//                }));
+        PlansTableHelper plansTableHelper = new PlansTableHelper(this);
+
+        // TODO: 以下のデバッグ用ダミーデータをとりのぞく
+        plansTableHelper.insertNewPlan("Hachikoみーてぃんぐ", false, ImmutableList.of("148", "149", "150"),
+                ImmutableList.<CandidateDate>of(
+                        new CandidateDate(0, new Date(), new Date(new Date().getTime() + 1000 * 60 * 120)),
+                        new CandidateDate(1, new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+                                new Date(new Date().getTime() + 1000 * 60 * 60 * 24 + 1000 * 60 * 120))));
+
+        ((ListView) findViewById(R.id.event_list)).setAdapter(new PlanAdapter(this,
+                plansTableHelper.queryUnfixedPlans().toArray(new UnfixedPlan[0])));
     }
 
     @Override
