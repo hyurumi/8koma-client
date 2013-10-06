@@ -47,4 +47,6 @@
   <string name="confirm_new_event_text">予定を確認</string>
   <string name="confirm_new_event_back">戻る</string>
   <string name="confirm_new_event_ok">招待を送信</string>
+  <string name="no_event_text">Hachikoによって作成された予定がありません</string>
+  <string name="no_event_then_create_new">新しい予定を作成する</string>
 </resources>

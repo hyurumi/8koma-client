@@ -9,4 +9,22 @@
       android:layout_height="wrap_content"
       android:padding="7dp"
       android:id="@+id/event_list"/>
+  <LinearLayout
+      android:layout_height="fill_parent"
+      android:layout_width="fill_parent"
+      android:orientation="vertical"
+      android:id="@+id/view_for_no_event"
+      android:gravity="center_vertical"
+      android:visibility="gone">
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="@string/no_event_text"
+        android:gravity="center_horizontal"/>
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/no_event_create_new"
+        android:text="@string/no_event_then_create_new" />
+  </LinearLayout>
 </LinearLayout>

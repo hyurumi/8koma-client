@@ -12,16 +12,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
-import com.google.common.collect.ImmutableList;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class PlanListActivity extends Activity {
 
@@ -38,15 +37,17 @@ public class PlanListActivity extends Activity {
         setContentView(R.layout.activity_event_list);
         PlansTableHelper plansTableHelper = new PlansTableHelper(this);
 
-        // TODO: 以下のデバッグ用ダミーデータをとりのぞく
-        plansTableHelper.insertNewPlan("Hachikoみーてぃんぐ", false, ImmutableList.of("148", "149", "150"),
-                ImmutableList.<CandidateDate>of(
-                        new CandidateDate(0, new Date(), new Date(new Date().getTime() + 1000 * 60 * 120)),
-                        new CandidateDate(1, new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
-                                new Date(new Date().getTime() + 1000 * 60 * 60 * 24 + 1000 * 60 * 120))));
-
-        ((ListView) findViewById(R.id.event_list)).setAdapter(new PlanAdapter(this,
-                plansTableHelper.queryUnfixedPlans().toArray(new UnfixedPlan[0])));
+        ListView eventList = ((ListView) findViewById(R.id.event_list));
+        List<UnfixedPlan> unfixedPlans = plansTableHelper.queryUnfixedPlans();
+        eventList.setAdapter(new PlanAdapter(this, unfixedPlans.toArray(new UnfixedPlan[0])));
+        findViewById(R.id.view_for_no_event).setVisibility(
+                unfixedPlans.size() == 0 ? View.VISIBLE : View.GONE);
+        findViewById(R.id.no_event_create_new).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCreatingEvent();
+            }
+        });
     }
 
     @Override
