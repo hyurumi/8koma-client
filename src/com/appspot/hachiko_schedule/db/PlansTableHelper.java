@@ -23,6 +23,7 @@ public class PlansTableHelper {
     private static final String START_AT_MILLIS = "start_at_millis";
     private static final String END_AT_MILLIS = "end_at_millis";
     private static final String ANSWER_ID = "answer_id";
+    private static final String ANSWER_STATE = "answer_state";
     private static final String POSITIVE_MEMBER_IDS = "positive_member_ids";
     private static final String NEGETIVE_MEMBER_IDS = "negative_member_ids";
 
@@ -42,6 +43,7 @@ public class PlansTableHelper {
                 .addColumn(START_AT_MILLIS, SQLiteType.INTEGER)
                 .addColumn(END_AT_MILLIS, SQLiteType.INTEGER)
                 .addColumn(ANSWER_ID, SQLiteType.INTEGER)
+                .addColumn(ANSWER_STATE, SQLiteType.INTEGER)
                 .addColumn(POSITIVE_MEMBER_IDS, SQLiteType.TEXT)
                 .addColumn(NEGETIVE_MEMBER_IDS, SQLiteType.TEXT)
                 .toString();
@@ -79,6 +81,7 @@ public class PlansTableHelper {
         ContentValues values = new ContentValues();
         values.put(PLAN_ID, planId);
         values.put(ANSWER_ID, candidateDate.getAnswerId());
+        values.put(ANSWER_STATE, candidateDate.getMyAnswerState().toInt());
         values.put(START_AT_MILLIS, candidateDate.getStartDate().getTime());
         values.put(END_AT_MILLIS, candidateDate.getEndDate().getTime());
         db.insert(CANDIDATE_DATE_TABLE_NAME, null, values);
@@ -113,9 +116,10 @@ public class PlansTableHelper {
         return unfixedPlans;
     }
 
-    public List<CandidateDate> queryCandidateDates(SQLiteDatabase db, long planId) {
+    private List<CandidateDate> queryCandidateDates(SQLiteDatabase db, long planId) {
         Cursor c = db.rawQuery("select " + ANSWER_ID + "," + START_AT_MILLIS + "," + END_AT_MILLIS
-                + " from " + CANDIDATE_DATE_TABLE_NAME + " WHERE " + PLAN_ID + " == " + planId + ";",
+                + "," + ANSWER_STATE + " from " + CANDIDATE_DATE_TABLE_NAME + " WHERE " + PLAN_ID
+                + " == " + planId + ";",
                 null);
         if (!c.moveToFirst()) {
             c.close();
@@ -127,9 +131,19 @@ public class PlansTableHelper {
             candidateDates.add(new CandidateDate(
                     c.getInt(c.getColumnIndex(ANSWER_ID)),
                     new Date(c.getLong(c.getColumnIndex(START_AT_MILLIS))),
-                    new Date(c.getLong(c.getColumnIndex(END_AT_MILLIS)))
+                    new Date(c.getLong(c.getColumnIndex(END_AT_MILLIS))),
+                    CandidateDate.AnswerState.fromInt(c.getInt(c.getColumnIndex(ANSWER_STATE)))
             ));
         } while (c.moveToNext());
         return candidateDates;
+    }
+
+    public void updateAnswer(long planId, long answerId, CandidateDate.AnswerState state) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ANSWER_STATE, state.toInt());
+        db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + ANSWER_ID + "==?",
+                new String[]{Long.toString(planId), Long.toString(answerId)});
+        db.close();
     }
 }

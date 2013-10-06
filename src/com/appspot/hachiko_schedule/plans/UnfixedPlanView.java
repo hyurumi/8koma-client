@@ -13,8 +13,11 @@ import android.widget.Toast;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
+import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
 import com.google.common.base.Joiner;
+
+import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
 
 /**
  * 調整中の予定を表すView
@@ -23,6 +26,7 @@ public class UnfixedPlanView extends LinearLayout {
     private TextView titleView;
     private TextView participantsView;
     private ViewGroup candidateDateContainer;
+    private PlansTableHelper plansTableHelper;
 
     public UnfixedPlanView(Context context) {
         super(context);
@@ -46,6 +50,7 @@ public class UnfixedPlanView extends LinearLayout {
         layout.findViewById(R.id.event_show_detail_button)
                 .setOnClickListener(new OnExpandButtonClick());
         candidateDateContainer = (ViewGroup) layout.findViewById(R.id.candidate_date_container);
+        plansTableHelper = new PlansTableHelper(context);
     }
 
     public UnfixedPlanView setPlan(UnfixedPlan plan) {
@@ -54,7 +59,7 @@ public class UnfixedPlanView extends LinearLayout {
         candidateDateContainer.removeAllViews();
         for (CandidateDate candidateDate: plan.getCandidateDates()) {
             CandidateDateAnswerView answerView = new CandidateDateAnswerView(getContext());
-            answerView.setCandidate(candidateDate);
+            answerView.setCandidate(plan.getPlanId(), candidateDate);
             candidateDateContainer.addView(answerView);
         }
         View v = new View(getContext());
@@ -79,6 +84,8 @@ public class UnfixedPlanView extends LinearLayout {
         private TextView numOfNgText;
         private TextView numOfOkText;
         private TextView candidateText;
+        private CandidateDate candidateDate;
+        private long planId;
 
         private CandidateDateAnswerView(Context context) {
             super(context);
@@ -100,7 +107,6 @@ public class UnfixedPlanView extends LinearLayout {
             numOfNgText = (TextView) layout.findViewById(R.id.date_candidate_answer_no);
             numOfOkText = (TextView) layout.findViewById(R.id.date_candidate_answer_yes);
             candidateText = (TextView) layout.findViewById(R.id.candidate_date_body);
-            setAnswerState(AnswerState.NEUTRAL);
             candidateText.setOnTouchListener(new HorizontalSwipeListener(getContext()) {
 
                 @Override
@@ -142,23 +148,29 @@ public class UnfixedPlanView extends LinearLayout {
             setMeasuredDimension(width, height + 40);
         }
 
-        private void setCandidate(CandidateDate candidateDate) {
+        private void setCandidate(long planId, CandidateDate candidateDate) {
+            this.planId = planId;
+            this.candidateDate = candidateDate;
+            updateTextAndBgColor();
+        }
+
+        private void updateTextAndBgColor() {
             candidateText.setText(candidateDate.getDateText());
-            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
-            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
+            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum())
+                    + (candidateDate.getMyAnswerState() == AnswerState.NG ? 1 : 0));
+            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum())
+                    + (candidateDate.getMyAnswerState() == AnswerState.OK ? 1 : 0));
+            candidateText.setBackgroundColor(
+                    getResources().getColor(candidateDate.getMyAnswerState().getColorResource()));
         }
 
         private void setAnswerState(AnswerState answerState) {
-            candidateText.setBackgroundColor(getResources().getColor(answerState.colorResource));
-        }
-    }
-
-    private enum AnswerState {
-        OK(R.color.ok_green), NEUTRAL(R.color.neutral_yellow), NG(R.color.ng_red);
-
-        private final int colorResource;
-        private AnswerState(int colorResource) {
-            this.colorResource = colorResource;
+            if (answerState == candidateDate.getMyAnswerState()) {
+                return;
+            }
+            candidateDate.setMyAnswerState(answerState);
+            updateTextAndBgColor();
+            plansTableHelper.updateAnswer(planId, candidateDate.getAnswerId(), answerState);
         }
     }
 

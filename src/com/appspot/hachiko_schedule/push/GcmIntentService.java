@@ -76,7 +76,8 @@ public class GcmIntentService extends IntentService {
                 candidateDates.add(new CandidateDate(
                         candidateDateJson.getInt("candId"),
                         DateUtils.parseISO8601(timeRange.getString("start")),
-                        DateUtils.parseISO8601(timeRange.getString("end"))));
+                        DateUtils.parseISO8601(timeRange.getString("end")),
+                        CandidateDate.AnswerState.NEUTRAL));
             }
             PlansTableHelper tableHelper = new PlansTableHelper(this);
             String myHachikoId = HachikoPreferences.getDefault(this)

@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.data;
 
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.util.DateUtils;
 
 import java.util.Collections;
@@ -13,18 +14,20 @@ public class CandidateDate {
     private final int answerId;
     private final Date startDate;
     private final Date endDate;
+    private AnswerState myAnswerState;
     private List<Long> positiveFriendIds;
     private List<Long> negativeFriendIds;
 
-    public CandidateDate(int answerId, Date startDate, Date endDate) {
-        this(answerId, startDate, endDate, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    public CandidateDate(int answerId, Date startDate, Date endDate, AnswerState myAnswerState) {
+        this(answerId, startDate, endDate, myAnswerState, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
     }
 
-    public CandidateDate(int answerId, Date startDate, Date endDate,
+    public CandidateDate(int answerId, Date startDate, Date endDate, AnswerState myAnswerState,
                          List<Long> positiveFriendIds, List<Long> negativeFriendIds) {
         this.answerId = answerId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.myAnswerState = myAnswerState;
         this.positiveFriendIds = positiveFriendIds;
         this.negativeFriendIds = negativeFriendIds;
     }
@@ -45,11 +48,56 @@ public class CandidateDate {
         return answerId;
     }
 
+    public AnswerState getMyAnswerState() {
+        return myAnswerState;
+    }
+
+    public void setMyAnswerState(AnswerState myAnswerState) {
+        this.myAnswerState = myAnswerState;
+    }
+
     public Date getStartDate() {
         return startDate;
     }
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public static enum AnswerState {
+        OK(R.color.ok_green), NEUTRAL(R.color.neutral_yellow), NG(R.color.ng_red);
+
+        private final int colorResource;
+        private AnswerState(int colorResource) {
+            this.colorResource = colorResource;
+        }
+
+        public static AnswerState fromInt(int i) {
+            switch (i) {
+                case 0:
+                    return OK;
+                case 1:
+                    return NEUTRAL;
+                case 2:
+                    return NG;
+            }
+            return null;
+        }
+
+        public int toInt() {
+            switch (this) {
+                case OK:
+                    return 0;
+                case NEUTRAL:
+                    return 1;
+                case NG:
+                    return 2;
+            }
+            return -1;
+        }
+
+        public int getColorResource() {
+            return colorResource;
+        }
     }
 }
