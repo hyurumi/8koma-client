@@ -51,7 +51,7 @@ public class UnfixedPlanView extends LinearLayout {
 
     public UnfixedPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
-        participantsView.setText(Joiner.on(", ").join(plan.getPotentialCandidates()));
+        participantsView.setText(Joiner.on(", ").join(plan.getpotentialParticipants()));
         candidateDateContainer.removeAllViews();
         for (CandidateDate candidateDate: plan.getCandidateDates()) {
             CandidateDateAnswerView answerView = new CandidateDateAnswerView(getContext());
@@ -146,8 +146,8 @@ public class UnfixedPlanView extends LinearLayout {
 
         private void setCandidate(CandidateDate candidateDate) {
             candidateText.setText(candidateDate.getDateText());
-            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriends().size()));
-            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriends().size()));
+            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
+            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
         }
 
         private void setAnswerState(AnswerState answerState) {

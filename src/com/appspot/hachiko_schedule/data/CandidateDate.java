@@ -1,31 +1,55 @@
 package com.appspot.hachiko_schedule.data;
 
-import java.util.Collection;
+import com.appspot.hachiko_schedule.util.DateUtils;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 予定調整中の候補日に対応するデータクラス
  */
 public class CandidateDate {
-    private final String dateText;
-    private Collection<String> positiveFriends;
-    private Collection<String> negativeFriends;
+    private final int answerId;
+    private final Date startDate;
+    private final Date endDate;
+    private List<Long> positiveFriendIds;
+    private List<Long> negativeFriendIds;
 
-    public CandidateDate(String dateText, Collection<String> positiveFriends,
-                         Collection<String> negativeFriends) {
-        this.dateText = dateText;
-        this.positiveFriends = positiveFriends;
-        this.negativeFriends = negativeFriends;
+    public CandidateDate(int answerId, Date startDate, Date endDate) {
+        this(answerId, startDate, endDate, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    }
+
+    public CandidateDate(int answerId, Date startDate, Date endDate,
+                         List<Long> positiveFriendIds, List<Long> negativeFriendIds) {
+        this.answerId = answerId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.positiveFriendIds = positiveFriendIds;
+        this.negativeFriendIds = negativeFriendIds;
     }
 
     public String getDateText() {
-        return dateText;
+        return DateUtils.timeslotString(startDate, endDate);
     }
 
-    public Collection<String> getPositiveFriends() {
-        return positiveFriends;
+    public int getPositiveFriendsNum() {
+        return positiveFriendIds.size();
     }
 
-    public Collection<String> getNegativeFriends() {
-        return negativeFriends;
+    public int getNegativeFriendsNum() {
+        return negativeFriendIds.size();
+    }
+
+    public int getAnswerId() {
+        return answerId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 }

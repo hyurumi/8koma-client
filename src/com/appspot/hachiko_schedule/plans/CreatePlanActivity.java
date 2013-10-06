@@ -101,13 +101,10 @@ public class CreatePlanActivity extends Activity {
                         .append(System.getProperty("line.separator"))
                         .append("候補日:")
                         .append(System.getProperty("line.separator"));
-                SimpleDateFormat startDateFormat = new SimpleDateFormat("MM/dd HH:mm");
-                SimpleDateFormat endDateFormat = new SimpleDateFormat("HH:mm");
                 for (Timeslot timeslot: suggestingTimeslots) {
-                    content.append(startDateFormat.format(timeslot.getStartDate()))
-                            .append(" - ")
-                            .append(endDateFormat.format(timeslot.getEndDate()))
-                            .append(System.getProperty("line.separator"));
+                    content.append(DateUtils.timeslotString(
+                            timeslot.getStartDate(), timeslot.getEndDate()));
+                    content.append(System.getProperty("line.separator"));
 
                 }
                 AlertDialog dialog = new AlertDialog.Builder(CreatePlanActivity.this)

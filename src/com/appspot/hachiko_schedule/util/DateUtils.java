@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtils {
+    private static final SimpleDateFormat START_DATE_FORMAT = new SimpleDateFormat("MM/dd HH:mm");
+    private static final SimpleDateFormat END_HOUR_FORMAT = new SimpleDateFormat("HH:mm");
 
     /**
      * 動作確認用などに，現在時間から指定した日時あとのDateオブジェクトを返す
@@ -23,5 +25,12 @@ public class DateUtils {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(date);
+    }
+
+    public static String timeslotString(Date startDate, Date endDate) {
+        return new StringBuilder().append(START_DATE_FORMAT.format(startDate))
+                .append(" - ")
+                .append(END_HOUR_FORMAT.format(endDate))
+                .toString();
     }
 }
