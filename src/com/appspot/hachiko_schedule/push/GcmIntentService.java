@@ -11,7 +11,7 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
-import com.appspot.hachiko_schedule.plans.EventListActivity;
+import com.appspot.hachiko_schedule.plans.PlanListActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -83,7 +83,7 @@ public class GcmIntentService extends IntentService {
             boolean isHost = myHachikoId.equals(hostId);
             tableHelper.insertNewPlan(title, isHost, friendIds, candidateDates);
             PendingIntent pendingIntent
-                    = getActivityIntent(new Intent(this, EventListActivity.class));
+                    = getActivityIntent(new Intent(this, PlanListActivity.class));
             if (isHost) {
                 sendNotification(title + "が作成されました", "詳細を見るにはクリック", pendingIntent);
             } else {

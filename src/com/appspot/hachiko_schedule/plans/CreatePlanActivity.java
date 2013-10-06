@@ -114,7 +114,7 @@ public class CreatePlanActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 sendCreatePlanRequest();
-                                Intent intent = new Intent(CreatePlanActivity.this, EventListActivity.class);
+                                Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
                                 startActivity(intent);

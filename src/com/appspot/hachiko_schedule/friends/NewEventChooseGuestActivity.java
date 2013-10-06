@@ -12,7 +12,7 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.SearchView;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.plans.EventListActivity;
+import com.appspot.hachiko_schedule.plans.PlanListActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.push.GoogleCloudMessagingHelper;
 import com.appspot.hachiko_schedule.setup.SetupManager;
@@ -80,7 +80,7 @@ public class NewEventChooseGuestActivity extends Activity {
     }
 
     private void launchEventListActivity() {
-        Intent intent = new Intent(this, EventListActivity.class);
+        Intent intent = new Intent(this, PlanListActivity.class);
         startActivity(intent);
     }
 

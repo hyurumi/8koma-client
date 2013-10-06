@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EventListActivity extends Activity {
+public class PlanListActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
