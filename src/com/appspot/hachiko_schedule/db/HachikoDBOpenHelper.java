@@ -18,10 +18,12 @@ public class HachikoDBOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         UserTableHelper.onCreateDatabase(db);
+        PlansTableHelper.onCreateDatabase(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         UserTableHelper.onUpgradeDatabase(db, oldVersion, newVersion);
+        PlansTableHelper.onUpgradeDatabase(db, oldVersion, newVersion);
     }
 }
