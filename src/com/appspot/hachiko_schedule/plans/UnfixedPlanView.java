@@ -10,12 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.JSONStringRequest;
+import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
 
@@ -121,6 +131,7 @@ public class UnfixedPlanView extends LinearLayout {
 
                 @Override
                 protected boolean onSwipeEnd(View v, MotionEvent e) {
+                    persistCurrentState();
                     return false;
                 }
             });
@@ -129,12 +140,14 @@ public class UnfixedPlanView extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     setAnswerState(AnswerState.NG);
+                    persistCurrentState();
                 }
             });
             numOfOkText.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setAnswerState(AnswerState.OK);
+                    persistCurrentState();
                 }
             });
         }
@@ -170,8 +183,47 @@ public class UnfixedPlanView extends LinearLayout {
             }
             candidateDate.setMyAnswerState(answerState);
             updateTextAndBgColor();
-            plansTableHelper.updateAnswer(planId, candidateDate.getAnswerId(), answerState);
         }
+
+        private void persistCurrentState() {
+            AnswerState answerState = candidateDate.getMyAnswerState();
+            plansTableHelper.updateAnswer(planId, candidateDate.getAnswerId(), answerState);
+            sendResponse(planId, candidateDate.getAnswerId(), answerState);
+        }
+    }
+
+    private void sendResponse(long planId, long answerId, AnswerState answerState) {
+        JSONObject param = new JSONObject();
+        try {
+            param.put("planId", planId);
+            JSONArray responses = new JSONArray();
+            JSONObject response = new JSONObject();
+            response.put(Long.toString(planId), answerState.toString());
+            responses.put(response);
+            param.put("responses", responses);
+        } catch (JSONException e) {
+            HachikoLogger.error("JSONERROR", e);
+            return;
+        }
+        HachikoLogger.debug("respond", param);
+        Request request = new JSONStringRequest(
+                getContext(),
+                PlanAPI.RESPOND.getMethod(),
+                PlanAPI.RESPOND.getUrl(),
+                param,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("respond success: ", s);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("respond", volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(request);
     }
 
     private class OnExpandButtonClick implements OnClickListener {

@@ -99,5 +99,19 @@ public class CandidateDate {
         public int getColorResource() {
             return colorResource;
         }
+
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case OK:
+                    return "ok";
+                case NEUTRAL:
+                    return "tentative";
+                case NG:
+                    return "ng";
+            }
+            return null;
+        }
     }
 }
