@@ -57,6 +57,7 @@ public abstract class HorizontalSwipeListener implements View.OnTouchListener {
                     v.setTranslationX(0);
                 }
                 itemPressed = false;
+                onTouchEnd(v, event, swiping);
                 break;
             }
             default:
@@ -86,4 +87,11 @@ public abstract class HorizontalSwipeListener implements View.OnTouchListener {
      * @return trueを返すとデフォルトの動作(ただちにもとの位置に戻る)がキャンセルされる
      */
     protected abstract boolean onSwipeEnd(View v, MotionEvent e);
+
+    /**
+     * デフォルト実装はNo-op, swipe中であるかどうかにかかわらずTouchが終わった時に呼ばれる．
+     * onSwipeEndと同時に呼ばれ得る
+     */
+    protected void onTouchEnd(View v, MotionEvent e, boolean swiping) {
+    };
 }

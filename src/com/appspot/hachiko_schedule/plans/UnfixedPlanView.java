@@ -96,6 +96,7 @@ public class UnfixedPlanView extends LinearLayout {
         private TextView candidateText;
         private CandidateDate candidateDate;
         private long planId;
+        private AnswerState lastPersistedState;
 
         private CandidateDateAnswerView(Context context) {
             super(context);
@@ -131,8 +132,15 @@ public class UnfixedPlanView extends LinearLayout {
 
                 @Override
                 protected boolean onSwipeEnd(View v, MotionEvent e) {
-                    persistCurrentState();
                     return false;
+                }
+
+                @Override
+                protected void onTouchEnd(View v, MotionEvent e, boolean swiping) {
+                    if (!swiping) {
+                        setAnswerState(AnswerState.NEUTRAL);
+                    }
+                    persistCurrentState();
                 }
             });
 
@@ -187,8 +195,12 @@ public class UnfixedPlanView extends LinearLayout {
 
         private void persistCurrentState() {
             AnswerState answerState = candidateDate.getMyAnswerState();
+            if (lastPersistedState == answerState) {
+                return;
+            }
             plansTableHelper.updateAnswer(planId, candidateDate.getAnswerId(), answerState);
             sendResponse(planId, candidateDate.getAnswerId(), answerState);
+            lastPersistedState = answerState;
         }
     }
 
