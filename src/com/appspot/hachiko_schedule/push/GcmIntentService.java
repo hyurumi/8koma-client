@@ -107,6 +107,7 @@ public class GcmIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                        .setAutoCancel(true)
                         .setContentText(msg);
         if (contentIntent != null) {
             builder.setContentIntent(contentIntent);
