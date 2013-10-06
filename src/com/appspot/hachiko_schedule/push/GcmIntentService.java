@@ -1,6 +1,7 @@
 package com.appspot.hachiko_schedule.push;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -108,11 +109,17 @@ public class GcmIntentService extends IntentService {
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                         .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setContentText(msg);
         if (contentIntent != null) {
             builder.setContentIntent(contentIntent);
         }
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        Notification notification = builder.build();
+        // DEFAULT_LIGHTはNoLightの可能性があるのでここでライトを上書き
+        notification.ledARGB = 0xff0000cc;
+        notification.ledOnMS = 300;
+        notification.ledOffMS = 1000;
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     private void reportUnknownTypeNotification(Intent intent, String tag) {
