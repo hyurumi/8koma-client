@@ -68,6 +68,24 @@
     -->
     <import file="custom_rules.xml" optional="true" />
 
+    <target name="-pre-compile">
+      <!-- HACK to add jarfiles to the classpath directly-->
+      <!-- http://stackoverflow.com/questions/3217643/how-to-add-external-jar-libraries-to-an-android-project-from-the-command-line -->
+      <echo>ORIGINAL jars.path : ${toString:project.all.jars.path}</echo>
+      <path id="project.all.jars.path.new">
+        <path path="${toString:project.all.jars.path}"/>
+        <path path="libs/jar/volley.jar"/>
+        <path path="libs/jar/android-support-v4.jar"/>
+        <path path="libs/jar/guava-14.0.1.jar"/>
+        <path path="libs/projects/google-play-services_lib/libs/google-play-services.jar"/>
+      </path>
+
+      <path id="project.all.jars.path">
+        <path path="${toString:project.all.jars.path.new}"/>
+      </path>
+      <echo>OVERRIDDEN jars.path : ${toString:project.all.jars.path}</echo>
+    </target>
+
     <!-- Import the actual build file.
 
          To customize existing targets, there are two options:

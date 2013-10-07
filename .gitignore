@@ -2,6 +2,7 @@ local.properties
 *~
 .idea/*
 gen/*
+bin/*
 out/*
 build-log.xml
 build.log
