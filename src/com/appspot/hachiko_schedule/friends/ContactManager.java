@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.provider.ContactsContract.CommonDataKinds;
@@ -46,7 +47,10 @@ public class ContactManager {
         int idIndex = cursor.getColumnIndex(Contacts._ID);
         int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
-        while( cursor.moveToNext()){
+        if (!cursor.moveToFirst()) {
+            return Collections.EMPTY_LIST;
+        }
+        do {
             String displayName = cursor.getString(nameIndex);
             if (displayName.matches(EXCLUDE_PATTERN)) {
                 continue;
@@ -63,7 +67,7 @@ public class ContactManager {
                     cursor.getString(nameIndex),
                     uriString == null ? null : Uri.parse(uriString),
                     email));
-        }
+        } while(cursor.moveToNext());
         cursor.close();
         return entries;
     }
