@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
@@ -128,7 +129,7 @@ public class GoogleAuthActivity extends Activity {
 
     private void sendRegisterRequest(String gmail, String authToken) {
         JSONObject params = JSONUtils.jsonObject("gmail", gmail, "google_token", authToken);
-        HachikoLogger.debug("register__req");
+        HachikoLogger.debug("register request");
         JsonRequest request = VolleyRequestFactory.registerRequest(
                 this,
                 params,
@@ -150,6 +151,9 @@ public class GoogleAuthActivity extends Activity {
                     }
                 }
         );
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                1000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         HachikoApp.defaultRequestQueue().add(request);
     }
 
