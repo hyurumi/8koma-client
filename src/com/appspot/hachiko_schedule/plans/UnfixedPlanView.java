@@ -77,19 +77,6 @@ public class UnfixedPlanView extends LinearLayout {
         return this;
     }
 
-    protected int calcMeasuredSize(int measureSpec, int desired) {
-        int mode = MeasureSpec.getMode(measureSpec);
-        int size = MeasureSpec.getSize(measureSpec);
-
-        if (mode == MeasureSpec.EXACTLY) {
-            return size;
-        } else if (mode == MeasureSpec.AT_MOST) {
-            return Math.min(size, desired);
-        } else {
-            return desired;
-        }
-    }
-
     private class CandidateDateAnswerView extends RelativeLayout {
         private TextView numOfNgText;
         private TextView numOfOkText;
@@ -158,15 +145,6 @@ public class UnfixedPlanView extends LinearLayout {
                     persistCurrentState();
                 }
             });
-        }
-
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            int width = calcMeasuredSize(widthMeasureSpec, 100);
-            int height = calcMeasuredSize(heightMeasureSpec, 100);
-            // TODO: 下の+40はレイアウト崩れに対するワークアラウンド、原因究明してちゃんとなおす
-            setMeasuredDimension(width, height + 40);
         }
 
         private void setCandidate(long planId, CandidateDate candidateDate) {
