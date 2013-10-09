@@ -22,9 +22,11 @@ import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
+import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
+import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -53,7 +55,7 @@ public class CreatePlanActivity extends Activity {
     private ScheduleSuggester scheduleSuggester;
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
-    private long[] friendIds;
+    private Long[] friendIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class CreatePlanActivity extends Activity {
         Preconditions.checkNotNull(friends);
         Preconditions.checkState(friends.length != 0);
         showFriendsName(friends);
-        friendIds = new long[friends.length];
+        friendIds = new Long[friends.length];
         for (int i = 0; i < friends.length; i++) {
             friendIds[i] = ((FriendIdentifier) friends[i]).getHachikoId();
         }
@@ -129,11 +131,14 @@ public class CreatePlanActivity extends Activity {
         JSONObject param = new JSONObject();
         try {
             JSONArray dates = new JSONArray();
+            List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
             for (Timeslot timeslot: suggestingTimeslots) {
                 JSONObject timeslotJson = new JSONObject();
                 timeslotJson.put("start", DateUtils.formatAsISO8601(timeslot.getStartDate()));
                 timeslotJson.put("end", DateUtils.formatAsISO8601(timeslot.getEndDate()));
                 dates.put(timeslotJson);
+                candidateDates.add(new CandidateDate(-1, timeslot.getStartDate(),
+                        timeslot.getEndDate(), CandidateDate.AnswerState.NEUTRAL));
             }
             JSONArray friendIdsJson = new JSONArray();
             for (long friendId: friendIds) {
@@ -141,7 +146,12 @@ public class CreatePlanActivity extends Activity {
             }
             param.put("friendsId", friendIdsJson);
             param.put("candidates", dates);
-            param.put("title", eventTitleView.getText().toString());
+            String title = eventTitleView.getText().toString();
+            param.put("title", title);
+
+            PlansTableHelper plansTableHelper = new PlansTableHelper(this);
+            plansTableHelper.insertNewPlan(
+                    title, /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
         } catch (JSONException e) {
             HachikoLogger.error("JSON error/Never happen", e);
             return;
@@ -161,6 +171,7 @@ public class CreatePlanActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        // TODO: 作った予定のキャンセルと，エラーメッセージ #53
                         HachikoLogger.error("plan creation error", volleyError);
                     }
                 });

@@ -62,13 +62,13 @@ public class PlansTableHelper {
      * (Unfixedな)予定を追加する
      */
     public void insertNewPlan(
-            String title, boolean isHost, List<String> frinedIds, List<CandidateDate> dates) {
+            String title, boolean isHost, List friendIds, List<CandidateDate> dates) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues planValue = new ContentValues();
         planValue.put(TITLE, title);
         planValue.put(IS_HOST, isHost ? 1 : 0);
         planValue.put(IS_FIXED, 0);
-        planValue.put(FRIEND_IDS, Joiner.on(",").join(frinedIds));
+        planValue.put(FRIEND_IDS, Joiner.on(",").join(friendIds));
         long planId = db.insert(PLAN_TABLE_NAME, null, planValue);
         for (CandidateDate date: dates) {
             insertCandidateDate(db, planId, date);
