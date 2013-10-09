@@ -13,6 +13,7 @@ import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.*;
@@ -61,15 +62,24 @@ public class FriendsFragment extends Fragment {
                 startActivityForResult(intent, 0);
             }
         });
-        // TODO: implement a means for managing user info with their name.
-        ContactManager manager = ContactManager.getInstance(getActivity());
-        adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend,
-                manager.getListOfContactEntries());
+        adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend, getListOfFriends());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
         return view;
     }
 
+    private List<FriendItem> getListOfFriends() {
+        if (HachikoPreferences.getDefault(getActivity()).getBoolean(
+                HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP,
+                HachikoPreferences.IS_LOCAL_USER_TABLE_SETUP_DEFAULT
+        )) {
+            UserTableHelper userTableHelper = new UserTableHelper(getActivity());
+            return userTableHelper.getListOfContactEntries();
+        }
+        // ローカルデータベースがまだセットアップされてないので，標準のContactを利用
+        ContactManager manager = ContactManager.getInstance(getActivity());
+        return manager.getListOfContactEntries();
+    }
     @Override
     public void onPause() {
         super.onPause();

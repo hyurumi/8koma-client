@@ -34,6 +34,8 @@ public class HachikoPreferences {
     public static final int APP_VERSION_DEFAULT = 0;
     public static final String KEY_IS_CALENDAR_SETUP = "is_calendar_setup";
     public static final boolean IS_CALENDAR_SETUP_DEFAULT = false;
+    public static final String KEY_IS_LOCAL_USER_TABLE_SETUP = "is_local_user_table_setup";
+    public static final boolean IS_LOCAL_USER_TABLE_SETUP_DEFAULT = false;
     public static final String KEY_CALENDARS_TO_USE = "calendars_to_use";
     public static final Set<String> CALENDARS_TO_USE_DEFAULT = Collections.emptySet();
     public static final String KEY_CALENDARS_NOT_TO_USE = "calendars_not_to_use";

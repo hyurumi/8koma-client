@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
@@ -135,6 +137,34 @@ public class UserTableHelper {
             names.add(c.getString(c.getColumnIndex(DISPLAY_NAME)));
         } while (c.moveToNext());
         return names;
+    }
+
+    public List<FriendItem> getListOfContactEntries() {
+        List entries = new ArrayList<FriendItem>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select " + LOCAL_CONTACT_ID + "," + DISPLAY_NAME + ","
+                + PROFILE_PIC_URI + "," + PRIMARY_EMAIL + " from " + USER_TABLE_NAME +";", null);
+
+        int idIndex = cursor.getColumnIndex(LOCAL_CONTACT_ID);
+        int nameIndex = cursor.getColumnIndex(DISPLAY_NAME);
+        int thumbnailIndex = cursor.getColumnIndex(PROFILE_PIC_URI);
+        int emailIndex = cursor.getColumnIndex(PRIMARY_EMAIL);
+        if (!cursor.moveToFirst()) {
+            return Collections.EMPTY_LIST;
+        }
+        do {
+            String displayName = cursor.getString(nameIndex);
+            String uriString = cursor.getString(thumbnailIndex);
+            String email = cursor.getString(emailIndex);
+
+            entries.add(new FriendItem(
+                    cursor.getLong(idIndex),
+                    displayName,
+                    uriString == null ? null : Uri.parse(uriString),
+                    email));
+        } while(cursor.moveToNext());
+        cursor.close();
+        return entries;
     }
 
     /**

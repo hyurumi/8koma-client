@@ -13,6 +13,7 @@ import com.appspot.hachiko_schedule.apis.HachiJsonArrayRequest;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.friends.ContactManager;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +34,8 @@ public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         List<FriendItem> friends = ContactManager.getInstance(context).getListOfContactEntries();
         setupLocalTable(friends);
+        HachikoPreferences.getDefaultEditor(context).putBoolean(
+                HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, true).commit();
         JSONArray requestParams = constructApiParams(friends);
         requestFriendsHachikoIds(requestParams);
         return null;

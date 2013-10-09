@@ -63,7 +63,7 @@ public class ContactManager {
 
             entries.add(new FriendItem(
                     cursor.getLong(idIndex),
-                    cursor.getString(nameIndex),
+                    displayName,
                     uriString == null ? null : Uri.parse(uriString),
                     email));
         } while(cursor.moveToNext());
