@@ -23,9 +23,6 @@ import static android.provider.ContactsContract.CommonDataKinds;
  * Utility class to get data from system contacts.
  */
 public class ContactManager {
-
-    private static final String EXCLUDE_PATTERN = "^[a-zA-Z0-9_\\+@\\/\\(\\)\\-\\.\\s]+$";
-
     private Context context;
 
     protected ContactManager(Context context) {
@@ -52,13 +49,15 @@ public class ContactManager {
         }
         do {
             String displayName = cursor.getString(nameIndex);
-            if (displayName.matches(EXCLUDE_PATTERN)) {
+            if (displayName == null || displayName.contains("@")) {
                 continue;
             }
             String uriString = cursor.getString(thumbnailIndex);
             String email = queryPrimaryEmailAddress(cursor.getString(
                     cursor.getColumnIndex(Contacts._ID)));
-            if (email == null) {
+            if (email == null
+                    /* 名前がemailから勝手に推測されるケースがあるぽい */
+                    || email.startsWith(displayName)) {
                 continue;
             }
 
