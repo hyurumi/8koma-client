@@ -1,15 +1,26 @@
 package com.appspot.hachiko_schedule.prefs;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.preference.*;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * メイン画面から飛べる設定
@@ -111,7 +122,51 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
-        newPreferenceCategory("デバッグ", restartHachiko);
+
+        Preference confirmVersion = new Preference(this);
+        confirmVersion.setTitle("ビルド情報を確認");
+        confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new AlertDialog.Builder(MainPreferenceActivity.this)
+                        .setMessage("Build Date: " + getBuildTimeString() + "\n"
+                                + "Latest commit: " + getCommitInfo())
+                        .show();
+                return true;
+            }
+        });
+        PreferenceCategory category = newPreferenceCategory("デバッグ");
+        category.addPreference(restartHachiko);
+        category.addPreference(confirmVersion);
+    }
+
+    private String getBuildTimeString() {
+        try{
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
+            ZipFile zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("classes.dex");
+            long time = ze.getTime();
+            return new SimpleDateFormat("yyyy mm/dd HH:mm").format(new java.util.Date(time));
+        }catch(Exception e){
+            return "unknown";
+        }
+    }
+
+    private String getCommitInfo() {
+        Properties prop = new Properties();
+        String fileName = "commit.properties";
+        try {
+            InputStream fileStream = getAssets().open(fileName);
+            prop.load(fileStream);
+            fileStream.close();
+        } catch (FileNotFoundException e) {
+            return "(現状自動ビルド時のみ対応)";
+        } catch (IOException e) {
+            return "(取得に失敗)";
+        }
+        HachikoLogger.debug(prop);
+        HachikoLogger.debug(prop.stringPropertyNames());
+        return prop.getProperty("commit");
     }
 
     private PreferenceCategory newPreferenceCategory(String title, Preference... preferences) {

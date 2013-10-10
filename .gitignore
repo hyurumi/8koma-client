@@ -7,3 +7,4 @@ out/*
 build-log.xml
 build.log
 *.iml
+assets/commit.properties
