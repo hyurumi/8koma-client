@@ -133,10 +133,12 @@ public class CreatePlanActivity extends Activity {
             JSONArray dates = new JSONArray();
             List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
             for (Timeslot timeslot: suggestingTimeslots) {
+                JSONObject candidateJson = new JSONObject();
                 JSONObject timeslotJson = new JSONObject();
                 timeslotJson.put("start", DateUtils.formatAsISO8601(timeslot.getStartDate()));
                 timeslotJson.put("end", DateUtils.formatAsISO8601(timeslot.getEndDate()));
-                dates.put(timeslotJson);
+                candidateJson.put("time", timeslotJson);
+                dates.put(candidateJson);
                 candidateDates.add(new CandidateDate(-1, timeslot.getStartDate(),
                         timeslot.getEndDate(), CandidateDate.AnswerState.NEUTRAL));
             }
