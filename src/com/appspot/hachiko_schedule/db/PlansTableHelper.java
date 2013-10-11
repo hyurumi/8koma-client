@@ -18,6 +18,7 @@ public class PlansTableHelper {
     private static final String IS_HOST = "is_host";
     private static final String IS_FIXED = "is_fixed";
     private static final String FRIEND_IDS = "friend_ids";
+    private static final String CREATED_AT = "created_at";
 
     private static final String CANDIDATE_DATE_TABLE_NAME = "candiate_dates";
     private static final String START_AT_MILLIS = "start_at_millis";
@@ -37,6 +38,7 @@ public class PlansTableHelper {
                 .addColumn(IS_HOST, SQLiteType.INTEGER)
                 .addColumn(IS_FIXED, SQLiteType.INTEGER)
                 .addColumn(FRIEND_IDS, SQLiteType.TEXT)
+                .addColumn(CREATED_AT, SQLiteType.INTEGER)
                 .toString();
         String createCanidateDatesTable = new SQLiteCreateTableBuilder(CANDIDATE_DATE_TABLE_NAME)
                 .addColumn(PLAN_ID, SQLiteType.INTEGER)
@@ -69,6 +71,7 @@ public class PlansTableHelper {
         planValue.put(IS_HOST, isHost ? 1 : 0);
         planValue.put(IS_FIXED, 0);
         planValue.put(FRIEND_IDS, Joiner.on(",").join(friendIds));
+        planValue.put(CREATED_AT, new Date().getTime());
         long planId = db.insert(PLAN_TABLE_NAME, null, planValue);
         for (CandidateDate date: dates) {
             insertCandidateDate(db, planId, date);
@@ -94,7 +97,8 @@ public class PlansTableHelper {
     // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
     public List<UnfixedPlan> queryUnfixedPlans() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME + " WHERE " + IS_FIXED + " == 0;", null);
+        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME + " WHERE " + IS_FIXED + " == 0 ORDER BY "
+                + CREATED_AT + " DESC;", null);
         if (!c.moveToFirst()) {
             c.close();
             return Collections.emptyList();
