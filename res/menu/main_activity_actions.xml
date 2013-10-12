@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/action_create_event"
-        android:icon="@drawable/ic_new_event"
+        android:icon="@drawable/ic_action_new_event"
         android:title="@string/action_create_event"
         android:showAsAction="always" />
   <item android:id="@+id/action_launch_calendar_app"

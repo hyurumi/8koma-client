@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="hachiko_theme" parent="@android:style/Theme.Holo.Light">
+    <style name="hachiko_theme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/hachiko_actionbar_style</item>
     </style>
     <style name="hachiko_actionbar_style" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/background_white</item>
+        <item name="android:background">@color/background</item>
     </style>
 </resources>
