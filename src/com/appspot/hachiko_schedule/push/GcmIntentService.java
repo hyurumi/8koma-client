@@ -20,8 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * GCMを通じて送られてきたデータに応じて適切な処理をする
@@ -29,7 +28,7 @@ import java.util.List;
 public class GcmIntentService extends IntentService {
     // TODO: provide different value for different kind of message.
     public static final int NOTIFICATION_ID = 100;
-    private static final String TAG_INVITE = "invite";
+    private static final String TAG_INVITE = "invited";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -61,8 +60,9 @@ public class GcmIntentService extends IntentService {
 
     private void sendInviteNotification(JSONObject body) {
         try {
+            Long planId = body.getLong("planId");
             String title = body.getString("title");
-            String hostId = body.getString("hostId");
+            String hostId = body.getString("owner");
             List<String> friendIds = new ArrayList<String>();
             JSONArray array = body.getJSONArray("friendsId");
             for (int i = 0; i < array.length(); i++) {
@@ -72,18 +72,19 @@ public class GcmIntentService extends IntentService {
             array = body.getJSONArray("candidates");
             for (int i = 0; i < array.length(); i++) {
                 JSONObject candidateDateJson = array.getJSONObject(i);
-                JSONObject timeRange = candidateDateJson.getJSONObject("timeRange");
+                JSONObject timeRange = candidateDateJson.getJSONObject("time");
                 candidateDates.add(new CandidateDate(
-                        candidateDateJson.getInt("candId"),
+                        candidateDateJson.getInt("id"),
                         DateUtils.parseISO8601(timeRange.getString("start")),
                         DateUtils.parseISO8601(timeRange.getString("end")),
                         CandidateDate.AnswerState.NEUTRAL));
             }
-            PlansTableHelper tableHelper = new PlansTableHelper(this);
             String myHachikoId = HachikoPreferences.getDefault(this)
                     .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
             boolean isHost = myHachikoId.equals(hostId);
-            tableHelper.insertNewPlan(title, isHost, friendIds, candidateDates);
+            PlansTableHelper tableHelper = new PlansTableHelper(this);
+            tableHelper.insertNewPlan(planId, title, isHost, friendIds, candidateDates);
+            updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent
                     = getActivityIntent(new Intent(this, PlanListActivity.class));
             if (isHost) {
@@ -93,6 +94,35 @@ public class GcmIntentService extends IntentService {
             }
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
+        }
+    }
+
+    private void updateAttendanceInfo(long planId, String myHachikoId, JSONArray attendance)
+            throws JSONException {
+        PlansTableHelper tableHelper = new PlansTableHelper(this);
+        Set<Long> positiveFriendIds = new HashSet<Long>();
+        Set<Long> negativeFriendIds = new HashSet<Long>();
+        for (int i = 0; i < attendance.length(); i++) {
+            JSONObject attendanceJson = attendance.getJSONObject(i);
+            long candidateId = attendanceJson.getLong("candId");
+            JSONObject answers = attendanceJson.getJSONObject("attendance");
+            Iterator<String> guestIds = answers.keys();
+            while (guestIds.hasNext()) {
+                String guestId = guestIds.next();
+                CandidateDate.AnswerState answer
+                        = CandidateDate.AnswerState.fromString(answers.getString(guestId));
+                if (guestId.equals(myHachikoId)) {
+                    tableHelper.updateOwnAnswer(planId, candidateId, answer);
+                    continue;
+                }
+
+                if (answer == CandidateDate.AnswerState.OK) {
+                    positiveFriendIds.add(Long.parseLong(guestId));
+                } else if (answer == CandidateDate.AnswerState.NG) {
+                    negativeFriendIds.add(Long.parseLong(guestId));
+                }
+            }
+            tableHelper.updateAnswers(planId, candidateId, positiveFriendIds, negativeFriendIds);
         }
     }
 

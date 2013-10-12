@@ -63,21 +63,23 @@ public class PlansTableHelper {
     /**
      * (Unfixedな)予定を追加する
      */
-    public void insertNewPlan(
-            String title, boolean isHost, List friendIds, List<CandidateDate> dates) {
+    public long insertNewPlan(
+            long planId, String title, boolean isHost, List friendIds, List<CandidateDate> dates) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues planValue = new ContentValues();
+        planValue.put(PLAN_ID, planId);
         planValue.put(TITLE, title);
         planValue.put(IS_HOST, isHost ? 1 : 0);
         planValue.put(IS_FIXED, 0);
         planValue.put(FRIEND_IDS, Joiner.on(",").join(friendIds));
         planValue.put(CREATED_AT, new Date().getTime());
-        long planId = db.insert(PLAN_TABLE_NAME, null, planValue);
+        db.insert(PLAN_TABLE_NAME, null, planValue);
         for (CandidateDate date: dates) {
             insertCandidateDate(db, planId, date);
         }
         db.close();
         HachikoLogger.debug("insert plan:", planValue);
+        return planId;
     }
 
     private void insertCandidateDate(SQLiteDatabase db, long planId, CandidateDate candidateDate) {
@@ -142,10 +144,21 @@ public class PlansTableHelper {
         return candidateDates;
     }
 
-    public void updateAnswer(long planId, long answerId, CandidateDate.AnswerState state) {
+    public void updateOwnAnswer(long planId, long answerId, CandidateDate.AnswerState state) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ANSWER_STATE, state.toInt());
+        db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + ANSWER_ID + "==?",
+                new String[]{Long.toString(planId), Long.toString(answerId)});
+        db.close();
+    }
+
+    public void updateAnswers(long planId, long answerId, Set<Long> positiveFriendIds,
+                             Set<Long> negativeFriendIds) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(POSITIVE_MEMBER_IDS, positiveFriendIds.toString());
+        values.put(NEGETIVE_MEMBER_IDS, negativeFriendIds.toString());
         db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + ANSWER_ID + "==?",
                 new String[]{Long.toString(planId), Long.toString(answerId)});
         db.close();

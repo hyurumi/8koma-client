@@ -84,6 +84,18 @@ public class CandidateDate {
             return null;
         }
 
+        public static AnswerState fromString(String str) {
+            str = str.toLowerCase();
+            if (str.equals("ok")) {
+                return OK;
+            } else if (str.equals("tentative")) {
+                return NEUTRAL;
+            } else if (str.equals("ng")) {
+                return NG;
+            }
+            return NEUTRAL;
+        }
+
         public int toInt() {
             switch (this) {
                 case OK:
