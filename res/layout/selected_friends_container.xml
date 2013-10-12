@@ -11,8 +11,11 @@
             android:id="@+id/new_plan_button"
             android:layout_alignParentRight="true"
             android:text="@string/guests_choice_confirm"
-            android:background="@color/background" android:textColor="@color/font_color_white" android:paddingLeft="16dp"
-            android:paddingRight="10dp" android:textAlignment="center" android:clickable="true"/>
+            android:background="@color/background"
+            android:textColor="@color/font_color_white"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp"
+            android:clickable="true"/>
     <HorizontalScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
