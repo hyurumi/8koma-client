@@ -188,7 +188,7 @@ public class UnfixedPlanView extends LinearLayout {
             param.put("planId", planId);
             JSONArray responses = new JSONArray();
             JSONObject response = new JSONObject();
-            response.put(Long.toString(planId), answerState.toString());
+            response.put(Long.toString(answerId), answerState.toString());
             responses.put(response);
             param.put("responses", responses);
         } catch (JSONException e) {
