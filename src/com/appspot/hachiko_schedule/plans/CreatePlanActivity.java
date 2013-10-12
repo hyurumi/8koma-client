@@ -183,9 +183,10 @@ public class CreatePlanActivity extends Activity {
                     public void onErrorResponse(VolleyError volleyError) {
                         // TODO: 作った予定のキャンセルと，エラーメッセージ #53
                         progressDialog.hide();
+                        String statusCode = volleyError.networkResponse == null ? ""
+                                : "(" + volleyError.networkResponse.statusCode + ")";
                         new AlertDialog.Builder(CreatePlanActivity.this)
-                                .setMessage("通信中にエラーが発生しました ("
-                                        + volleyError.networkResponse.statusCode + ")")
+                                .setMessage("通信中にエラーが発生しました "+ statusCode)
                                 .show();
                         HachikoLogger.error("plan creation error", volleyError);
                     }

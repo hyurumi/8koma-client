@@ -44,8 +44,15 @@ public class GoogleAuthActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         authPreferences  = new GoogleAuthPreferences(this);
+        progressDialog = new ProgressDialog(this);
         if (authPreferences.isAuthSetuped()) {
-            transitToNextActivity();
+            if (HachikoPreferences.getDefault(this)
+                    .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "").equals("")) {
+                sendRegisterRequest(
+                        authPreferences.getAccountName(), authPreferences.getToken());
+            } else {
+                transitToNextActivity();
+            }
         } else {
             HachikoLogger.debug("choose account");
             chooseAccount();
@@ -98,11 +105,7 @@ public class GoogleAuthActivity extends Activity {
 
     private void requestToken() {
         HachikoLogger.debug("Request token as " + authPreferences.getAccountName());
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("認証を行っています...");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
+        showProgressDialog("認証を行っています...");
         AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -134,9 +137,23 @@ public class GoogleAuthActivity extends Activity {
         task.execute();
     }
 
+    private void showProgressDialog(String msg) {
+        progressDialog.setMessage("認証を行っています...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+    }
+
     private void sendRegisterRequest(String gmail, String authToken) {
         JSONObject params = JSONUtils.jsonObject("gmail", gmail, "google_token", authToken);
         HachikoLogger.debug("register request");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgressDialog("Hachikoサーバと通信中...");
+            }
+        });
+        showProgressDialog("Hachikoサーバと通信中...");
         JsonRequest request = VolleyRequestFactory.registerRequest(
                 this,
                 params,
@@ -155,11 +172,12 @@ public class GoogleAuthActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         progressDialog.hide();
+                        String statusCode = volleyError.networkResponse == null ? ""
+                                : "(" + volleyError.networkResponse.statusCode + ")";
                         new AlertDialog.Builder(GoogleAuthActivity.this)
                                 .setMessage(
-                                        "Hachikoサーバと通信中にエラーが発生しました ("
-                                                + volleyError.networkResponse.statusCode + ")\n"
-                                                + "時間をおいて再度お試しください")
+                                        "Hachikoサーバと通信中にエラーが発生しました " + statusCode
+                                                + "\n時間をおいて再度お試しください")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
