@@ -22,7 +22,8 @@ public class SetupManager {
     public Intent intentForRequiredSetupIfAny() {
         SharedPreferences prefs = HachikoPreferences.getDefault(context);
         GoogleAuthPreferences googleAuthPreferences = new GoogleAuthPreferences(context);
-        if (!googleAuthPreferences.isAuthSetuped()) {
+        String myHachikoId = prefs.getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
+        if (!googleAuthPreferences.isAuthSetuped() || myHachikoId.equals("")) {
             return new Intent(context, GoogleAuthActivity.class);
         } else if (!prefs.getBoolean(
                 HachikoPreferences.KEY_IS_CALENDAR_SETUP,

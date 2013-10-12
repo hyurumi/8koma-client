@@ -2,6 +2,9 @@ package com.appspot.hachiko_schedule.setup;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +37,7 @@ public class GoogleAuthActivity extends Activity {
             + CALENDAR_SCOPE + " " + EMAIL_SCOPE;
     private static final String COM_GOOGLE = "com.google";
 
+    private ProgressDialog progressDialog;
     private GoogleAuthPreferences authPreferences;
 
     @Override
@@ -94,11 +98,15 @@ public class GoogleAuthActivity extends Activity {
 
     private void requestToken() {
         HachikoLogger.debug("Request token as " + authPreferences.getAccountName());
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("認証を行っています...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 String token = null;
-
                 try {
                     token = GoogleAuthUtil.getToken(
                             GoogleAuthActivity.this, authPreferences.getAccountName(), SCOPE);
@@ -122,7 +130,6 @@ public class GoogleAuthActivity extends Activity {
             protected void onPostExecute(String token) {
                 HachikoLogger.debug("Token obtained: ", token);
             }
-
         };
         task.execute();
     }
@@ -147,13 +154,27 @@ public class GoogleAuthActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        progressDialog.hide();
+                        new AlertDialog.Builder(GoogleAuthActivity.this)
+                                .setMessage(
+                                        "Hachikoサーバと通信中にエラーが発生しました ("
+                                                + volleyError.networkResponse.statusCode + ")\n"
+                                                + "時間をおいて再度お試しください")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                })
+                                .show();
                         HachikoLogger.error("Hachiko registration error ", volleyError);
                     }
                 }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
-                1000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        ));
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         HachikoApp.defaultRequestQueue().add(request);
     }
 
