@@ -53,7 +53,7 @@
     <activity
         android:name=".friends.NewEventChooseGuestActivity"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light">
+        android:theme="@style/hachiko_theme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>

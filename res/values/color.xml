@@ -3,4 +3,6 @@
   <color name="ok_green">#73F25C</color>
   <color name="neutral_yellow">#F3FC8B</color>
   <color name="ng_red">#FC4949</color>
+
+  <color name="background_white">#FFFFFF</color>
 </resources>
