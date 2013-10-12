@@ -48,7 +48,7 @@
         android:name=".plans.CreatePlanActivity"
         android:label="@string/app_name"
         android:theme="@style/hachiko_theme"
-        android:windowSoftInputMode="stateHidden">
+        android:windowSoftInputMode="adjustPan|stateHidden">
     </activity>
     <activity
         android:name=".friends.NewEventChooseGuestActivity"

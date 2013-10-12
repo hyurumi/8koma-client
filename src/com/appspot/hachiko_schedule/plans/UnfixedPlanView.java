@@ -176,7 +176,7 @@ public class UnfixedPlanView extends LinearLayout {
             if (lastPersistedState == answerState) {
                 return;
             }
-            plansTableHelper.updateAnswer(planId, candidateDate.getAnswerId(), answerState);
+            plansTableHelper.updateOwnAnswer(planId, candidateDate.getAnswerId(), answerState);
             sendResponse(planId, candidateDate.getAnswerId(), answerState);
             lastPersistedState = answerState;
         }

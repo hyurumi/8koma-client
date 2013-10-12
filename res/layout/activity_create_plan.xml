@@ -144,7 +144,6 @@
         android:layout_height="wrap_content"
         android:text="@string/confirm_button_label"
         android:id="@+id/invite_button"
-        android:layout_marginTop="3dp"
         android:layout_alignParentBottom="true" android:background="@color/background"
         android:textColor="@color/font_color_white"/>
 </RelativeLayout>
