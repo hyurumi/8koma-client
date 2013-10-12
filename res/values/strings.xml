@@ -49,4 +49,5 @@
   <string name="confirm_new_event_ok">招待を送信</string>
   <string name="no_event_text">Hachikoによって作成された予定がありません</string>
   <string name="no_event_then_create_new">新しい予定を作成する</string>
+    <string name="guests_choice_confirm">招待する</string>
 </resources>
