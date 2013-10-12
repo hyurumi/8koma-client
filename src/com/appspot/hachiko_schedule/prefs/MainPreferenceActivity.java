@@ -130,7 +130,10 @@ public class MainPreferenceActivity extends PreferenceActivity {
             public boolean onPreferenceClick(Preference preference) {
                 new AlertDialog.Builder(MainPreferenceActivity.this)
                         .setMessage("Build Date: " + getBuildTimeString() + "\n"
-                                + "Latest commit: " + getCommitInfo())
+                                + "Latest commit: " + getCommitInfo()
+                                + "Gcm Info:"
+                                + HachikoPreferences.getDefault(MainPreferenceActivity.this)
+                                .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found"))
                         .show();
                 return true;
             }
