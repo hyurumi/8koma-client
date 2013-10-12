@@ -29,6 +29,7 @@ public class GcmIntentService extends IntentService {
     // TODO: provide different value for different kind of message.
     public static final int NOTIFICATION_ID = 100;
     private static final String TAG_INVITE = "invited";
+    private static final String TAG_ALL_RESPONDED = "allResponded";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -51,6 +52,8 @@ public class GcmIntentService extends IntentService {
         try {
             if (tag.equals(TAG_INVITE)) {
                 sendInviteNotification(new JSONObject(body));
+            } else if (tag.equals(TAG_ALL_RESPONDED)) {
+                sendRespondedNotification(new JSONObject(body));
             }
         } catch (JSONException e) {
             HachikoLogger.error("error parsing request " + body, e);
@@ -92,6 +95,21 @@ public class GcmIntentService extends IntentService {
             } else {
                 sendNotification("イベントへの招待が届きました", title, pendingIntent);
             }
+        } catch (JSONException e) {
+            HachikoLogger.error(body.toString(), e);
+        }
+    }
+
+    private void sendRespondedNotification(JSONObject body) {
+        try {
+            String title = body.getString("title");
+            Long planId = body.getLong("planId");
+            String myHachikoId = HachikoPreferences.getDefault(this)
+                    .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
+            updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
+            PendingIntent pendingIntent
+                    = getActivityIntent(new Intent(this, PlanListActivity.class));
+            sendNotification("参加者から返答が届きました", title, pendingIntent);
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
         }
