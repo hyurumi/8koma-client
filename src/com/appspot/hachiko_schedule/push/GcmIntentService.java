@@ -65,7 +65,6 @@ public class GcmIntentService extends IntentService {
         try {
             Long planId = body.getLong("planId");
             String title = body.getString("title");
-            String hostId = body.getString("owner");
             List<String> friendIds = new ArrayList<String>();
             JSONArray array = body.getJSONArray("friendsId");
             for (int i = 0; i < array.length(); i++) {
@@ -82,17 +81,18 @@ public class GcmIntentService extends IntentService {
                         DateUtils.parseISO8601(timeRange.getString("end")),
                         CandidateDate.AnswerState.NEUTRAL));
             }
+            PlansTableHelper tableHelper = new PlansTableHelper(this);
+            String hostId = body.getString("owner");
             String myHachikoId = HachikoPreferences.getDefault(this)
                     .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
             boolean isHost = myHachikoId.equals(hostId);
-            PlansTableHelper tableHelper = new PlansTableHelper(this);
-            tableHelper.insertNewPlan(planId, title, isHost, friendIds, candidateDates);
+            if (!isHost) {
+                tableHelper.insertNewPlan(planId, title, isHost, friendIds, candidateDates);
+            }
             updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent
                     = getActivityIntent(new Intent(this, PlanListActivity.class));
-            if (isHost) {
-                sendNotification(title + "が作成されました", "詳細を見るにはクリック", pendingIntent);
-            } else {
+            if (!isHost) {
                 sendNotification("イベントへの招待が届きました", title, pendingIntent);
             }
         } catch (JSONException e) {
