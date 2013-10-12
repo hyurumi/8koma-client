@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,6 +57,7 @@ public class CreatePlanActivity extends Activity {
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
     private Long[] friendIds;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +118,11 @@ public class CreatePlanActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 sendCreatePlanRequest();
-                                Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
-                                startActivity(intent);
+                                progressDialog = new ProgressDialog(CreatePlanActivity.this);
+                                progressDialog.setMessage("予定作成しています...");
+                                progressDialog.setCancelable(false);
+                                progressDialog.setIndeterminate(true);
+                                progressDialog.show();
                             }
                         }).create();
                 dialog.show();
@@ -129,9 +132,10 @@ public class CreatePlanActivity extends Activity {
 
     private void sendCreatePlanRequest() {
         JSONObject param = new JSONObject();
+        final List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
+        final String title = eventTitleView.getText().toString();
         try {
             JSONArray dates = new JSONArray();
-            List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
             for (Timeslot timeslot: suggestingTimeslots) {
                 JSONObject candidateJson = new JSONObject();
                 JSONObject timeslotJson = new JSONObject();
@@ -148,12 +152,7 @@ public class CreatePlanActivity extends Activity {
             }
             param.put("friendsId", friendIdsJson);
             param.put("candidates", dates);
-            String title = eventTitleView.getText().toString();
             param.put("title", title);
-
-            PlansTableHelper plansTableHelper = new PlansTableHelper(this);
-            plansTableHelper.insertNewPlan(
-                    title, /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
         } catch (JSONException e) {
             HachikoLogger.error("JSON error/Never happen", e);
             return;
@@ -168,6 +167,14 @@ public class CreatePlanActivity extends Activity {
                     public void onResponse(String s) {
                         HachikoLogger.debug("plan successfully created");
                         HachikoLogger.debug(s);
+                        PlansTableHelper plansTableHelper
+                                = new PlansTableHelper(CreatePlanActivity.this);
+                        plansTableHelper.insertNewPlan(Long.parseLong(s), title,
+                                /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
+                        Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
