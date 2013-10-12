@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -9,15 +9,18 @@
     android:background="#f7f7f7">
 
   <ScrollView
-      android:layout_height="fill_parent"
+      android:layout_height="wrap_content"
       android:layout_width="fill_parent"
-      android:fillViewport="true">
+      android:layout_marginLeft="5dp"
+      android:layout_marginRight="5dp"
+      android:fillViewport="true" android:layout_alignParentTop="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:layout_marginLeft="5dp">
+
+            >
 
       <LinearLayout
           android:orientation="vertical"
@@ -133,14 +136,15 @@
           android:gravity="bottom"
           android:layout_marginRight="5dp">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/confirm_button_label"
-            android:id="@+id/invite_button"
-            android:layout_marginTop="3dp"
-            />
       </LinearLayout>
     </LinearLayout>
   </ScrollView>
-</LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_button_label"
+        android:id="@+id/invite_button"
+        android:layout_marginTop="3dp"
+        android:layout_alignParentBottom="true" android:background="@color/background"
+        android:textColor="@color/font_color_white"/>
+</RelativeLayout>
