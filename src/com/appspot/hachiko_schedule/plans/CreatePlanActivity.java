@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -181,9 +182,16 @@ public class CreatePlanActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         // TODO: 作った予定のキャンセルと，エラーメッセージ #53
+                        progressDialog.hide();
+                        new AlertDialog.Builder(CreatePlanActivity.this)
+                                .setMessage("通信中にエラーが発生しました ("
+                                        + volleyError.networkResponse.statusCode + ")")
+                                .show();
                         HachikoLogger.error("plan creation error", volleyError);
                     }
                 });
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                /* num of retry */3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         HachikoApp.defaultRequestQueue().add(request);
     }
 
