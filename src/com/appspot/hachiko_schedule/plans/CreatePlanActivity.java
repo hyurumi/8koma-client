@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.format.DateFormat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,14 @@ import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
  * {@link Activity} for creating new plan.
  */
 public class CreatePlanActivity extends Activity {
-    private Spinner dayAfterSpinner;
-    private Spinner timeWordsSpinner;
+    private Spinner startDateSpinner;
+    private Spinner endDateSpinner;
     private Spinner durationSpinner;
+    private RadioGroup dateRangeRadioGroup;
+    private ToggleButton morningButton;
+    private ToggleButton afternoonButton;
+    private ToggleButton eveningButton;
+    private ToggleButton nightButton;
     private EditText eventTitleView;
     private ViewGroup schedulesContainer;
     private Set<Timeslot> suggestingTimeslots = new HashSet<Timeslot>();
@@ -68,16 +74,24 @@ public class CreatePlanActivity extends Activity {
 
         scheduleSuggester = new ScheduleSuggester(this);
         eventTitleView = (EditText) findViewById(R.id.what_to_do);
-        dayAfterSpinner = (Spinner) findViewById(R.id.days_after_spinner);
-        timeWordsSpinner = (Spinner) findViewById(R.id.time_words_spinner);
+        startDateSpinner = (Spinner) findViewById(R.id.start_date_spinner);
+        endDateSpinner = (Spinner) findViewById(R.id.end_date_spinner);
+        dateRangeRadioGroup = (RadioGroup) findViewById(R.id.date_range_selections);
+        morningButton = (ToggleButton) findViewById(R.id.morning);
+        afternoonButton = (ToggleButton) findViewById(R.id.afternoon);
+        eveningButton = (ToggleButton) findViewById(R.id.evening);
+        nightButton = (ToggleButton) findViewById(R.id.night);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
         schedulesContainer = (ViewGroup) findViewById(R.id.schedules);
         confirmButton = (Button) findViewById(R.id.invite_button);
 
-        dayAfterSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
-        timeWordsSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
+        setFriends();
+        initDateRange();
         durationSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
+        confirmButton.setOnClickListener(new ConfirmButtonListener());
+     }
 
+    private void setFriends() {
         friends = getIntent().getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
         Preconditions.checkNotNull(friends);
         Preconditions.checkState(friends.length != 0);
@@ -86,50 +100,85 @@ public class CreatePlanActivity extends Activity {
         for (int i = 0; i < friends.length; i++) {
             friendIds[i] = ((FriendIdentifier) friends[i]).getHachikoId();
         }
+    }
 
-        debugQueryEvents();
+    private void initDateRange() {
+        final Calendar today;
+        Calendar nextMonday = null;
+        Calendar nextFriday = null;
+        today = Calendar.getInstance();
+        final List<Calendar> continuesDays = new ArrayList<Calendar>();
+        continuesDays.add(today);
+        Calendar calendar = today;
+        for (int i = 0; i < 21; i++) {
+            calendar = (Calendar) calendar.clone();
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            if (nextMonday == null && calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                nextMonday = calendar;
+            }
+            if (nextFriday == null && nextMonday != null
+                    && calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+                nextFriday = calendar;
+            }
+            continuesDays.add(calendar);
+        }
+        startDateSpinner.setAdapter(new CalendarArrayAdapter(continuesDays));
+        endDateSpinner.setAdapter(new CalendarArrayAdapter(continuesDays));
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        final Calendar nextMonday_ = nextMonday;
+        final Calendar nextFriday_ = nextFriday;
+        startDateSpinner.setSelection(continuesDays.indexOf(nextMonday_));
+        endDateSpinner.setSelection(continuesDays.indexOf(nextFriday_));
+        startDateSpinner.setEnabled(false);
+        endDateSpinner.setEnabled(false);
+        dateRangeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                StringBuilder title = new StringBuilder();
-                for (int i = 0; i < friends.length; i++) {
-                    title.append(((FriendIdentifier) friends[i]).getName());
-                    if (i != friends.length - 1) {
-                        title.append(", ");
-                    } else {
-                        title.append("に招待を送信する");
-                    }
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.date_range_nextweek:
+                        startDateSpinner.setSelection(continuesDays.indexOf(nextMonday_));
+                        endDateSpinner.setSelection(continuesDays.indexOf(nextFriday_));
+                        startDateSpinner.setEnabled(false);
+                        endDateSpinner.setEnabled(false);
+                        return;
+                    case R.id.date_range_asap:
+                        startDateSpinner.setSelection(continuesDays.indexOf(today));
+                        endDateSpinner.setSelection(continuesDays.indexOf(today) + 3);
+                        startDateSpinner.setEnabled(false);
+                        endDateSpinner.setEnabled(false);
+                        return;
+                    case R.id.date_range_manual:
+                        startDateSpinner.setEnabled(true);
+                        endDateSpinner.setEnabled(true);
+                        return;
                 }
-                StringBuilder content = new StringBuilder();
-                content.append(eventTitleView.getText().toString())
-                        .append(System.getProperty("line.separator"))
-                        .append("候補日:")
-                        .append(System.getProperty("line.separator"));
-                for (Timeslot timeslot: suggestingTimeslots) {
-                    content.append(DateUtils.timeslotString(
-                            timeslot.getStartDate(), timeslot.getEndDate()));
-                    content.append(System.getProperty("line.separator"));
-
-                }
-                AlertDialog dialog = new AlertDialog.Builder(CreatePlanActivity.this)
-                        .setTitle(title.toString())
-                        .setMessage(content.toString())
-                        .setPositiveButton("送信", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                sendCreatePlanRequest();
-                                progressDialog = new ProgressDialog(CreatePlanActivity.this);
-                                progressDialog.setMessage("予定作成しています...");
-                                progressDialog.setCancelable(false);
-                                progressDialog.setIndeterminate(true);
-                                progressDialog.show();
-                            }
-                        }).create();
-                dialog.show();
             }
         });
-     }
+    }
+
+    private class CalendarArrayAdapter extends ArrayAdapter<Calendar> {
+        private CalendarArrayAdapter(List<Calendar> calendars) {
+            super(CreatePlanActivity.this, android.R.layout.simple_spinner_item, calendars);
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return overrideTextOfView(super.getView(position, convertView, parent), position);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return overrideTextOfView(
+                    super.getDropDownView(position, convertView, parent), position);
+        }
+
+        private View overrideTextOfView(View textView, int position) {
+            Calendar item = getItem(position);
+            ((TextView) textView).setText(DateFormat.format("MM / dd (E)", item));
+            return textView;
+        }
+    }
 
     private void sendCreatePlanRequest() {
         JSONObject param = new JSONObject();
@@ -187,7 +236,7 @@ public class CreatePlanActivity extends Activity {
                         String statusCode = volleyError.networkResponse == null ? ""
                                 : "(" + volleyError.networkResponse.statusCode + ")";
                         new AlertDialog.Builder(CreatePlanActivity.this)
-                                .setMessage("通信中にエラーが発生しました "+ statusCode)
+                                .setMessage("通信中にエラーが発生しました " + statusCode)
                                 .show();
                         HachikoLogger.error("plan creation error", volleyError);
                     }
@@ -204,17 +253,6 @@ public class CreatePlanActivity extends Activity {
         }
         ((TextView) findViewById(R.id.friends_name_to_invite))
                 .setText(friendsNameToInvite.toString());
-    }
-
-    private void debugQueryEvents() {
-        List<Timeslot> events = new EventManager(this).queryAllForthcomingEvent();
-        HachikoLogger.debug(events.size() + " events are registered");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        for (Timeslot event: events) {
-            HachikoLogger.debug(dateFormat.format(event.getStartDate())
-                    + "-" + timeFormat.format(event.getEndDate()) + event.isAllDay());
-        }
     }
 
     private View addNewScheduleTextView(Timeslot schedule) {
@@ -272,25 +310,58 @@ public class CreatePlanActivity extends Activity {
                 delayInMillis);
     }
 
+    private class ConfirmButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            StringBuilder title = new StringBuilder();
+            for (int i = 0; i < friends.length; i++) {
+                title.append(((FriendIdentifier) friends[i]).getName());
+                if (i != friends.length - 1) {
+                    title.append(", ");
+                } else {
+                    title.append("に招待を送信する");
+                }
+            }
+            StringBuilder content = new StringBuilder();
+            content.append(eventTitleView.getText().toString())
+                    .append(System.getProperty("line.separator"))
+                    .append("候補日:")
+                    .append(System.getProperty("line.separator"));
+            for (Timeslot timeslot: suggestingTimeslots) {
+                content.append(DateUtils.timeslotString(
+                        timeslot.getStartDate(), timeslot.getEndDate()));
+                content.append(System.getProperty("line.separator"));
+
+            }
+            AlertDialog dialog = new AlertDialog.Builder(CreatePlanActivity.this)
+                    .setTitle(title.toString())
+                    .setMessage(content.toString())
+                    .setPositiveButton("送信", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendCreatePlanRequest();
+                            progressDialog = new ProgressDialog(CreatePlanActivity.this);
+                            progressDialog.setMessage("予定作成しています...");
+                            progressDialog.setCancelable(false);
+                            progressDialog.setIndeterminate(true);
+                            progressDialog.show();
+                        }
+                    }).create();
+            dialog.show();
+        }
+    }
+
     private class OnSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // reschedule.
             schedulesContainer.removeAllViews();
-            int timeWordIndex = timeWordsSpinner.getSelectedItemPosition();
-            String duration = (String) durationSpinner.getSelectedItem();
-            String daysAfter = (String) dayAfterSpinner.getSelectedItem();
-            if (timeWordIndex == AdapterView.INVALID_POSITION
-                    || duration == null || daysAfter == null) {
-                return;
-            }
 
             List<Timeslot> schedules = scheduleSuggester.suggestTimeSlot(
-                    TimeWords.values()[timeWordIndex],
+                    TimeWords.MORNING,
                     // TODO: いったんダミー値を入れるようにしておくので、後で直す。
-                    //Integer.parseInt(duration),
-                    //Integer.parseInt(daysAfter)
                     Integer.parseInt("30"),
                     Integer.parseInt("1")
             );
