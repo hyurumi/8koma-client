@@ -153,7 +153,6 @@ public class GoogleAuthActivity extends Activity {
                 showProgressDialog("Hachikoサーバと通信中...");
             }
         });
-        showProgressDialog("Hachikoサーバと通信中...");
         JsonRequest request = VolleyRequestFactory.registerRequest(
                 this,
                 params,
