@@ -49,7 +49,7 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background_white" android:layout_margin="5dp">
+                android:background="@color/background_white" android:layout_margin="5dp" android:padding="5dp">
 
             <LinearLayout
                     android:orientation="horizontal"
@@ -77,93 +77,82 @@
                         android:layout_weight="5"
                         android:entries="@array/time_words"/>
             </LinearLayout>
+            <include layout="@layout/horizontal_line_gray"/>
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp" android:orientation="horizontal">
-                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="46dp" android:orientation="horizontal" android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+                <Spinner
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/minutes_wrapper"
-                        android:layout_alignParentRight="true">
-                    <Spinner
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/duration_spinner"
-                            android:layout_marginLeft="10dp"
-                            android:entries="@array/duration"/>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/minutes"/>
-                </LinearLayout>
+                        android:layout_height="fill_parent"
+                        android:id="@+id/duration_spinner"
+                        android:layout_marginLeft="10dp"
+                        android:entries="@array/duration"/>
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" android:layout_alignParentLeft="true">
-                    <Button
-                            android:layout_width="96dp"
-                            android:layout_height="wrap_content"
-                            android:text="来週中"
-                            android:id="@+id/button" android:layout_margin="0dp"/>
-                    <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="直近"
-                            android:id="@+id/button1"/>
-                    <Button
-                            android:layout_width="84dp"
-                            android:layout_height="wrap_content"
-                            android:text="自由に"
-                            android:id="@+id/button2"/>
+                        android:layout_height="wrap_content">
+                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                            android:text="来週中" android:id="@+id/button4"
+                            android:layout_alignParentBottom="true" android:background="@color/background"
+                            android:textColor="@color/font_color_white" android:textSize="12dp"
+                            android:layout_weight="0.33"/>
+                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                            android:text="なるべく早く" android:id="@+id/button5"
+                            android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
+                            android:textColor="@color/font_color_gray" android:textSize="12dp"
+                            android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.34"/>
+                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                            android:text="手動設定" android:id="@+id/button6"
+                            android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
+                            android:textColor="@color/font_color_gray" android:layout_weight="0.33"
+                            android:textSize="12dp"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-                <ToggleButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="abc"
-                        android:layout_weight="1"
-                        android:id="@+id/toggleButton"/>
-                <ToggleButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New ToggleButton"
-                        android:layout_weight="1"
-                        android:id="@+id/toggleButton"/>
-                <ToggleButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New ToggleButton"
-                        android:layout_weight="1"
-                        android:id="@+id/toggleButton"/>
-                <ToggleButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New ToggleButton"
-                        android:layout_weight="1"
-                        android:id="@+id/toggleButton"/>
+                    android:layout_height="46dp"
+                    android:paddingTop="5dp" android:paddingBottom="5dp" android:gravity="fill_horizontal">
+                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:text="朝" android:id="@+id/button7"
+                        android:layout_alignParentBottom="true" android:background="@color/background"
+                        android:textColor="@color/font_color_white" android:textSize="12dp"
+                        android:layout_weight="0.25"/>
+                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:text="昼" android:id="@+id/button8"
+                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
+                        android:textColor="@color/font_color_gray" android:textSize="12dp"
+                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"/>
+                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:text="夕" android:id="@+id/button9"
+                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
+                        android:textColor="@color/font_color_gray" android:textSize="12dp"
+                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"/>
+                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:text="夜" android:id="@+id/button10"
+                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
+                        android:textColor="@color/font_color_gray"
+                        android:textSize="12dp" android:layout_weight="0.25"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp">
                 <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="下の日程で招待を送ります(スワイプで日程変更)" android:background="@color/background_color_gray"
+                        android:text="下の日程で招待を送ります(スワイプで日程変更)"
                         />
+                <include layout="@layout/horizontal_line_gray"/>
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:paddingLeft="20dp"
-                        android:id="@+id/schedules"/>
+                        android:id="@+id/schedules" android:layout_marginTop="5dp"/>
             </LinearLayout>
         </LinearLayout>
 

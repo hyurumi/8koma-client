@@ -35,12 +35,12 @@
     <item>夜</item>
   </string-array>
   <string-array name="duration">
-    <item>30</item>
-    <item>60</item>
-    <item>90</item>
-    <item>120</item>
-    <item>150</item>
-    <item>180</item>
+    <item>30分</item>
+    <item>1時間</item>
+    <item>1時間半</item>
+    <item>2時間</item>
+    <item>2時間半</item>
+    <item>３時間</item>
   </string-array>
   <string name="invite_button_label">この日程で誘う</string>
   <string name="confirm_new_event_text">予定を確認</string>

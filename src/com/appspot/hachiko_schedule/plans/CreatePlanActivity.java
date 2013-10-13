@@ -288,8 +288,11 @@ public class CreatePlanActivity extends Activity {
 
             List<Timeslot> schedules = scheduleSuggester.suggestTimeSlot(
                     TimeWords.values()[timeWordIndex],
-                    Integer.parseInt(duration),
-                    Integer.parseInt(daysAfter)
+                    // TODO: いったんダミー値を入れるようにしておくので、後で直す。
+                    //Integer.parseInt(duration),
+                    //Integer.parseInt(daysAfter)
+                    Integer.parseInt("30"),
+                    Integer.parseInt("1")
             );
             suggestingTimeslots.clear();
             for (Timeslot schedule: schedules) {
