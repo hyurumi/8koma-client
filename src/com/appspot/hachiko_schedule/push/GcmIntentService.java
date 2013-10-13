@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import com.appspot.hachiko_schedule.Constants;
@@ -30,6 +31,7 @@ public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 100;
     private static final String TAG_INVITE = "invited";
     private static final String TAG_ALL_RESPONDED = "allResponded";
+    private static final String TAG_CONFIRMED = "confirmed";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -54,6 +56,8 @@ public class GcmIntentService extends IntentService {
                 sendInviteNotification(new JSONObject(body));
             } else if (tag.equals(TAG_ALL_RESPONDED)) {
                 sendRespondedNotification(new JSONObject(body));
+            } else if (tag.equals(TAG_CONFIRMED)) {
+                sendEventRegisteredNotification(new JSONObject(body));
             }
         } catch (JSONException e) {
             HachikoLogger.error("error parsing request " + body, e);
@@ -118,6 +122,27 @@ public class GcmIntentService extends IntentService {
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
         }
+    }
+
+    private void sendEventRegisteredNotification(JSONObject body) {
+        try {
+            String planId = body.getString("planId");
+            PlansTableHelper plansTableHelper = new PlansTableHelper(this);
+            String title = plansTableHelper.queryTitle(planId);
+            Date startDate
+                    = DateUtils.parseISO8601(body.getJSONObject("timeRange").getString("start"));
+            sendNotification("予定がカレンダーに登録されました", title, calendarIntent(startDate));
+        } catch (JSONException e) {
+            HachikoLogger.error(body.toString(), e);
+        }
+    }
+
+    // TODO: ICS以前の後方互換怪しいのであとでしらべる #1
+    private PendingIntent calendarIntent(Date date) {
+        Uri uriCalendar = Uri.parse(
+                "content://com.android.calendar/time/" + Long.toString(date.getTime()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uriCalendar);
+        return getActivityIntent(intent);
     }
 
     private void updateAttendanceInfo(long planId, String myHachikoId, JSONArray attendance)

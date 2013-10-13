@@ -175,4 +175,16 @@ public class PlansTableHelper {
                 new String[]{Long.toString(planId), Long.toString(answerId)});
         db.close();
     }
+
+    public String queryTitle(String planId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{TITLE}, PLAN_ID + " == ? ",
+                new String[] {planId}, null, null, null, "1");
+        String ret = null;
+        if (c.moveToFirst()) {
+            ret = c.getString(c.getColumnIndex(TITLE));
+        }
+        db.close();
+        return ret;
+    }
 }
