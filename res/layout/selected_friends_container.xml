@@ -11,7 +11,7 @@
             android:id="@+id/new_plan_button"
             android:layout_alignParentRight="true"
             android:text="@string/guests_choice_confirm"
-            android:background="@color/background"
+            android:background="@drawable/color_stateful"
             android:textColor="@color/font_color_white"
             android:paddingLeft="16dp"
             android:paddingRight="10dp"

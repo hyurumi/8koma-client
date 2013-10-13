@@ -6,5 +6,13 @@
     <color name="ng_red">#FC4949</color>
 
     <color name="font_color_white">#FFFFFF</color>
-    <color name="background">#00AAAA</color><color name="background_white">#FFFFFF</color><color name="background_color_gray">#f5f5f5</color><color name="font_color_gray">#666666</color>
+    <color name="background">#00AAAA</color>
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_color_gray">#f5f5f5</color>
+    <color name="font_color_gray">#666666</color>
+
+    <color name="btn_normal">#00AAAA</color>
+    <color name="btn_focused">#007777</color>
+    <color name="btn_pressed">#007777</color>
+    <color name="btn_unactive">#AAAAAA</color>
 </resources>
