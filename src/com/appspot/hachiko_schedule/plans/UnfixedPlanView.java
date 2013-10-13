@@ -27,6 +27,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
 
 /**
@@ -67,9 +71,17 @@ public class UnfixedPlanView extends LinearLayout {
         titleView.setText(plan.getTitle());
         participantsView.setText(Joiner.on(", ").join(plan.getpotentialParticipants()));
         candidateDateContainer.removeAllViews();
-        for (CandidateDate candidateDate: plan.getCandidateDates()) {
+        List<CandidateDate> candidateDates = plan.getCandidateDates();
+        Collections.sort(candidateDates, new Comparator<CandidateDate>() {
+            @Override
+            public int compare(CandidateDate lhs, CandidateDate rhs) {
+                return (int) (lhs.getStartDate().getTime() - rhs.getStartDate().getTime());
+            }
+        });
+        for (int i = 0; i < candidateDates.size(); i++) {
+            CandidateDate candidateDate = candidateDates.get(i);
             CandidateDateAnswerView answerView = new CandidateDateAnswerView(getContext());
-            answerView.setCandidate(plan.getPlanId(), candidateDate);
+            answerView.setCandidate(plan.getPlanId(), candidateDate, i);
             candidateDateContainer.addView(answerView);
         }
         View v = new View(getContext());
@@ -82,6 +94,7 @@ public class UnfixedPlanView extends LinearLayout {
         private TextView numOfOkText;
         private TextView candidateText;
         private CandidateDate candidateDate;
+        private int index;
         private long planId;
         private AnswerState lastPersistedState;
 
@@ -147,9 +160,10 @@ public class UnfixedPlanView extends LinearLayout {
             });
         }
 
-        private void setCandidate(long planId, CandidateDate candidateDate) {
+        private void setCandidate(long planId, CandidateDate candidateDate, int index) {
             this.planId = planId;
             this.candidateDate = candidateDate;
+            this.index = index;
             updateTextAndBgColor();
         }
 
@@ -177,7 +191,7 @@ public class UnfixedPlanView extends LinearLayout {
                 return;
             }
             plansTableHelper.updateOwnAnswer(planId, candidateDate.getAnswerId(), answerState);
-            sendResponse(planId, candidateDate.getAnswerId(), answerState);
+            sendResponse(planId, index, answerState);
             lastPersistedState = answerState;
         }
     }
