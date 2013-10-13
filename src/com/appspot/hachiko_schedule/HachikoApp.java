@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
 import com.appspot.hachiko_schedule.dev.FakeRequestQueue;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
@@ -22,7 +22,7 @@ public class HachikoApp extends Application {
         super.onCreate();
         appContext = getApplicationContext();
         fakeRequestQueue = new FakeRequestQueue(appContext);
-        requestQueue = Volley.newRequestQueue(appContext);
+        requestQueue = new HachiRequestQueue(appContext);
         requestQueue.start();
     }
 

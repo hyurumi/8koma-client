@@ -49,6 +49,13 @@ public class HachikoCookieManager {
         return false;
     }
 
+    public void invalidateSessionCookie() {
+        HachikoPreferences.getDefaultEditor(context)
+                .remove(HachikoPreferences.KEY_SESSION_KEY)
+                .remove(HachikoPreferences.KEY_SESSION_EXPIRES)
+                .commit();
+    }
+
     /**
      * @return セッションIDを付与して返す
      */

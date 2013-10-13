@@ -27,6 +27,14 @@ public class HachikoLogger {
         return Log.e(DEFAULT_TAG, msg);
     }
 
+    static public int warn(String msg) {
+        return Log.w(DEFAULT_TAG, msg);
+    }
+
+    static public int warn(Object... objects) {
+        return Log.w(DEFAULT_TAG, appendAsString(objects));
+    }
+
     static public int error(String msg, Throwable throwable) {
         return Log.e(DEFAULT_TAG, msg, throwable);
     }
