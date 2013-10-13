@@ -57,12 +57,7 @@
           android:layout_marginTop="3dp"
           android:layout_marginBottom="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/what_label"/>
-        <include layout="@layout/horizontal_line"/>
-        <TextView
+          <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="予定の種類(例:飲み会)が表示されていません．"

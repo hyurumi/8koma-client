@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <color name="ok_green">#73F25C</color>
-  <color name="neutral_yellow">#F3FC8B</color>
-  <color name="ng_red">#FC4949</color>
-
-  <color name="font_color_white">#FFFFFF</color>
-  <color name="background">#006F86</color>
-</resources>

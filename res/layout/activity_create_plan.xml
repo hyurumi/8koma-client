@@ -6,13 +6,11 @@
     android:layout_width="match_parent"
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
-    android:background="#f7f7f7">
+    android:background="@color/background_color_gray" android:clickable="false">
 
   <ScrollView
       android:layout_height="wrap_content"
       android:layout_width="fill_parent"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="5dp"
       android:fillViewport="true" android:layout_alignParentTop="true">
 
     <LinearLayout
@@ -25,15 +23,14 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp">
+                android:background="@color/background_white"
+                android:layout_margin="5dp" android:padding="5dp">
 
             <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/with_who_label"/>
-
-            <include layout="@layout/horizontal_line"/>
+            <include layout="@layout/horizontal_line_gray"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -41,40 +38,18 @@
                     android:id="@+id/friends_name_to_invite"/>
         </LinearLayout>
 
+        <EditText
+                android:id="@+id/what_to_do"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/background_white"
+                android:layout_margin="5dp" android:padding="5dp" android:hint="@string/what_to_do_default"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="5dp">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/what_label"/>
-
-            <include layout="@layout/horizontal_line"/>
-
-            <EditText
-                    android:id="@+id/what_to_do"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/what_to_do_default"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp">
-
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/when_label"/>
-
-            <include layout="@layout/horizontal_line"/>
+                android:background="@color/background_white" android:layout_margin="5dp">
 
             <LinearLayout
                     android:orientation="horizontal"
@@ -102,9 +77,9 @@
                         android:layout_weight="5"
                         android:entries="@array/time_words"/>
             </LinearLayout>
-            <RelativeLayout
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="55dp" android:orientation="horizontal">
                 <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -122,60 +97,76 @@
                             android:layout_height="wrap_content"
                             android:text="@string/minutes"/>
                 </LinearLayout>
-                <SeekBar
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" android:layout_alignParentLeft="true">
+                    <Button
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:text="来週中"
+                            android:id="@+id/button" android:layout_margin="0dp"/>
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="直近"
+                            android:id="@+id/button1"/>
+                    <Button
+                            android:layout_width="84dp"
+                            android:layout_height="wrap_content"
+                            android:text="自由に"
+                            android:id="@+id/button2"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+                <ToggleButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="abc"
+                        android:layout_weight="1"
+                        android:id="@+id/toggleButton"/>
+                <ToggleButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New ToggleButton"
+                        android:layout_weight="1"
+                        android:id="@+id/toggleButton"/>
+                <ToggleButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New ToggleButton"
+                        android:layout_weight="1"
+                        android:id="@+id/toggleButton"/>
+                <ToggleButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New ToggleButton"
+                        android:layout_weight="1"
+                        android:id="@+id/toggleButton"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="10dp">
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="下の日程で招待を送ります(スワイプで日程変更)" android:background="@color/background_color_gray"
+                        />
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/seekBar"
-                        android:layout_toLeftOf="@id/minutes_wrapper"/>
-            </RelativeLayout>
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:id="@+id/schedules"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-            <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="abc"
-                    android:layout_weight="1"
-                    android:id="@+id/toggleButton"/>
-            <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:layout_weight="1"
-                    android:id="@+id/toggleButton"/>
-            <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:layout_weight="1"
-                    android:id="@+id/toggleButton"/>
-            <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New ToggleButton"
-                    android:layout_weight="1"
-                    android:id="@+id/toggleButton"/>
-        </LinearLayout>
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="20dp"
-                    android:id="@+id/schedules"/>
-        </LinearLayout>
     </LinearLayout>
   </ScrollView>
     <Button
