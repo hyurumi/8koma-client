@@ -23,7 +23,6 @@ import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -200,10 +199,8 @@ public class UnfixedPlanView extends LinearLayout {
         JSONObject param = new JSONObject();
         try {
             param.put("planId", planId);
-            JSONArray responses = new JSONArray();
-            JSONObject response = new JSONObject();
-            response.put(Long.toString(answerId), answerState.toString());
-            responses.put(response);
+            JSONObject responses = new JSONObject();
+            responses.put(Long.toString(answerId), answerState.toString());
             param.put("responses", responses);
         } catch (JSONException e) {
             HachikoLogger.error("JSONERROR", e);
