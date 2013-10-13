@@ -9,8 +9,6 @@ import android.provider.CalendarContract;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
@@ -48,20 +46,6 @@ public class PlanListActivity extends Activity {
                 startCreatingEvent();
             }
         });
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        checkNewEvent(intent);
-    }
-
-    private void checkNewEvent(Intent intent) {
-        if (intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false)) {
-            Toast.makeText(this,
-                    "新しいイベントが登録されました！(データ記憶する部分はまだ作ってないので表示は変わりません...)",
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
