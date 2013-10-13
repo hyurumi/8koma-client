@@ -9,13 +9,16 @@ import java.util.List;
 public class UnfixedPlan {
     private final long planId;
     private final String title;
+    private final boolean isHost;
     private final Collection<String> potentialParticipants;
     private final List<CandidateDate> candidateDates;
 
-    public UnfixedPlan(long planId, String title, Collection<String> potentialParticipants,
+    public UnfixedPlan(long planId, String title, boolean isHost,
+                       Collection<String> potentialParticipants,
                        List<CandidateDate> candidateDates) {
         this.planId = planId;
         this.title = title;
+        this.isHost = isHost;
         this.potentialParticipants = potentialParticipants;
         this.candidateDates = candidateDates;
     }
@@ -26,6 +29,10 @@ public class UnfixedPlan {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean isHost() {
+        return isHost;
     }
 
     public Collection<String> getpotentialParticipants() {

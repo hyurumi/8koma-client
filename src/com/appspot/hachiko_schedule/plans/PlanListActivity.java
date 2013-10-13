@@ -122,11 +122,13 @@ public class PlanListActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
+            if (plans[position].isHost()) {
+                convertView = new UnfixedHostPlanView(getContext());
+                ((UnfixedHostPlanView) convertView).setPlan(plans[position]);
+            } else {
                 convertView = new UnfixedGuestPlanView(getContext());
+                ((UnfixedGuestPlanView) convertView).setPlan(plans[position]);
             }
-            ((UnfixedGuestPlanView) convertView).setPlan(plans[position]);
-
             return convertView;
         }
 

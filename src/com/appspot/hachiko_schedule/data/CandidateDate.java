@@ -1,7 +1,12 @@
 package com.appspot.hachiko_schedule.data;
 
+import android.content.Context;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.util.DateUtils;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 
 import java.util.Collections;
 import java.util.Date;
@@ -36,6 +41,18 @@ public class CandidateDate {
         return DateUtils.timeslotString(startDate, endDate);
     }
 
+    public String getPositiveFriendNames(Context context) {
+        UserTableHelper userTableHelper = new UserTableHelper(context);
+        List<String> hachikoIds = userTableHelper.getFriendsNameForHachikoIds(
+                Collections2.transform(positiveFriendIds,
+                new Function<Long, String>() {
+                    @Override
+                    public String apply(Long val) {
+                        return Long.toString(val);
+                    }
+                }));
+        return Joiner.on(", ").join(hachikoIds);
+    }
     public int getPositiveFriendsNum() {
         return positiveFriendIds.size();
     }

@@ -115,6 +115,7 @@ public class PlansTableHelper {
             unfixedPlans.add(new UnfixedPlan(
                     planId,
                     c.getString(c.getColumnIndex(TITLE)),
+                    c.getInt(c.getColumnIndex(IS_HOST)) == 1,
                     userTableHelper.getFriendsNameForHachikoIds(
                             Arrays.asList(participantIds.split(","))),
                     queryCandidateDates(db, planId)
