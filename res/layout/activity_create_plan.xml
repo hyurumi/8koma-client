@@ -62,7 +62,7 @@
                         android:id="@+id/days_after_spinner"
                         android:entries="@array/positive_num_list"
                         android:layout_weight="5"
-                        android:clickable="false"/>
+                        android:clickable="false" android:gravity="center"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/time_words_spinner"
                         android:layout_weight="5"
-                        android:entries="@array/time_words"/>
+                        android:entries="@array/time_words" android:gravity="center"/>
             </LinearLayout>
             <include layout="@layout/horizontal_line_gray"/>
             <LinearLayout
@@ -87,27 +87,34 @@
                         android:layout_height="fill_parent"
                         android:id="@+id/duration_spinner"
                         android:layout_marginLeft="10dp"
-                        android:entries="@array/duration"/>
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
-                            android:text="来週中" android:id="@+id/button4"
-                            android:layout_alignParentBottom="true" android:background="@color/background"
-                            android:textColor="@color/font_color_white" android:textSize="12dp"
-                            android:layout_weight="0.33"/>
-                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
-                            android:text="なるべく早く" android:id="@+id/button5"
-                            android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
-                            android:textColor="@color/font_color_gray" android:textSize="12dp"
-                            android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.34"/>
-                    <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
-                            android:text="手動設定" android:id="@+id/button6"
-                            android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
-                            android:textColor="@color/font_color_gray" android:layout_weight="0.33"
-                            android:textSize="12dp"/>
-                </LinearLayout>
+                        android:entries="@array/duration" android:gravity="center"/>
+                   <RadioGroup android:layout_height="fill_parent"
+                           android:layout_width="fill_parent" android:orientation="horizontal">
+                       <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:text="来週中"
+                            android:id="@+id/radioButton1" android:background="@drawable/toggle_btn_color_stateful"
+                            android:checked="true" android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                            android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
+                            android:button="@null"/>
+                       <RadioButton
+                               android:layout_width="wrap_content"
+                               android:layout_height="fill_parent"
+                               android:text="なるべく早く"
+                               android:id="@+id/radioButton2" android:background="@drawable/toggle_btn_color_stateful"
+                               android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                               android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
+                               android:button="@null"/>
+                       <RadioButton
+                               android:layout_width="wrap_content"
+                               android:layout_height="fill_parent"
+                               android:text="手動設定"
+                               android:id="@+id/radioButton3" android:background="@drawable/toggle_btn_color_stateful"
+                               android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                               android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
+                               android:button="@null"/>
+                   </RadioGroup>
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
