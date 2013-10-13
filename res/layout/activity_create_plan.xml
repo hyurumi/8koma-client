@@ -114,26 +114,29 @@
                     android:layout_width="fill_parent"
                     android:layout_height="46dp"
                     android:paddingTop="5dp" android:paddingBottom="5dp" android:gravity="fill_horizontal">
-                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                         android:text="朝" android:id="@+id/button7"
-                        android:layout_alignParentBottom="true" android:background="@color/background"
-                        android:textColor="@color/font_color_white" android:textSize="12dp"
-                        android:layout_weight="0.25"/>
-                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
-                        android:text="昼" android:id="@+id/button8"
-                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
-                        android:textColor="@color/font_color_gray" android:textSize="12dp"
-                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"/>
-                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
+                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
+                        android:layout_weight="0.25" android:checked="true" android:textOn="朝" android:textOff="朝"/>
+                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                              android:id="@+id/button8"
+                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
+                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
+                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"
+                        android:textOff="昼" android:textOn="昼"/>
+                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                         android:text="夕" android:id="@+id/button9"
-                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
-                        android:textColor="@color/font_color_gray" android:textSize="12dp"
-                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"/>
-                <Button android:layout_width="wrap_content" android:layout_height="fill_parent"
+                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
+                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
+                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"
+                        android:textOff="夕" android:textOn="夕" android:checked="false"/>
+                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                         android:text="夜" android:id="@+id/button10"
-                        android:layout_alignParentBottom="true" android:background="@color/background_color_gray"
-                        android:textColor="@color/font_color_gray"
-                        android:textSize="12dp" android:layout_weight="0.25"/>
+                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
+                        android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                        android:textSize="12dp" android:layout_weight="0.25" android:textOff="夜" android:textOn="夜"
+                        android:checked="false"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="vertical"
@@ -163,6 +166,6 @@
         android:layout_height="wrap_content"
         android:text="@string/confirm_button_label"
         android:id="@+id/invite_button"
-        android:layout_alignParentBottom="true" android:background="@drawable/color_stateful"
+        android:layout_alignParentBottom="true" android:background="@drawable/btn_color_stateful"
         android:textColor="@color/font_color_white"/>
 </RelativeLayout>

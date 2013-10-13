@@ -15,4 +15,10 @@
     <color name="btn_focused">#007777</color>
     <color name="btn_pressed">#007777</color>
     <color name="btn_unactive">#AAAAAA</color>
+
+    <color name="toggle_btn_normal">#f5f5f5</color>
+    <color name="toggle_btn_checked">#00AAAA</color>
+
+    <color name="toggle_btn_txt_normal">#666666</color>
+    <color name="toggle_btn_txt_checked">#ffffff</color>
 </resources>
