@@ -116,16 +116,16 @@ public class PlanListActivity extends Activity {
 
         public PlanAdapter(
                 Context context, UnfixedPlan[] unfixedPlans) {
-            super(context, R.layout.unfixed_plan_view, unfixedPlans);
+            super(context, R.layout.unfixed_guest_plan_view, unfixedPlans);
             this.plans = unfixedPlans;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = new UnfixedPlanView(getContext());
+                convertView = new UnfixedGuestPlanView(getContext());
             }
-            ((UnfixedPlanView) convertView).setPlan(plans[position]);
+            ((UnfixedGuestPlanView) convertView).setPlan(plans[position]);
 
             return convertView;
         }

@@ -33,31 +33,31 @@ import java.util.List;
 import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
 
 /**
- * 調整中の予定を表すView
+ * 調整中の予定の，誘われた人にとっての見え方を表すView
  */
-public class UnfixedPlanView extends LinearLayout {
+public class UnfixedGuestPlanView extends LinearLayout {
     private TextView titleView;
     private TextView participantsView;
     private ViewGroup candidateDateContainer;
     private PlansTableHelper plansTableHelper;
 
-    public UnfixedPlanView(Context context) {
+    public UnfixedGuestPlanView(Context context) {
         super(context);
         init(context);
     }
 
-    public UnfixedPlanView(Context context, AttributeSet attrs) {
+    public UnfixedGuestPlanView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public UnfixedPlanView(Context context, AttributeSet attrs, int defStyle) {
+    public UnfixedGuestPlanView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
     private void init(Context context) {
-        View layout = LayoutInflater.from(context).inflate(R.layout.unfixed_plan_view, this);
+        View layout = LayoutInflater.from(context).inflate(R.layout.unfixed_guest_plan_view, this);
         titleView = (TextView) layout.findViewById(R.id.event_title);
         participantsView = (TextView) layout.findViewById(R.id.event_potential_participants);
         layout.findViewById(R.id.event_show_detail_button)
@@ -66,7 +66,7 @@ public class UnfixedPlanView extends LinearLayout {
         plansTableHelper = new PlansTableHelper(context);
     }
 
-    public UnfixedPlanView setPlan(UnfixedPlan plan) {
+    public UnfixedGuestPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
         participantsView.setText(Joiner.on(", ").join(plan.getpotentialParticipants()));
         candidateDateContainer.removeAllViews();
