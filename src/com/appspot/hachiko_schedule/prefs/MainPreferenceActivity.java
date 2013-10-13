@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.util.ReauthActivity;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -138,9 +139,21 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
+
+        Preference reauth = new Preference(this);
+        reauth.setTitle("再認証");
+        reauth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(MainPreferenceActivity.this, ReauthActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
         PreferenceCategory category = newPreferenceCategory("デバッグ");
         category.addPreference(restartHachiko);
         category.addPreference(confirmVersion);
+        category.addPreference(reauth);
     }
 
     private String getBuildTimeString() {
