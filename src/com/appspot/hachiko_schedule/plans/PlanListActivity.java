@@ -9,6 +9,7 @@ import android.provider.CalendarContract;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 public class PlanListActivity extends Activity {
+    private boolean shouldBackToChooseGuestActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class PlanListActivity extends Activity {
             return;
         }
 
+        handleIntent(getIntent());
         setContentView(R.layout.activity_event_list);
         PlansTableHelper plansTableHelper = new PlansTableHelper(this);
 
@@ -46,6 +49,17 @@ public class PlanListActivity extends Activity {
                 startCreatingEvent();
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        shouldBackToChooseGuestActivity
+                = (intent != null && intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false));
     }
 
     @Override
@@ -90,6 +104,17 @@ public class PlanListActivity extends Activity {
     private void launchMenuActivity() {
         Intent intent = new Intent(this, MainPreferenceActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && shouldBackToChooseGuestActivity) {
+            Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**

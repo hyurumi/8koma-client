@@ -173,7 +173,8 @@ public class CreatePlanActivity extends Activity {
                         plansTableHelper.insertNewPlan(Long.parseLong(s), title,
                                 /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
                         Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(
+                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
                         startActivity(intent);
                     }
