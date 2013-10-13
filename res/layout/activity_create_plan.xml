@@ -21,122 +21,161 @@
         android:layout_width="fill_parent"
 
             >
-
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
-          android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/with_who_label"/>
-
-        <include layout="@layout/horizontal_line"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_name_to_invite"/>
-      </LinearLayout>
-
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
-          android:layout_marginBottom="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/what_label"/>
-
-        <include layout="@layout/horizontal_line"/>
-
-        <EditText
-            android:id="@+id/what_to_do"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/what_to_do_default" />
-      </LinearLayout>
-
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
-          android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/when_label"/>
-
-        <include layout="@layout/horizontal_line"/>
-
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp">
 
-          <Spinner
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/days_after_spinner"
-              android:entries="@array/positive_num_list"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/with_who_label"/>
 
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/days_after_label"/>
+            <include layout="@layout/horizontal_line"/>
 
-          <Spinner
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/time_words_spinner"
-              android:entries="@array/time_words"/>
-
-          <Spinner
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/duration_spinner"
-              android:layout_marginLeft="10dp"
-              android:entries="@array/duration"/>
-
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/minutes"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/friends_name_to_invite"/>
         </LinearLayout>
-      </LinearLayout>
 
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
-          android:layout_marginBottom="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:id="@+id/schedules"/>
-      </LinearLayout>
-      <LinearLayout
-          android:layout_width="fill_parent"
-          android:layout_height="fill_parent"
-          android:gravity="bottom"
-          android:layout_marginRight="5dp">
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="5dp">
 
-      </LinearLayout>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/what_label"/>
+
+            <include layout="@layout/horizontal_line"/>
+
+            <EditText
+                    android:id="@+id/what_to_do"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/what_to_do_default"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp">
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/when_label"/>
+
+            <include layout="@layout/horizontal_line"/>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/days_after_spinner"
+                        android:entries="@array/positive_num_list"
+                        android:layout_weight="5"
+                        android:clickable="false"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="〜"/>
+
+                <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/time_words_spinner"
+                        android:layout_weight="5"
+                        android:entries="@array/time_words"/>
+            </LinearLayout>
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/minutes_wrapper"
+                        android:layout_alignParentRight="true">
+                    <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/duration_spinner"
+                            android:layout_marginLeft="10dp"
+                            android:entries="@array/duration"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/minutes"/>
+                </LinearLayout>
+                <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/seekBar"
+                        android:layout_toLeftOf="@id/minutes_wrapper"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="abc"
+                    android:layout_weight="1"
+                    android:id="@+id/toggleButton"/>
+            <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New ToggleButton"
+                    android:layout_weight="1"
+                    android:id="@+id/toggleButton"/>
+            <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New ToggleButton"
+                    android:layout_weight="1"
+                    android:id="@+id/toggleButton"/>
+            <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New ToggleButton"
+                    android:layout_weight="1"
+                    android:id="@+id/toggleButton"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    android:id="@+id/schedules"/>
+        </LinearLayout>
     </LinearLayout>
   </ScrollView>
     <Button
