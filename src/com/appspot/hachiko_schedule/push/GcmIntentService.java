@@ -88,6 +88,11 @@ public class GcmIntentService extends IntentService {
             boolean isHost = myHachikoId.equals(hostId);
             if (!isHost) {
                 tableHelper.insertNewPlan(planId, title, isHost, friendIds, candidateDates);
+            } else {
+                for (CandidateDate candidateDate: candidateDates) {
+                    tableHelper.updateAnswerIdByStartDate(
+                            planId, candidateDate.getStartDate(), candidateDate.getAnswerId());
+                }
             }
             updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent

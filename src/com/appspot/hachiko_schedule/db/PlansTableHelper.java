@@ -41,10 +41,10 @@ public class PlansTableHelper {
                 .addColumn(CREATED_AT, SQLiteType.INTEGER)
                 .toString();
         String createCanidateDatesTable = new SQLiteCreateTableBuilder(CANDIDATE_DATE_TABLE_NAME)
+                .addColumn(ANSWER_ID, SQLiteType.INTEGER, SQLiteConstraint.PRIMARY_KEY)
                 .addColumn(PLAN_ID, SQLiteType.INTEGER)
                 .addColumn(START_AT_MILLIS, SQLiteType.INTEGER)
                 .addColumn(END_AT_MILLIS, SQLiteType.INTEGER)
-                .addColumn(ANSWER_ID, SQLiteType.INTEGER)
                 .addColumn(ANSWER_STATE, SQLiteType.INTEGER)
                 .addColumn(POSITIVE_MEMBER_IDS, SQLiteType.TEXT)
                 .addColumn(NEGETIVE_MEMBER_IDS, SQLiteType.TEXT)
@@ -85,7 +85,9 @@ public class PlansTableHelper {
     private void insertCandidateDate(SQLiteDatabase db, long planId, CandidateDate candidateDate) {
         ContentValues values = new ContentValues();
         values.put(PLAN_ID, planId);
-        values.put(ANSWER_ID, candidateDate.getAnswerId());
+        if (candidateDate.getAnswerId() > 0) {
+            values.put(ANSWER_ID, candidateDate.getAnswerId());
+        }
         values.put(ANSWER_STATE, candidateDate.getMyAnswerState().toInt());
         values.put(START_AT_MILLIS, candidateDate.getStartDate().getTime());
         values.put(END_AT_MILLIS, candidateDate.getEndDate().getTime());
@@ -150,6 +152,15 @@ public class PlansTableHelper {
         values.put(ANSWER_STATE, state.toInt());
         db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + ANSWER_ID + "==?",
                 new String[]{Long.toString(planId), Long.toString(answerId)});
+        db.close();
+    }
+
+    public void updateAnswerIdByStartDate(long planId, Date startDate, long answerId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ANSWER_ID, answerId);
+        db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + START_AT_MILLIS + "==?",
+                new String[]{Long.toString(planId), Long.toString(startDate.getTime())});
         db.close();
     }
 
