@@ -12,6 +12,7 @@ public class DateUtils {
     private static final SimpleDateFormat END_HOUR_FORMAT = new SimpleDateFormat("HH:mm");
     private static final String DATE_FORMAT_ISO8601_UTC = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String DATE_FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String DATE_FORMAT_ISO8601_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * 動作確認用などに，現在時間から指定した日時あとのDateオブジェクトを返す
@@ -34,6 +35,8 @@ public class DateUtils {
         try {
             if (iso8601.endsWith("Z")) {
                 return new SimpleDateFormat(DATE_FORMAT_ISO8601_UTC).parse(iso8601);
+            } else if (iso8601.length() == 19) {
+                return new SimpleDateFormat(DATE_FORMAT_ISO8601_WITHOUT_TIMEZONE).parse(iso8601);
             }
             return new SimpleDateFormat(DATE_FORMAT_ISO8601).parse(iso8601);
         } catch (ParseException e) {
