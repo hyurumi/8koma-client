@@ -95,6 +95,12 @@ public class GoogleCloudMessagingHelper {
                 }
                 return result;
             }
+
+            @Override
+            protected void onPostExecute(String s) {
+                HachikoLogger.debug(s);
+                super.onPostExecute(s);
+            }
         }.execute(null, null, null);
     }
 

@@ -71,9 +71,11 @@ public class NewEventChooseGuestActivity extends Activity {
     private void initGoogleCloudMessagingIfNecessary() {
         GoogleCloudMessagingHelper googleCloudMessagingHelper = new GoogleCloudMessagingHelper(this);
         if (!googleCloudMessagingHelper.checkPlayServices()) {
+            HachikoLogger.debug("service not available");
             return;
         }
         String registrationId = googleCloudMessagingHelper.getRegistrationId();
+        HachikoLogger.debug("regId: ", registrationId);
         if (registrationId.isEmpty()) {
             googleCloudMessagingHelper.registerInBackground();
         }
