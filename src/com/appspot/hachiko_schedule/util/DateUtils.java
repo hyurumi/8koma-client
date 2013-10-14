@@ -10,6 +10,7 @@ import java.util.TimeZone;
 public class DateUtils {
     private static final SimpleDateFormat START_DATE_FORMAT = new SimpleDateFormat("MM/dd HH:mm");
     private static final SimpleDateFormat END_HOUR_FORMAT = new SimpleDateFormat("HH:mm");
+    private static final String DATE_FORMAT_ISO8601_UTC = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String DATE_FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     /**
@@ -31,6 +32,9 @@ public class DateUtils {
 
     public static Date parseISO8601(String iso8601) {
         try {
+            if (iso8601.endsWith("Z")) {
+                return new SimpleDateFormat(DATE_FORMAT_ISO8601_UTC).parse(iso8601);
+            }
             return new SimpleDateFormat(DATE_FORMAT_ISO8601).parse(iso8601);
         } catch (ParseException e) {
             HachikoLogger.error("Date parse error" + iso8601, e);
