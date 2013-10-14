@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.apis;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,8 +12,11 @@ import com.android.volley.*;
 import com.android.volley.toolbox.*;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
+import com.appspot.hachiko_schedule.setup.GoogleAuthActivity;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.JSONUtils;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -69,6 +73,16 @@ public class HachiRequestQueue extends RequestQueue {
 
     private static void loginAndRetry(Context context, final Request originalRequest) {
         GoogleAuthPreferences authPreferences = new GoogleAuthPreferences(context);
+        invalidateToken(context, authPreferences);
+        try {
+            String token = GoogleAuthUtil.getToken(
+                    context, authPreferences.getAccountName(), GoogleAuthActivity.SCOPE);
+            authPreferences.setToken(token);
+        } catch (Exception e) {
+            HachikoDialogs.showErrorDialogIfDeveloper(context, e, "google auth");
+            HachikoLogger.error("Google Login failed", e);
+            return;
+        }
         JSONObject params = JSONUtils.jsonObject(
                 "gmail", authPreferences.getAccountName(),
                 "google_token", authPreferences.getToken());
@@ -80,7 +94,8 @@ public class HachiRequestQueue extends RequestQueue {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        HachikoApp.defaultRequestQueue().add(originalRequest);
+                        HachikoLogger.debug("auth success, please retry");
+                        originalRequest.deliverError(new VolleyError());
                     }
                 },
                 new Response.ErrorListener() {
@@ -91,5 +106,15 @@ public class HachiRequestQueue extends RequestQueue {
                 }
         );
         HachikoApp.defaultRequestQueue().add(authRequest);
+    }
+
+    // TODO: リファクタリング
+    // GoogleAuthActivtyからこぴぺ
+    private static final String COM_GOOGLE = "com.google";
+    private static void invalidateToken(Context context, GoogleAuthPreferences authPreferences) {
+        HachikoLogger.debug("invalidate token");
+        AccountManager accountManager = AccountManager.get(context);
+        accountManager.invalidateAuthToken(COM_GOOGLE, authPreferences.getToken());
+        authPreferences.setToken(null);
     }
 }

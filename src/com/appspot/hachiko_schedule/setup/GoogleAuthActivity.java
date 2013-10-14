@@ -33,7 +33,7 @@ public class GoogleAuthActivity extends Activity {
     private static final String OWN_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     private static final String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
     private static final String EMAIL_SCOPE = "https://mail.google.com/";
-    private static final String SCOPE = "oauth2:" + PROFILE_SCOPE + " " + OWN_EMAIL_SCOPE + " "
+    public static final String SCOPE = "oauth2:" + PROFILE_SCOPE + " " + OWN_EMAIL_SCOPE + " "
             + CALENDAR_SCOPE + " " + EMAIL_SCOPE;
     private static final String COM_GOOGLE = "com.google";
 
