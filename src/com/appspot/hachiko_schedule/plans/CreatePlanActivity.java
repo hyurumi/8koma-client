@@ -47,6 +47,7 @@ import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
  * {@link Activity} for creating new plan.
  */
 public class CreatePlanActivity extends Activity {
+    private static final String DEFAULT_EVENT_TITLE = "打ち合わせ";
     private Spinner startDateSpinner;
     private Spinner endDateSpinner;
     private Spinner durationSpinner;
@@ -183,7 +184,7 @@ public class CreatePlanActivity extends Activity {
     private void sendCreatePlanRequest() {
         JSONObject param = new JSONObject();
         final List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
-        final String title = eventTitleView.getText().toString();
+        final String title = getEventTitle();
         try {
             JSONArray dates = new JSONArray();
             for (Timeslot timeslot: suggestingTimeslots) {
@@ -255,6 +256,11 @@ public class CreatePlanActivity extends Activity {
                 .setText(friendsNameToInvite.toString());
     }
 
+    private String getEventTitle() {
+        String str = eventTitleView.getText().toString();
+        return str.length() == 0 ? DEFAULT_EVENT_TITLE : str;
+    }
+
     private View addNewScheduleTextView(Timeslot schedule) {
         TextView scheduleView = new TextView(CreatePlanActivity.this);
         SimpleDateFormat startDateFormat = new SimpleDateFormat("MM/dd HH:mm");
@@ -324,7 +330,7 @@ public class CreatePlanActivity extends Activity {
                 }
             }
             StringBuilder content = new StringBuilder();
-            content.append(eventTitleView.getText().toString())
+            content.append(getEventTitle())
                     .append(System.getProperty("line.separator"))
                     .append("候補日:")
                     .append(System.getProperty("line.separator"));
