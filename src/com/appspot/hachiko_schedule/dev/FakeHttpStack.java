@@ -71,16 +71,17 @@ class FakeHttpStack implements HttpStack {
         int resourceId = context.getResources().getIdentifier(
                 resourceName, "raw", context.getApplicationContext().getPackageName());
         if (resourceId == 0) {
-            HachikoLogger.error("No fake file named " + resourceName);
+            HachikoLogger.warn("No fake file named ", resourceName,
+                    "default fake response should be used.");
+        } else {
+            InputStream stream = context.getResources().openRawResource(resourceId);
+            try {
+                String string = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
+                return new StringEntity(string);
+            } catch (IOException e) {
+                HachikoLogger.error("error reading " + resourceName, e);
+            }
         }
-        InputStream stream = context.getResources().openRawResource(resourceId);
-        try {
-            String string = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
-            return new StringEntity(string);
-        } catch (IOException e) {
-            HachikoLogger.error("error reading " + resourceName, e);
-        }
-
         // 適切なリソースが無いので，適当に返す
         if (request instanceof StringRequest) {
             return new StringEntity("100");

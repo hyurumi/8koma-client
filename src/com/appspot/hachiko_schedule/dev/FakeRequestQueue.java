@@ -53,7 +53,11 @@ public class FakeRequestQueue extends RequestQueue {
         HachikoLogger.debug(
                 "New request ", request.getUrl(), " is added with priority ", request.getPriority());
         try {
-            HachikoLogger.debug(new String(request.getBody()));
+            if (request.getBody() == null) {
+                HachikoLogger.debug("body is null");
+            } else {
+                HachikoLogger.debug("Body:" + new String(request.getBody()));
+            }
         } catch (AuthFailureError e) {
             // cannot do anything
         }
