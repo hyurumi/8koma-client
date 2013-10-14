@@ -30,6 +30,7 @@ import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -232,13 +233,9 @@ public class CreatePlanActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        // TODO: 作った予定のキャンセルと，エラーメッセージ #53
+                        // TODO: 作った予定のキャンセル #53
                         progressDialog.hide();
-                        String statusCode = volleyError.networkResponse == null ? ""
-                                : "(" + volleyError.networkResponse.statusCode + ")";
-                        new AlertDialog.Builder(CreatePlanActivity.this)
-                                .setMessage("通信中にエラーが発生しました " + statusCode)
-                                .show();
+                        HachikoDialogs.showNetworkErrorDialog(CreatePlanActivity.this, volleyError);
                         HachikoLogger.error("plan creation error", volleyError);
                     }
                 });

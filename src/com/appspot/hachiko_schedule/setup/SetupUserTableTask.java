@@ -14,6 +14,7 @@ import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.friends.ContactManager;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,6 +87,7 @@ public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        HachikoDialogs.showNetworkErrorDialog(context, volleyError);
                         HachikoLogger.error("response error on friends request", volleyError);
                     }
                 }

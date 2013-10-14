@@ -20,6 +20,7 @@ import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
@@ -221,6 +222,7 @@ public class UnfixedGuestPlanView extends LinearLayout {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        HachikoDialogs.showNetworkErrorDialog(getContext(), volleyError, "回答");
                         HachikoLogger.error("respond", volleyError);
                     }
                 });

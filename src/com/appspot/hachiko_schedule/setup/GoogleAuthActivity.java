@@ -2,7 +2,6 @@ package com.appspot.hachiko_schedule.setup;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthException;
@@ -171,12 +171,8 @@ public class GoogleAuthActivity extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         progressDialog.hide();
-                        String statusCode = volleyError.networkResponse == null ? ""
-                                : "(" + volleyError.networkResponse.statusCode + ")";
-                        new AlertDialog.Builder(GoogleAuthActivity.this)
-                                .setMessage(
-                                        "Hachikoサーバと通信中にエラーが発生しました " + statusCode
-                                                + "\n時間をおいて再度お試しください")
+                        HachikoDialogs
+                                .networkErrorDialogBuilder(GoogleAuthActivity.this, volleyError)
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override

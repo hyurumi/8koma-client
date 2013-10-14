@@ -11,6 +11,7 @@ import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
 import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -119,6 +120,8 @@ public class GoogleCloudMessagingHelper {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        HachikoDialogs.showNetworkErrorDialog(
+                                activity, volleyError, "Googleサーバとの");
                         HachikoLogger.error("GCM registration ID send error", volleyError);
                     }
                 }
