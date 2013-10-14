@@ -1,29 +1,40 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.*;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.JSONStringRequest;
+import com.appspot.hachiko_schedule.apis.PlanAPI;
+import com.appspot.hachiko_schedule.data.CandidateDate;
+import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PlanListActivity extends Activity {
+public class PlanListActivity extends Activity implements UnfixedHostPlanView.OnConfirmListener {
     private boolean shouldBackToChooseGuestActivity;
+    private ProgressDialog progressDialog;
+    private PlanAdapter planAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +48,54 @@ public class PlanListActivity extends Activity {
 
         handleIntent(getIntent());
         setContentView(R.layout.activity_event_list);
+        progressDialog = new ProgressDialog(this);
         PlansTableHelper plansTableHelper = new PlansTableHelper(this);
 
         ListView eventList = ((ListView) findViewById(R.id.event_list));
-        List<Plan> unfixedPlans = plansTableHelper.queryUnfixedPlans();
-        eventList.setAdapter(new PlanAdapter(this, unfixedPlans.toArray(new Plan[0])));
+        List<Plan> plans = plansTableHelper.queryPlans();
+        planAdapter = new PlanAdapter(this, plans.toArray(new Plan[0]), this);
+        eventList.setAdapter(planAdapter);
         findViewById(R.id.view_for_no_event).setVisibility(
-                unfixedPlans.size() == 0 ? View.VISIBLE : View.GONE);
+                plans.size() == 0 ? View.VISIBLE : View.GONE);
         findViewById(R.id.no_event_create_new).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startCreatingEvent();
             }
         });
+    }
+
+    @Override
+    public void onConfirm(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
+        int answerId = candidateDate.getAnswerId();
+        progressDialog.setMessage("予定を確定中");
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        HachikoLogger.debug("confirm: " + PlanAPI.CONFIRM.getUrl() + answerId);
+        Request request = new JSONStringRequest(PlanListActivity.this,
+                PlanAPI.CONFIRM.getMethod(),
+                PlanAPI.CONFIRM.getUrl() + answerId,
+                null,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("Confirmed");
+                        progressDialog.hide();
+                        FixedPlan fixedPlan = new FixedPlan(
+                                unfixedPlan.getPlanId(), unfixedPlan.getTitle(), true, candidateDate);
+                        planAdapter.updatePlan(unfixedPlan, fixedPlan);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        progressDialog.hide();
+                        HachikoDialogs.showNetworkErrorDialog(
+                                PlanListActivity.this, volleyError);
+                        HachikoLogger.error("confirm fail", volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(request);
     }
 
     @Override
@@ -116,40 +162,5 @@ public class PlanListActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * 確定した予定一覧を表示する用のリストadapter
-     */
-    private static class PlanAdapter extends ArrayAdapter<Plan> {
-        private final Plan[] plans;
-
-        public PlanAdapter(
-                Context context, Plan[] unfixedPlans) {
-            super(context, R.layout.unfixed_guest_plan_view, unfixedPlans);
-            this.plans = unfixedPlans;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (plans[position].isHost()) {
-                convertView = new UnfixedHostPlanView(getContext());
-                ((UnfixedHostPlanView) convertView).setPlan((UnfixedPlan)plans[position]);
-            } else {
-                convertView = new UnfixedGuestPlanView(getContext());
-                ((UnfixedGuestPlanView) convertView).setPlan((UnfixedPlan)plans[position]);
-            }
-            return convertView;
-        }
-
-        @Override
-        public boolean areAllItemsEnabled() {
-            return false;
-        }
-
-        @Override
-        public boolean isEnabled(int position) {
-            return false;
-        }
     }
 }

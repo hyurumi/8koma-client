@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.data.Plan;
+import com.appspot.hachiko_schedule.data.FixedPlan;
 
 /**
  * 確定した予定を表すView
  */
-public class FixedPlanView extends LinearLayout implements PlanView {
+public class FixedPlanView extends LinearLayout implements PlanView<FixedPlan> {
     private TextView titleView;
     private TextView participantsView;
     private TextView dateView;
@@ -33,15 +33,17 @@ public class FixedPlanView extends LinearLayout implements PlanView {
     }
 
     private void init(Context context) {
-        View layout = LayoutInflater.from(context).inflate(R.layout.unfixed_host_plan_view, this);
+        View layout = LayoutInflater.from(context).inflate(R.layout.fixed_plan_view, this);
         titleView = (TextView) layout.findViewById(R.id.event_title);
         participantsView = (TextView) layout.findViewById(R.id.event_participants);
         dateView = (TextView) layout.findViewById(R.id.event_date);
     }
 
     @Override
-    public PlanView setPlan(Plan plan) {
+    public PlanView setPlan(FixedPlan plan) {
         titleView.setText(plan.getTitle());
+        participantsView.setText(plan.getPositiveFriendNames(getContext()));
+        dateView.setText(plan.getDateText());
         return null;
     }
 }
