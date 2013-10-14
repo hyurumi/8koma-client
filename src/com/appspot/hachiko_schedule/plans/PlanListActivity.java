@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
@@ -39,8 +40,8 @@ public class PlanListActivity extends Activity {
         PlansTableHelper plansTableHelper = new PlansTableHelper(this);
 
         ListView eventList = ((ListView) findViewById(R.id.event_list));
-        List<UnfixedPlan> unfixedPlans = plansTableHelper.queryUnfixedPlans();
-        eventList.setAdapter(new PlanAdapter(this, unfixedPlans.toArray(new UnfixedPlan[0])));
+        List<Plan> unfixedPlans = plansTableHelper.queryUnfixedPlans();
+        eventList.setAdapter(new PlanAdapter(this, unfixedPlans.toArray(new Plan[0])));
         findViewById(R.id.view_for_no_event).setVisibility(
                 unfixedPlans.size() == 0 ? View.VISIBLE : View.GONE);
         findViewById(R.id.no_event_create_new).setOnClickListener(new View.OnClickListener() {
@@ -120,11 +121,11 @@ public class PlanListActivity extends Activity {
     /**
      * 確定した予定一覧を表示する用のリストadapter
      */
-    private static class PlanAdapter extends ArrayAdapter<UnfixedPlan> {
-        private final UnfixedPlan[] plans;
+    private static class PlanAdapter extends ArrayAdapter<Plan> {
+        private final Plan[] plans;
 
         public PlanAdapter(
-                Context context, UnfixedPlan[] unfixedPlans) {
+                Context context, Plan[] unfixedPlans) {
             super(context, R.layout.unfixed_guest_plan_view, unfixedPlans);
             this.plans = unfixedPlans;
         }
@@ -133,10 +134,10 @@ public class PlanListActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (plans[position].isHost()) {
                 convertView = new UnfixedHostPlanView(getContext());
-                ((UnfixedHostPlanView) convertView).setPlan(plans[position]);
+                ((UnfixedHostPlanView) convertView).setPlan((UnfixedPlan)plans[position]);
             } else {
                 convertView = new UnfixedGuestPlanView(getContext());
-                ((UnfixedGuestPlanView) convertView).setPlan(plans[position]);
+                ((UnfixedGuestPlanView) convertView).setPlan((UnfixedPlan)plans[position]);
             }
             return convertView;
         }

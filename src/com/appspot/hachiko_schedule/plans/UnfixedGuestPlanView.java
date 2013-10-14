@@ -36,7 +36,7 @@ import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
 /**
  * 調整中の予定の，誘われた人にとっての見え方を表すView
  */
-public class UnfixedGuestPlanView extends LinearLayout {
+public class UnfixedGuestPlanView extends LinearLayout implements PlanView<UnfixedPlan> {
     private TextView titleView;
     private TextView participantsView;
     private ViewGroup candidateDateContainer;
@@ -67,6 +67,7 @@ public class UnfixedGuestPlanView extends LinearLayout {
         plansTableHelper = new PlansTableHelper(context);
     }
 
+    @Override
     public UnfixedGuestPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
         participantsView.setText(Joiner.on(", ").join(plan.getpotentialParticipants()));

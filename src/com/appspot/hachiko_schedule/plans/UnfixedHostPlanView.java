@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * 自らが作成した予定の調整中のものを表すView
  */
-public class UnfixedHostPlanView extends LinearLayout {
+public class UnfixedHostPlanView extends LinearLayout implements PlanView<UnfixedPlan> {
     private TextView titleView;
     private ViewGroup candidateDateContainer;
     private int numOfPotentialParticipants;
@@ -58,6 +58,7 @@ public class UnfixedHostPlanView extends LinearLayout {
         progressDialog = new ProgressDialog(context);
     }
 
+    @Override
     public UnfixedHostPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
         numOfPotentialParticipants = plan.getpotentialParticipants().size();

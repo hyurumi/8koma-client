@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.appspot.hachiko_schedule.data.CandidateDate;
+import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
@@ -99,7 +100,7 @@ public class PlansTableHelper {
      * @return すべての未確定な予定を取得
      */
     // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
-    public List<UnfixedPlan> queryUnfixedPlans() {
+    public List<Plan> queryUnfixedPlans() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME + " WHERE " + IS_FIXED + " == 0 ORDER BY "
                 + CREATED_AT + " DESC;", null);
@@ -107,7 +108,7 @@ public class PlansTableHelper {
             c.close();
             return Collections.emptyList();
         }
-        List<UnfixedPlan> unfixedPlans = new ArrayList<UnfixedPlan>();
+        List<Plan> unfixedPlans = new ArrayList<Plan>();
         do {
             long planId = c.getLong(c.getColumnIndex(PLAN_ID));
             String participantIds = c.getString(c.getColumnIndex(FRIEND_IDS));
