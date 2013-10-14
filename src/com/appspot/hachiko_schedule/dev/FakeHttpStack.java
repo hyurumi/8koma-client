@@ -77,6 +77,10 @@ class FakeHttpStack implements HttpStack {
             InputStream stream = context.getResources().openRawResource(resourceId);
             try {
                 String string = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
+                if ("randomInt".equals(string)) {
+                    string = Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
+                }
+
                 return new StringEntity(string);
             } catch (IOException e) {
                 HachikoLogger.error("error reading " + resourceName, e);
