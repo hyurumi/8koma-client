@@ -20,7 +20,7 @@
   <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
-  <uses-premission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"/>
+  <uses-permission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"/>
 
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -80,7 +80,7 @@
         android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
         <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-        <category android:name="com.example.gcm"/>
+        <category android:name="com.appspot.hachiko_schedule"/>
       </intent-filter>
     </receiver>
     <service android:name=".push.GcmIntentService"/>
