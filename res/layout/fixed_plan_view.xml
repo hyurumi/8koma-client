@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="20dp"
+              android:background="@drawable/border">
+  <include layout="@layout/plan_view_title_text"/>
+  <include layout="@layout/horizontal_line_gray"/>
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="participants"
+      android:id="@+id/event_participants"
+      android:paddingTop="3dp"
+      android:paddingBottom="3dp"
+      android:singleLine="true"/>
+  <include layout="@layout/horizontal_line_gray"/>
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="2010/01/01 1:00 - 2:00"
+      android:id="@+id/event_date"
+      android:singleLine="true"
+      android:textSize="20sp"
+      android:paddingTop="5dp"/>
+</LinearLayout>

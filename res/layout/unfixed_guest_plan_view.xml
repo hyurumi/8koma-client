@@ -17,15 +17,7 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_expand"
         />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Title"
-        android:id="@+id/event_title"
-        android:layout_toLeftOf="@+id/expand_button"
-        android:singleLine="true"
-        android:textSize="24sp"
-        android:paddingTop="5dp"/>
+    <include layout="@layout/plan_view_title_text"/>
   </RelativeLayout>
   <include layout="@layout/horizontal_line_gray"/>
   <TextView

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.appspot.hachiko_schedule.data.CandidateDate;
+import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -101,29 +102,54 @@ public class PlansTableHelper {
      */
     // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
     public List<Plan> queryUnfixedPlans() {
+        return queryPlans(true);
+    }
+
+    /**
+     * @return すべての予定を取得
+     */
+    // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
+    public List<Plan> queryPlans() {
+        return queryPlans(false);
+    }
+
+    /**
+     * @return すべての予定を取得
+     */
+    // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
+    public List<Plan> queryPlans(boolean onlyUnfixed) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME + " WHERE " + IS_FIXED + " == 0 ORDER BY "
+        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME +
+                (onlyUnfixed ? (" WHERE " + IS_FIXED + " == 0") : "")
+                + " ORDER BY "
                 + CREATED_AT + " DESC;", null);
         if (!c.moveToFirst()) {
             c.close();
             return Collections.emptyList();
         }
-        List<Plan> unfixedPlans = new ArrayList<Plan>();
+        List<Plan> plans = new ArrayList<Plan>();
         do {
             long planId = c.getLong(c.getColumnIndex(PLAN_ID));
             String participantIds = c.getString(c.getColumnIndex(FRIEND_IDS));
-            HachikoLogger.debug(participantIds);
-            unfixedPlans.add(new UnfixedPlan(
-                    planId,
-                    c.getString(c.getColumnIndex(TITLE)),
-                    c.getInt(c.getColumnIndex(IS_HOST)) == 1,
-                    userTableHelper.getFriendsNameForHachikoIds(
-                            Arrays.asList(participantIds.split(","))),
-                    queryCandidateDates(db, planId)
-            ));
+            String title = c.getString(c.getColumnIndex(TITLE));
+            boolean isHost = c.getInt(c.getColumnIndex(IS_HOST)) == 1;
+            boolean isFixed = c.getInt(c.getColumnIndex(IS_FIXED)) == 1;
+            if (isFixed) {
+                plans.add(new FixedPlan(
+                        planId, title, isHost, queryCandidateDates(db, planId).get(0)));
+            } else {
+                plans.add(new UnfixedPlan(
+                        planId,
+                        title,
+                        isHost,
+                        userTableHelper.getFriendsNameForHachikoIds(
+                                Arrays.asList(participantIds.split(","))),
+                        queryCandidateDates(db, planId)
+                ));
+            }
         } while (c.moveToNext());
         db.close();
-        return unfixedPlans;
+        return plans;
     }
 
     private List<CandidateDate> queryCandidateDates(SQLiteDatabase db, long planId) {
