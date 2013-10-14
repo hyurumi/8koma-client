@@ -203,6 +203,16 @@ public class PlansTableHelper {
         db.close();
     }
 
+    public void confirmCandidateDate(long planId, long answerId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(CANDIDATE_DATE_TABLE_NAME, PLAN_ID + "==? AND " + ANSWER_ID + "!=?",
+                new String[]{Long.toString(planId), Long.toString(answerId)});
+        ContentValues values = new ContentValues();
+        values.put(IS_FIXED, 1);
+        db.update(PLAN_TABLE_NAME, values, PLAN_ID + "==?", new String[] {Long.toString(planId)});
+        db.close();
+    }
+
     public String queryTitle(String planId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{TITLE}, PLAN_ID + " == ? ",

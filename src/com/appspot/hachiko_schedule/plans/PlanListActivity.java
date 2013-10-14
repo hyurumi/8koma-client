@@ -35,6 +35,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
     private PlanAdapter planAdapter;
+    private PlansTableHelper plansTableHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         handleIntent(getIntent());
         setContentView(R.layout.activity_event_list);
         progressDialog = new ProgressDialog(this);
-        PlansTableHelper plansTableHelper = new PlansTableHelper(this);
+        plansTableHelper = new PlansTableHelper(this);
 
         ListView eventList = ((ListView) findViewById(R.id.event_list));
         List<Plan> plans = plansTableHelper.queryPlans();
@@ -80,10 +81,12 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                     @Override
                     public void onResponse(String s) {
                         HachikoLogger.debug("Confirmed");
-                        progressDialog.hide();
                         FixedPlan fixedPlan = new FixedPlan(
                                 unfixedPlan.getPlanId(), unfixedPlan.getTitle(), true, candidateDate);
+                        plansTableHelper.confirmCandidateDate(
+                                unfixedPlan.getPlanId(), candidateDate.getAnswerId());
                         planAdapter.updatePlan(unfixedPlan, fixedPlan);
+                        progressDialog.hide();
                     }
                 },
                 new Response.ErrorListener() {
