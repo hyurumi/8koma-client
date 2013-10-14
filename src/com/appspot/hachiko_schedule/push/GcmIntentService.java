@@ -130,7 +130,7 @@ public class GcmIntentService extends IntentService {
             PlansTableHelper plansTableHelper = new PlansTableHelper(this);
             String title = plansTableHelper.queryTitle(planId);
             Date startDate
-                    = DateUtils.parseISO8601(body.getJSONObject("timeRange").getString("start"));
+                    = DateUtils.parseISO8601(body.getJSONObject("time").getString("start"));
             sendNotification("予定がカレンダーに登録されました", title, calendarIntent(startDate));
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
