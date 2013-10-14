@@ -187,4 +187,14 @@ public class PlansTableHelper {
         db.close();
         return ret;
     }
+
+    /**
+     * デバッグ要
+     */
+    public void debugDeletePlansAndCandidateDates() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(PLAN_TABLE_NAME, "1", new String[]{});
+        db.delete(CANDIDATE_DATE_TABLE_NAME, "1", new String[]{});
+        db.close();
+    }
 }

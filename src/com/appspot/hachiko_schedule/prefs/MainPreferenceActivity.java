@@ -12,6 +12,7 @@ import android.preference.*;
 import android.widget.Toast;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.ReauthActivity;
 
@@ -124,6 +125,18 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
+        Preference deletePlans = new Preference(this);
+        deletePlans.setTitle("予定一覧画面の予定を削除");
+        deletePlans.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                PlansTableHelper plansTableHelper = new PlansTableHelper(MainPreferenceActivity.this);
+                plansTableHelper.debugDeletePlansAndCandidateDates();
+                Toast.makeText(MainPreferenceActivity.this, "データが削除されました", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
         Preference confirmVersion = new Preference(this);
         confirmVersion.setTitle("ビルド情報を確認");
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -152,6 +165,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         });
         PreferenceCategory category = newPreferenceCategory("デバッグ");
         category.addPreference(restartHachiko);
+        category.addPreference(deletePlans);
         category.addPreference(confirmVersion);
         category.addPreference(reauth);
     }
