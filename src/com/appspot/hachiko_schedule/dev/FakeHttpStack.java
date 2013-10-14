@@ -34,6 +34,7 @@ import java.util.Map;
  * ローカルでのデバッグ用に，メモリ上 or リソース上の値を返す{@link HttpStack}.
  */
 class FakeHttpStack implements HttpStack {
+    private static final int SIMULATED_DELAY_MS = 500;
     private final Context context;
 
     FakeHttpStack(Context context) {
@@ -43,7 +44,10 @@ class FakeHttpStack implements HttpStack {
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> stringStringMap)
             throws IOException, AuthFailureError {
-        // TODO: 遅延をはさんだほうがよい？
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
         HttpResponse response
                 = new BasicHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, 200, "OK"));
         List<Header> headers = defaultHeaders();
