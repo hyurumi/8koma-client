@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.plans;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -223,7 +224,8 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HachikoDialogs.showNetworkErrorDialog(getContext(), volleyError, "回答");
+                        HachikoDialogs.showNetworkErrorDialog(
+                                (Activity) getContext(), volleyError, "回答");
                         HachikoLogger.error("respond", volleyError);
                     }
                 });

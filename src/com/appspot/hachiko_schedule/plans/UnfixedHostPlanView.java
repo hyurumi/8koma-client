@@ -1,5 +1,6 @@
 package com.appspot.hachiko_schedule.plans;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -160,7 +161,7 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
                         public void onErrorResponse(VolleyError volleyError) {
                             progressDialog.hide();
                             HachikoDialogs.showNetworkErrorDialog(
-                                    getContext(), volleyError);
+                                    (Activity) getContext(), volleyError);
                             HachikoLogger.error("confirm fail", volleyError);
                         }
                     });

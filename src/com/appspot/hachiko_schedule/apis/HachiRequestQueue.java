@@ -13,7 +13,6 @@ import com.android.volley.toolbox.*;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.setup.GoogleAuthActivity;
-import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -79,7 +78,6 @@ public class HachiRequestQueue extends RequestQueue {
                     context, authPreferences.getAccountName(), GoogleAuthActivity.SCOPE);
             authPreferences.setToken(token);
         } catch (Exception e) {
-            HachikoDialogs.showErrorDialogIfDeveloper(context, e, "google auth");
             HachikoLogger.error("Google Login failed", e);
             return;
         }
