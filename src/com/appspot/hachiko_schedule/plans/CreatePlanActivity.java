@@ -23,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.apis.JSONStringRequest;
+import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
@@ -184,7 +184,7 @@ public class CreatePlanActivity extends Activity {
 
     private void sendCreatePlanRequest() {
         JSONObject param = new JSONObject();
-        final List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
+        List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
         final String title = getEventTitle();
         try {
             JSONArray dates = new JSONArray();
@@ -210,18 +210,37 @@ public class CreatePlanActivity extends Activity {
             return;
         }
         HachikoLogger.debug(param);
-        Request request = new JSONStringRequest(this,
+        Request request = new HachiJsonObjectRequest(this,
                 PlanAPI.NEW_PLAN.getMethod(),
                 PlanAPI.NEW_PLAN.getUrl(),
                 param,
-                new Response.Listener<String>() {
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String s) {
-                        HachikoLogger.debug("plan successfully created");
-                        HachikoLogger.debug(s);
+                    public void onResponse(JSONObject json) {
+                        long planId = 0;
+                        List<CandidateDate> candidateDates = null;
+                        try {
+                            planId = json.getLong("planId");
+                            HachikoLogger.debug("plan successfully created", planId);
+                            candidateDates = new ArrayList<CandidateDate>();
+                            JSONArray candidatesJson = json.getJSONArray("candidates");
+                            for (int i = 0; i < candidatesJson.length(); i++) {
+                                JSONObject candidateJson = candidatesJson.getJSONObject(i);
+                                JSONObject timeRange = candidateJson.getJSONObject("time");
+                                candidateDates.add(new CandidateDate(
+                                        candidateJson.getInt("id"),
+                                        DateUtils.parseISO8601(timeRange.getString("start")),
+                                        DateUtils.parseISO8601(timeRange.getString("end")),
+                                        CandidateDate.AnswerState.OK
+                                ));
+                            }
+                        } catch (JSONException e) {
+                            HachikoLogger.error("JSON parse error/Never happen", e);
+                            return;
+                        }
                         PlansTableHelper plansTableHelper
                                 = new PlansTableHelper(CreatePlanActivity.this);
-                        plansTableHelper.insertNewPlan(Long.parseLong(s), title,
+                        plansTableHelper.insertNewPlan(planId, title,
                                 /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
                         Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
                         intent.addFlags(
