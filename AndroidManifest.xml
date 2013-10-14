@@ -65,6 +65,11 @@
         android:theme="@style/hachiko_theme">
     </activity>
     <activity
+        android:name=".dev.SQLDumpActivity"
+        android:label="@string/app_name"
+        android:theme="@style/hachiko_theme">
+    </activity>
+    <activity
         android:name=".dev.NotImplementedActivity"
         android:label="@string/app_name"
         android:theme="@style/hachiko_theme">
