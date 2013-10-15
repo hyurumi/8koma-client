@@ -65,6 +65,7 @@ public class GoogleAuthActivity extends Activity {
             intent = new Intent(this, NewEventChooseGuestActivity.class);
         }
         startActivity(intent);
+        finish();
     }
 
     private void chooseAccount() {
