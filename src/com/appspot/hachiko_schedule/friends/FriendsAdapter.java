@@ -3,7 +3,10 @@ package com.appspot.hachiko_schedule.friends;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,10 +22,14 @@ import java.util.*;
  * Class that stands between cursor from Contacts and our own GridView.
  */
 public class FriendsAdapter extends ArrayAdapter<FriendItem> {
+    public static interface OnFriendItemSelectionChangeListener {
+        void onSelectionChange(int position, String itemName, boolean selected);
+    }
     private LayoutInflater inflater;
     private Set<String> filteredItem = new HashSet<String>();
     private List<FriendItem> entries;
     private UserTableHelper userTableHelper;
+    private OnFriendItemSelectionChangeListener onFriendItemSelectionChangeListener;
 
     public FriendsAdapter(Context context, int resource, List<FriendItem> entries) {
         super(context, resource, entries);
@@ -33,34 +40,31 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.list_item_friend, null);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_item_friend, null);
+            convertView.setOnTouchListener(new OnFriendTouchListener());
+        }
         FriendItem item = getItem(position);
-        ((TextView) view.findViewById(R.id.friend_name)).setText(item.getDisplayName());
-        ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
+        ((TextView) convertView.findViewById(R.id.friend_name)).setText(item.getDisplayName());
+        ((ImageView) convertView.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
         String emailOrHachikoUser;
         if (userTableHelper.isHachikoUser(item.getLocalContactId())) {
             emailOrHachikoUser = getContext().getResources().getString(R.string.hachiko_user);
         } else {
             emailOrHachikoUser = userTableHelper.queryPrimaryEmail(item.getLocalContactId());
         }
-        ((TextView) view.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
-        applyFilterToIcon(filteredItem.contains(item.getDisplayName()), view, position);
-        return view;
+        ((TextView) convertView.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
+        applyFilterToIcon(filteredItem.contains(item.getDisplayName()), convertView);
+        convertView.setTag(R.string.tag_friend_item, position);
+        return convertView;
     }
 
-    /**
-     * あるViewがクリックされたことを知らせる
-     *
-     * @return クリックの結果要素が選択された状態になればtrue
-     */
-    public boolean notifySelect(View view, int position) {
-        String key = ((TextView) view.findViewById(R.id.friend_name)).getText().toString();
-        boolean isSelected = filteredItem.contains(key);
-        applyFilterToIcon(!isSelected, view, position);
-        return !isSelected;
+    public void setOnFriendItemSelectedListener(
+            OnFriendItemSelectionChangeListener onFriendItemSelectedListener) {
+        this.onFriendItemSelectionChangeListener = onFriendItemSelectedListener;
     }
 
-    public void applyFilterToIcon(boolean apply, View wrapperView, int position) {
+    public void applyFilterToIcon(boolean apply, View wrapperView) {
         ImageView imageView = (ImageView) wrapperView.findViewById(R.id.friend_picture);
         View nameView = wrapperView.findViewById(R.id.friend_name_container);
         TextView textView = (TextView) wrapperView.findViewById(R.id.friend_name);
@@ -82,5 +86,21 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
                 return filteredItem.contains(entry.getDisplayName());
             }
         });
+    }
+
+    private class OnFriendTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                String name = ((TextView) view.findViewById(R.id.friend_name)).getText().toString();
+                boolean isSelected = filteredItem.contains(name);
+                applyFilterToIcon(!isSelected, view);
+                if (onFriendItemSelectionChangeListener != null) {
+                    onFriendItemSelectionChangeListener.onSelectionChange(
+                            (Integer) view.getTag(R.string.tag_friend_item), name, !isSelected);
+                }
+            }
+            return false;
+        }
     }
 }

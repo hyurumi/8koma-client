@@ -22,4 +22,6 @@
 
     <color name="toggle_btn_txt_normal">#666666</color>
     <color name="toggle_btn_txt_checked">#ffffff</color>
+
+    <color name="friend_selected_gray">#e6e6e6</color>
 </resources>

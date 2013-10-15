@@ -2,13 +2,13 @@ package com.appspot.hachiko_schedule.friends;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.appspot.hachiko_schedule.*;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
@@ -63,8 +63,8 @@ public class FriendsFragment extends Fragment {
             }
         });
         adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend, getListOfFriends());
+        adapter.setOnFriendItemSelectedListener(new OnFriendItemSelectedListener());
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new OnFriendItemClickListener());
         return view;
     }
 
@@ -85,19 +85,15 @@ public class FriendsFragment extends Fragment {
         super.onPause();
     }
 
-    private class OnFriendItemClickListener implements AdapterView.OnItemClickListener {
-
+    private class OnFriendItemSelectedListener implements FriendsAdapter.OnFriendItemSelectionChangeListener {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (adapter.notifySelect(view, position)) {
-
-                addSelectedFriendNameView(
-                        id,
-                        ((FriendItem) listView.getItemAtPosition(position)).getDisplayName());
+        public void onSelectionChange(int position, String itemName, boolean selected) {
+            if (selected) {
+                addSelectedFriendNameView(position, itemName);
             } else {
-                View unselectedFriendNameView = selectedFriendNameViews.get(id);
+                View unselectedFriendNameView = selectedFriendNameViews.get(position);
                 selectedFriendsNameContainer.removeView(unselectedFriendNameView);
-                selectedFriendNameViews.remove(id);
+                selectedFriendNameViews.remove(position);
             }
             boolean shouldEnable = !selectedFriendNameViews.isEmpty();
             createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
@@ -112,7 +108,7 @@ public class FriendsFragment extends Fragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.leftMargin = 20;
             friendNameView.setLayoutParams(params);
-            friendNameView.setBackgroundColor(Color.rgb(230, 230, 230));
+            friendNameView.setBackgroundColor(R.color.friend_selected_gray);
             selectedFriendsNameContainer.addView(friendNameView);
             selectedFriendsNamesScrollView.post(new Runnable() {
                 @Override
