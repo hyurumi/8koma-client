@@ -171,10 +171,10 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
 
         private void updateTextAndBgColor() {
             candidateText.setText(candidateDate.getDateText());
-            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum())
-                    + (candidateDate.getMyAnswerState() == AnswerState.NG ? 1 : 0));
-            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum())
-                    + (candidateDate.getMyAnswerState() == AnswerState.OK ? 1 : 0));
+            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum()
+                    + (candidateDate.getMyAnswerState() == AnswerState.NG ? 1 : 0)));
+            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum()
+                    + (candidateDate.getMyAnswerState() == AnswerState.OK ? 1 : 0)));
             candidateText.setBackgroundColor(
                     getResources().getColor(candidateDate.getMyAnswerState().getColorResource()));
         }

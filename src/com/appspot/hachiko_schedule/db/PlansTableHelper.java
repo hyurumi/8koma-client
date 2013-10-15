@@ -162,10 +162,8 @@ public class PlansTableHelper {
     }
 
     private List<CandidateDate> queryCandidateDates(SQLiteDatabase db, long planId) {
-        Cursor c = db.rawQuery("select " + ANSWER_ID + "," + START_AT_MILLIS + "," + END_AT_MILLIS
-                + "," + ANSWER_STATE + " from " + CANDIDATE_DATE_TABLE_NAME + " WHERE " + PLAN_ID
-                + " == " + planId + ";",
-                null);
+        Cursor c = db.query(
+                CANDIDATE_DATE_TABLE_NAME, null, PLAN_ID + "==" + planId, null, null, null, null);
         if (!c.moveToFirst()) {
             c.close();
             HachikoLogger.debug("no dates for plan", planId);
@@ -177,7 +175,9 @@ public class PlansTableHelper {
                     c.getInt(c.getColumnIndex(ANSWER_ID)),
                     new Date(c.getLong(c.getColumnIndex(START_AT_MILLIS))),
                     new Date(c.getLong(c.getColumnIndex(END_AT_MILLIS))),
-                    CandidateDate.AnswerState.fromInt(c.getInt(c.getColumnIndex(ANSWER_STATE)))
+                    CandidateDate.AnswerState.fromInt(c.getInt(c.getColumnIndex(ANSWER_STATE))),
+                    stringArrayToList(c.getString(c.getColumnIndex(POSITIVE_MEMBER_IDS))),
+                    stringArrayToList(c.getString(c.getColumnIndex(NEGETIVE_MEMBER_IDS)))
             ));
         } while (c.moveToNext());
         return candidateDates;
@@ -242,5 +242,21 @@ public class PlansTableHelper {
         db.delete(PLAN_TABLE_NAME, "1", new String[]{});
         db.delete(CANDIDATE_DATE_TABLE_NAME, "1", new String[]{});
         db.close();
+    }
+
+    private List<Long> stringArrayToList(String str) {
+        if (str == null || str.length() == 0 || "[]".equals(str)) {
+            return Collections.emptyList();
+        }
+
+        if (str.startsWith("[")) {
+            str = str.substring(1, str.length() - 1);
+        }
+        String[] strs = str.split(",");
+        List<Long> ret = new ArrayList<Long>();
+        for (int i = 0; i < strs.length; i++) {
+            ret.add(Long.parseLong(strs[i].trim()));
+        }
+        return ret;
     }
 }
