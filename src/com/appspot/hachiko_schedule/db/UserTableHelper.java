@@ -123,6 +123,9 @@ public class UserTableHelper {
     }
 
     public List<String> getFriendsNameForHachikoIds(Collection<String> hachikoIds) {
+        if (hachikoIds.size() == 0) {
+            return Collections.emptyList();
+        }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("select " + DISPLAY_NAME + " from " + USER_TABLE_NAME + " where "
                 + HACHIKO_ID + " IN (" + Joiner.on(",").join(hachikoIds) + ");", null);

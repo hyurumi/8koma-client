@@ -9,6 +9,7 @@ import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
  * Wrapper class of {@link Log}
  */
 public class HachikoLogger {
+    private static final String MY_CLASS_NAME = HachikoLogger.class.getSimpleName();
     private static final String DEFAULT_TAG = "HachikoApp";
 
     static public int info(Object... objects) {
@@ -52,14 +53,14 @@ public class HachikoLogger {
         if (!IS_DEVELOPER) {
             return 0;
         }
-        return Log.d(DEFAULT_TAG, msg);
+        return Log.d(DEFAULT_TAG, calcFileNameAndLineNumberUsingException() + msg);
     }
 
     static public int debug(Object... objects) {
-        if (!IS_DEVELOPER) {
+        if (!IS_DEVELOPER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
             return 0;
         }
-        return Log.d(DEFAULT_TAG, appendAsString(objects));
+        return debug(appendAsString(objects));
     }
 
     static private String appendAsString(Object... objects) {
@@ -70,21 +71,41 @@ public class HachikoLogger {
         return builder.toString();
     }
 
-    static public int debugWithSeparator(char ch, Object... objects) {
-        if (!IS_DEVELOPER) {
-            return 0;
-        }
-        return debugWithSeparator(Character.toString(ch), objects);
-    }
-
     static public int debugWithSeparator(CharSequence separator, Object... objects) {
-        if (!IS_DEVELOPER) {
+        if (!IS_DEVELOPER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
             return 0;
         }
         StringBuilder builder = new StringBuilder();
         for (Object obj: objects) {
             builder.append(obj).append(' ').append(separator);
         }
-        return Log.d(DEFAULT_TAG, builder.toString());
+        return debug(builder.toString());
+    }
+
+    /**
+     * 呼び出し元のファイル名，行数に関わる情報を取得する．例外機構を利用するため，呼び出しにコストがかかる．プロダクションの
+     * 正常系のログには用いるべきではないと思われる．
+     *
+     * @return 呼び出し元のファイル名と行数
+     */
+    private static String calcFileNameAndLineNumberUsingException(){
+        Exception e = new Exception();
+        StackTraceElement[] elements = e.getStackTrace();
+        for (int i = 1; i < elements.length; i++) {
+            String fileName = elements[i].getFileName();
+            if (fileName.contains(MY_CLASS_NAME)) {
+                continue;
+            }
+            StringBuilder builder = new StringBuilder();
+            builder.append('[');
+            if (fileName != null && fileName.endsWith(".java")) {
+                builder.append(fileName.substring(0, fileName.length() - 5));
+            } else {
+                builder.append(fileName);
+            }
+            builder.append(':').append(elements[i].getLineNumber()).append("] ");
+            return builder.toString();
+        }
+        return "(unknown location)";
     }
 }
