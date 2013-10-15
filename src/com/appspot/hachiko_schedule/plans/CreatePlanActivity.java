@@ -25,9 +25,9 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
+import com.appspot.hachiko_schedule.apis.VacancyRequest;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
-import com.appspot.hachiko_schedule.data.TimeWords;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
@@ -35,6 +35,7 @@ import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.appspot.hachiko_schedule.apis.VacancyRequest.Hours;
 import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
 
 /**
@@ -49,6 +51,16 @@ import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
  */
 public class CreatePlanActivity extends Activity {
     private static final String DEFAULT_EVENT_TITLE = "打ち合わせ";
+    // TODO: もっとましな対応管理の仕方を考える
+    private static final ImmutableMap<String, Integer> TEXT_TO_MIN
+            = new ImmutableMap.Builder<String, Integer>()
+            .put("30分", 30).put("1時間", 60).put("1時間半", 90)
+            .put("2時間", 120).put("2時間半", 150).put("３時間", 180).build();
+    // やがては設定可能になるべき，なのでメンバ変数
+    private Hours morning = new Hours(8, 11);
+    private Hours afternoon = new Hours(11, 16);
+    private Hours evening = new Hours(16, 19);
+    private Hours night = new Hours(18, 21);
     private Spinner startDateSpinner;
     private Spinner endDateSpinner;
     private Spinner durationSpinner;
@@ -66,7 +78,9 @@ public class CreatePlanActivity extends Activity {
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
     private Handler hander = new Handler();
     private Long[] friendIds;
+    private ProgressBar loadingCandidateView;
     private ProgressDialog progressDialog;
+    private VacancyRequest.Param lastRequestedVacancyParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +99,7 @@ public class CreatePlanActivity extends Activity {
         nightButton = (ToggleButton) findViewById(R.id.night);
         durationSpinner = (Spinner) findViewById(R.id.duration_spinner);
         schedulesContainer = (ViewGroup) findViewById(R.id.schedules);
+        loadingCandidateView = (ProgressBar) findViewById(R.id.progress_loading_candidate);
         confirmButton = (Button) findViewById(R.id.invite_button);
 
         setFriends();
@@ -93,6 +108,10 @@ public class CreatePlanActivity extends Activity {
         confirmButton.setOnClickListener(new ConfirmButtonListener());
         startDateSpinner.setOnItemSelectedListener(new OnStartDateSelectedListener());
         endDateSpinner.setOnItemSelectedListener(new OnEndDateSelectedListener());
+        morningButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
+        afternoonButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
+        eveningButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
+        nightButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
      }
 
     private void setFriends() {
@@ -200,10 +219,7 @@ public class CreatePlanActivity extends Activity {
                 candidateDates.add(new CandidateDate(-1, timeslot.getStartDate(),
                         timeslot.getEndDate(), CandidateDate.AnswerState.NEUTRAL));
             }
-            JSONArray friendIdsJson = new JSONArray();
-            for (long friendId: friendIds) {
-                friendIdsJson.put(friendId);
-            }
+            JSONArray friendIdsJson = new JSONArray(Arrays.asList(friendIds));
             param.put("friendsId", friendIdsJson);
             param.put("candidates", dates);
             param.put("title", title);
@@ -333,6 +349,63 @@ public class CreatePlanActivity extends Activity {
                 delayInMillis);
     }
 
+    private List<Hours> getPreferredTimeRange() {
+        List<Hours> result = new ArrayList<Hours>();
+        boolean[] checked = new boolean[] {morningButton.isChecked(), afternoonButton.isChecked(),
+                eveningButton.isChecked(), nightButton.isChecked(), false};
+        Hours[] hours = new Hours[] {morning, afternoon, evening, night};
+        boolean inTimeRange = false;
+        int start = 0;
+        for (int i = 0; i < 5; i++) {
+            if (checked[i] && !inTimeRange) {
+                start = hours[i].start;
+                inTimeRange = true;
+            } else if (!checked[i] && inTimeRange) {
+                result.add(new Hours(start, hours[i - 1].end));
+                inTimeRange = false;
+            }
+        }
+        return result;
+    }
+
+    private synchronized void suggestNewCandidates() {
+        List<Hours> preferredTimeRange = getPreferredTimeRange();
+        Calendar startDay = (Calendar) startDateSpinner.getSelectedItem();
+        Calendar endDay = (Calendar) endDateSpinner.getSelectedItem();
+        int durationMin = TEXT_TO_MIN.get(durationSpinner.getSelectedItem());
+        if (preferredTimeRange.size() == 0 || endDay.before(startDay)) {
+            HachikoLogger.debug("ignore invalid date or time input");
+            return;
+        }
+        VacancyRequest.Param param = new VacancyRequest.Param(
+                Arrays.asList(friendIds), preferredTimeRange, startDay, endDay, durationMin);
+        schedulesContainer.removeAllViews();
+        loadingCandidateView.setVisibility(View.VISIBLE);
+
+        if (param.equals(lastRequestedVacancyParam)) {
+            return;
+        }
+        Request vacancyRequest = new VacancyRequest(
+                this, param,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject object) {
+                        loadingCandidateView.setVisibility(View.GONE);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("err", volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(vacancyRequest);
+        lastRequestedVacancyParam = param;
+    }
+
+
+
     private class ConfirmButtonListener implements View.OnClickListener {
 
         @Override
@@ -375,10 +448,17 @@ public class CreatePlanActivity extends Activity {
         }
     }
 
+    private class OnTimeRangePreferenceSelectedListener
+            implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            suggestNewCandidates();
+        }
+    }
+
     private class OnStartDateSelectedListener extends DefaultSpinnerItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            HachikoLogger.debug(startDateSpinner.getAdapter().getCount(), position, id);
             if (startDateSpinner.getAdapter().getCount() - 1 == position) {
                 startDateSpinner.setSelection(position - 1);
             }
@@ -414,20 +494,6 @@ public class CreatePlanActivity extends Activity {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             // Do nothing
-        }
-
-        private void suggestNewCandidates() {
-            schedulesContainer.removeAllViews();
-            List<Timeslot> schedules = scheduleSuggester.suggestTimeSlot(
-                    TimeWords.MORNING,
-                    // TODO: いったんダミー値を入れるようにしておくので、後で直す。
-                    Integer.parseInt("30"),
-                    Integer.parseInt("1")
-            );
-            suggestingTimeslots.clear();
-            for (Timeslot schedule: schedules) {
-                addNewScheduleTextView(schedule);
-            }
         }
     }
 }

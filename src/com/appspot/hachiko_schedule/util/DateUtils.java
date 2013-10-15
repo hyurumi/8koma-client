@@ -31,6 +31,10 @@ public class DateUtils {
         return dateFormat.format(date);
     }
 
+    public static String formatAsISO8601(Calendar calendar) {
+        return formatAsISO8601(calendar.getTime());
+    }
+
     public static Date parseISO8601(String iso8601) {
         try {
             if (iso8601.endsWith("Z")) {

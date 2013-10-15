@@ -9,9 +9,10 @@
     android:background="@color/background_color_gray" android:clickable="false">
 
   <ScrollView
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_width="fill_parent"
-      android:fillViewport="true" android:layout_alignParentTop="true">
+      android:fillViewport="true" android:layout_alignParentTop="true"
+      android:layout_above="@+id/invite_button">
 
     <LinearLayout
         android:orientation="vertical"
@@ -48,7 +49,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/background_white" android:layout_margin="5dp" android:padding="5dp">
 
             <LinearLayout
@@ -151,21 +152,38 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="5dp"
+                >
                 <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="下の日程で招待を送ります(スワイプで日程変更)"
                         />
                 <include layout="@layout/horizontal_line_gray"/>
+
+              <RelativeLayout
+                  android:layout_width="fill_parent"
+                  android:layout_height="match_parent">
+
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingLeft="20dp"
-                        android:id="@+id/schedules" android:layout_marginTop="5dp"/>
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:orientation="vertical"
+                          android:paddingLeft="20dp"
+                          android:id="@+id/schedules" android:layout_marginTop="5dp">
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progress_loading_candidate"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"/>
+              </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
 
