@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -34,4 +34,64 @@
       android:padding="10dp"
       android:textSize="20dp"
       android:gravity="center_horizontal"/>
-</RelativeLayout>
+</RelativeLayout>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+<include layout="@layout/horizontal_line_gray"
+         android:layout_width="fill_parent"/>
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="5dp" android:layout_marginBottom="0dp"
+            android:layout_gravity="center" android:background="@color/background">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:id="@+id/date_candidate_answer_yes"
+                android:background="@color/background"
+                android:gravity="center_horizontal" android:layout_gravity="center"
+                android:textColor="@color/font_color_white" android:textSize="28sp" />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_weight="1">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01/01 10:00 - 20:00"
+                android:id="@+id/candidate_date_body"
+                android:singleLine="true"
+                android:textSize="24sp"
+                android:focusableInTouchMode="false" android:paddingLeft="5dp"/>
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Text Text Text Text"
+                    android:textColor="@color/font_color_gray"
+                    android:id="@+id/positive_friend_names" android:paddingLeft="5dp"/>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <Button android:layout_width="46dp" android:layout_height="46dp"
+                  android:text="@string/dontknow" android:id="@+id/night"
+                  android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
+                  android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                  android:textSize="32dp"
+                  android:checked="false" android:layout_gravity="center" android:layout_marginLeft="5dp"/>
+</LinearLayout>
+
+</LinearLayout>

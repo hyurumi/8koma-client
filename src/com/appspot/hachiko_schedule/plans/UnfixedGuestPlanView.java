@@ -117,7 +117,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
 
         private void init(Context context) {
             View layout = LayoutInflater.from(context).inflate(R.layout.date_answer_view, this);
-            numOfNgText = (TextView) layout.findViewById(R.id.date_candidate_answer_no);
+            //numOfNgText = (TextView) layout.findViewById(R.id.date_candidate_answer_no);
             numOfOkText = (TextView) layout.findViewById(R.id.date_candidate_answer_yes);
             candidateText = (TextView) layout.findViewById(R.id.candidate_date_body);
             candidateText.setOnTouchListener(new HorizontalSwipeListener(getContext()) {
@@ -146,13 +146,13 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                 }
             });
 
-            numOfNgText.setOnClickListener(new OnClickListener() {
+            /*numOfNgText.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setAnswerState(AnswerState.NG);
                     persistCurrentState();
                 }
-            });
+            });*/
             numOfOkText.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -166,17 +166,12 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             this.planId = planId;
             this.candidateDate = candidateDate;
             this.index = index;
-            updateTextAndBgColor();
         }
 
         private void updateTextAndBgColor() {
             candidateText.setText(candidateDate.getDateText());
-            numOfNgText.setText(Integer.toString(candidateDate.getNegativeFriendsNum()
-                    + (candidateDate.getMyAnswerState() == AnswerState.NG ? 1 : 0)));
             numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum()
                     + (candidateDate.getMyAnswerState() == AnswerState.OK ? 1 : 0)));
-            candidateText.setBackgroundColor(
-                    getResources().getColor(candidateDate.getMyAnswerState().getColorResource()));
         }
 
         private void setAnswerState(AnswerState answerState) {
@@ -184,7 +179,6 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                 return;
             }
             candidateDate.setMyAnswerState(answerState);
-            updateTextAndBgColor();
         }
 
         private void persistCurrentState() {

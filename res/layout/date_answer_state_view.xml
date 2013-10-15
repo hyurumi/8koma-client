@@ -8,11 +8,11 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp">
         <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0dp"
                 android:layout_marginRight="5dp" android:layout_marginBottom="0dp"
@@ -29,16 +29,15 @@
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp" android:orientation="vertical">
+                android:orientation="vertical">
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2010/01/01 1:00 - 2:00"
+                    android:text="01/01 10:00 - 20:00"
                     android:id="@+id/event_title"
                     android:singleLine="true"
                     android:textSize="24sp"
-                    android:paddingTop="5dp"
-                    android:focusableInTouchMode="false"/>
+                    android:focusableInTouchMode="false" android:paddingLeft="5dp"/>
             <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,10 +45,9 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Text Text Text Text Text Text Text Text Text"
-                        android:padding="5dp"
+                        android:text="Text Text Text Text Text Tex"
                         android:textColor="@color/font_color_gray"
-                        android:id="@+id/positive_friend_names"/>
+                        android:id="@+id/positive_friend_names" android:paddingLeft="5dp"/>
             </HorizontalScrollView>
         </LinearLayout>
 

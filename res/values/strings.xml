@@ -21,6 +21,7 @@
   <string name="when_label">いつ？</string>
   <string name="days_after_label">日後ごろ</string>
   <string name="minutes">分</string>
+    <string name="dontknow">\?</string>
   <string-array name="positive_num_list">
     <item>1</item>
     <item>2</item>
