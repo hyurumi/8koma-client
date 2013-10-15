@@ -89,8 +89,10 @@ public class CreatePlanActivity extends Activity {
 
         setFriends();
         initDateRange();
-        durationSpinner.setOnItemSelectedListener(new OnSpinnerItemSelectedListener());
+        durationSpinner.setOnItemSelectedListener(new DefaultSpinnerItemSelectedListener());
         confirmButton.setOnClickListener(new ConfirmButtonListener());
+        startDateSpinner.setOnItemSelectedListener(new OnStartDateSelectedListener());
+        endDateSpinner.setOnItemSelectedListener(new OnEndDateSelectedListener());
      }
 
     private void setFriends() {
@@ -217,8 +219,8 @@ public class CreatePlanActivity extends Activity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject json) {
-                        long planId = 0;
-                        List<CandidateDate> candidateDates = null;
+                        long planId;
+                        List<CandidateDate> candidateDates;
                         try {
                             planId = json.getLong("planId");
                             HachikoLogger.debug("plan successfully created", planId);
@@ -373,13 +375,49 @@ public class CreatePlanActivity extends Activity {
         }
     }
 
-    private class OnSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
+    private class OnStartDateSelectedListener extends DefaultSpinnerItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            HachikoLogger.debug(startDateSpinner.getAdapter().getCount(), position, id);
+            if (startDateSpinner.getAdapter().getCount() - 1 == position) {
+                startDateSpinner.setSelection(position - 1);
+            }
+            if (startDateSpinner.getSelectedItemPosition()
+                    > endDateSpinner.getSelectedItemPosition()) {
+                endDateSpinner.setSelection(startDateSpinner.getSelectedItemPosition() + 1);
+            }
+            super.onItemSelected(parent, view, position, id);
+        }
+    }
+
+    private class OnEndDateSelectedListener extends DefaultSpinnerItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (position == 0) {
+                endDateSpinner.setSelection(1);
+            }
+            if (startDateSpinner.getSelectedItemPosition()
+                    > endDateSpinner.getSelectedItemPosition()) {
+                startDateSpinner.setSelection(endDateSpinner.getSelectedItemPosition() - 1);
+            }
+            super.onItemSelected(parent, view, position, id);
+        }
+    }
+
+    private class DefaultSpinnerItemSelectedListener implements Spinner.OnItemSelectedListener {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // reschedule.
-            schedulesContainer.removeAllViews();
+            suggestNewCandidates();
+        }
 
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Do nothing
+        }
+
+        private void suggestNewCandidates() {
+            schedulesContainer.removeAllViews();
             List<Timeslot> schedules = scheduleSuggester.suggestTimeSlot(
                     TimeWords.MORNING,
                     // TODO: いったんダミー値を入れるようにしておくので、後で直す。
@@ -390,11 +428,6 @@ public class CreatePlanActivity extends Activity {
             for (Timeslot schedule: schedules) {
                 addNewScheduleTextView(schedule);
             }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            // Do nothing
         }
     }
 }
