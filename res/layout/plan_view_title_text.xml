@@ -7,4 +7,4 @@
           android:layout_toLeftOf="@+id/expand_button"
           android:singleLine="true"
           android:textSize="24sp"
-          android:paddingTop="5dp" />
+          android:paddingTop="5dp"/>

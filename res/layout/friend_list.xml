@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true">
-    <include
-        layout="@layout/selected_friends_container"
-        android:id="@+id/new_plan_button_wrapper" />
-    <SearchView
-        android:id="@+id/search_friend"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="@string/hint_on_search_friends" />
-    <ListView android:id="@+id/contact_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/new_plan_button_wrapper"
-        android:layout_below="@id/search_friend"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+  <include
+      layout="@layout/selected_friends_container"
+      android:id="@+id/new_plan_button_wrapper"/>
+  <SearchView
+      android:id="@+id/search_friend"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:queryHint="@string/hint_on_search_friends"/>
+  <ListView
+      android:id="@+id/contact_list"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/new_plan_button_wrapper"
+      android:layout_below="@id/search_friend"/>
 </RelativeLayout>

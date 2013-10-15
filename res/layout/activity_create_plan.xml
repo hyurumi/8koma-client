@@ -6,194 +6,240 @@
     android:layout_width="match_parent"
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
-    android:background="@color/background_color_gray" android:clickable="false">
-
+    android:background="@color/background_color_gray"
+    android:clickable="false">
   <ScrollView
       android:layout_height="match_parent"
       android:layout_width="fill_parent"
-      android:fillViewport="true" android:layout_alignParentTop="true"
+      android:fillViewport="true"
+      android:layout_alignParentTop="true"
       android:layout_above="@+id/invite_button">
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-
-            >
-        <EditText
-                android:id="@+id/what_to_do"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/background_white"
-                android:layout_margin="5dp" android:padding="5dp" android:hint="@string/what_to_do_default"/>
+        android:layout_width="fill_parent">
+      <EditText
+          android:id="@+id/what_to_do"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:background="@color/background_white"
+          android:layout_margin="5dp"
+          android:padding="5dp"
+          android:hint="@string/what_to_do_default"/>
+      <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/background_white"
+          android:layout_margin="5dp"
+          android:padding="5dp">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/ic_action_person"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/friends_name_to_invite"/>
+      </LinearLayout>
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="fill_parent"
+          android:layout_height="match_parent"
+          android:background="@color/background_white"
+          android:layout_margin="5dp"
+          android:padding="5dp">
         <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background_white"
-                android:layout_margin="5dp" android:padding="5dp">
-
-            <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:id="@+id/imageView" android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/ic_action_person" android:layout_marginRight="5dp"/>
-
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+          <Spinner
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/start_date_spinner"
+              android:layout_weight="5"
+              android:gravity="center"/>
+          <FrameLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1">
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/friends_name_to_invite"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="〜"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+          </FrameLayout>
+          <Spinner
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/end_date_spinner"
+              android:layout_weight="5"
+              android:entries="@array/time_words"
+              android:gravity="center"/>
         </LinearLayout>
-
+        <include layout="@layout/horizontal_line_gray"/>
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_white" android:layout_margin="5dp" android:padding="5dp">
-
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-                <Spinner
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/start_date_spinner"
-                        android:layout_weight="5"
-                        android:gravity="center"/>
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                  <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="〜"
-                          android:layout_gravity="center" android:gravity="center"/>
-                </FrameLayout>
-                <Spinner
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/end_date_spinner"
-                        android:layout_weight="5"
-                        android:entries="@array/time_words" android:gravity="center"/>
-            </LinearLayout>
-            <include layout="@layout/horizontal_line_gray"/>
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="46dp" android:orientation="horizontal" android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
-                <Spinner
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/duration_spinner"
-                        android:layout_marginLeft="10dp"
-                        android:entries="@array/duration" android:gravity="center"/>
-                <RadioGroup android:layout_height="fill_parent"
-                        android:layout_width="fill_parent"
-                        android:id="@+id/date_range_selections"
-                        android:orientation="horizontal">
-                     <RadioButton
-                         android:layout_width="wrap_content"
-                         android:layout_height="fill_parent"
-                         android:text="来週中"
-                         android:id="@+id/date_range_nextweek" android:background="@drawable/toggle_btn_color_stateful"
-                         android:checked="true" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                         android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
-                         android:button="@null"/>
-                     <RadioButton
-                             android:layout_width="wrap_content"
-                             android:layout_height="fill_parent"
-                             android:text="なるべく早く"
-                             android:id="@+id/date_range_asap" android:background="@drawable/toggle_btn_color_stateful"
-                             android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                             android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
-                             android:button="@null"/>
-                     <RadioButton
-                             android:layout_width="wrap_content"
-                             android:layout_height="fill_parent"
-                             android:text="手動設定"
-                             android:id="@+id/date_range_manual" android:background="@drawable/toggle_btn_color_stateful"
-                             android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                             android:textSize="12dp" android:layout_weight="0.3" android:gravity="center"
-                             android:button="@null"/>
-                 </RadioGroup>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="46dp"
-                    android:paddingTop="5dp" android:paddingBottom="5dp" android:gravity="fill_horizontal">
-                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                        android:text="朝" android:id="@+id/morning"
-                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
-                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
-                        android:layout_weight="0.25" android:checked="true" android:textOn="朝" android:textOff="朝"/>
-                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                              android:id="@+id/afternoon"
-                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
-                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
-                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"
-                        android:textOff="昼" android:textOn="昼"/>
-                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                        android:text="夕" android:id="@+id/evening"
-                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
-                        android:textColor="@drawable/toggle_btn_txt_color_stateful" android:textSize="12dp"
-                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_weight="0.25"
-                        android:textOff="夕" android:textOn="夕" android:checked="false"/>
-                <ToggleButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                        android:text="夜" android:id="@+id/night"
-                        android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
-                        android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                        android:textSize="12dp" android:layout_weight="0.25" android:textOff="夜" android:textOn="夜"
-                        android:checked="false"/>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                >
-                <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="下の日程で招待を送ります(スワイプで日程変更)"
-                        />
-                <include layout="@layout/horizontal_line_gray"/>
-
-              <RelativeLayout
-                  android:layout_width="fill_parent"
-                  android:layout_height="match_parent">
-
-                <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="match_parent"
-                          android:orientation="vertical"
-                          android:paddingLeft="20dp"
-                          android:id="@+id/schedules" android:layout_marginTop="5dp">
-
-                </LinearLayout>
-
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progress_loading_candidate"
-                    android:indeterminate="true"
-                    android:layout_centerInParent="true"/>
-              </RelativeLayout>
-
-            </LinearLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+          <Spinner
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:id="@+id/duration_spinner"
+              android:layout_marginLeft="10dp"
+              android:entries="@array/duration"
+              android:gravity="center"/>
+          <RadioGroup
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:id="@+id/date_range_selections"
+              android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="来週中"
+                android:id="@+id/date_range_nextweek"
+                android:background="@drawable/toggle_btn_color_stateful"
+                android:checked="true"
+                android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                android:textSize="12dp"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:button="@null"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="なるべく早く"
+                android:id="@+id/date_range_asap"
+                android:background="@drawable/toggle_btn_color_stateful"
+                android:checked="false"
+                android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                android:textSize="12dp"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:button="@null"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="手動設定"
+                android:id="@+id/date_range_manual"
+                android:background="@drawable/toggle_btn_color_stateful"
+                android:checked="false"
+                android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                android:textSize="12dp"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:button="@null"/>
+          </RadioGroup>
         </LinearLayout>
-
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="46dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:gravity="fill_horizontal">
+          <ToggleButton
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:text="朝"
+              android:id="@+id/morning"
+              android:layout_alignParentBottom="true"
+              android:background="@drawable/toggle_btn_color_stateful"
+              android:textColor="@drawable/toggle_btn_txt_color_stateful"
+              android:textSize="12dp"
+              android:layout_weight="0.25"
+              android:checked="true"
+              android:textOn="朝"
+              android:textOff="朝"/>
+          <ToggleButton
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:id="@+id/afternoon"
+              android:layout_alignParentBottom="true"
+              android:background="@drawable/toggle_btn_color_stateful"
+              android:textColor="@drawable/toggle_btn_txt_color_stateful"
+              android:textSize="12dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:layout_weight="0.25"
+              android:textOff="昼"
+              android:textOn="昼"/>
+          <ToggleButton
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:text="夕"
+              android:id="@+id/evening"
+              android:layout_alignParentBottom="true"
+              android:background="@drawable/toggle_btn_color_stateful"
+              android:textColor="@drawable/toggle_btn_txt_color_stateful"
+              android:textSize="12dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:layout_weight="0.25"
+              android:textOff="夕"
+              android:textOn="夕"
+              android:checked="false"/>
+          <ToggleButton
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:text="夜"
+              android:id="@+id/night"
+              android:layout_alignParentBottom="true"
+              android:background="@drawable/toggle_btn_color_stateful"
+              android:textColor="@drawable/toggle_btn_txt_color_stateful"
+              android:textSize="12dp"
+              android:layout_weight="0.25"
+              android:textOff="夜"
+              android:textOn="夜"
+              android:checked="false"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp">
+          <TextView
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="下の日程で招待を送ります(スワイプで日程変更)"/>
+          <include layout="@layout/horizontal_line_gray"/>
+          <RelativeLayout
+              android:layout_width="fill_parent"
+              android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:id="@+id/schedules"
+                android:layout_marginTop="5dp">
+            </LinearLayout>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_loading_candidate"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"/>
+          </RelativeLayout>
+        </LinearLayout>
+      </LinearLayout>
     </LinearLayout>
   </ScrollView>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm_button_label"
-        android:id="@+id/invite_button"
-        android:layout_alignParentBottom="true" android:background="@drawable/btn_color_stateful"
-        android:textColor="@color/font_color_white"/>
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/confirm_button_label"
+      android:id="@+id/invite_button"
+      android:layout_alignParentBottom="true"
+      android:background="@drawable/btn_color_stateful"
+      android:textColor="@color/font_color_white"/>
 </RelativeLayout>

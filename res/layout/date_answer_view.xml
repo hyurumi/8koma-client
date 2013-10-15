@@ -3,90 +3,106 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
-<include layout="@layout/horizontal_line_gray"
-         android:layout_width="fill_parent"/>
-<LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp">
+  <include
+      layout="@layout/horizontal_line_gray"
+      android:layout_width="fill_parent"/>
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="5dp"
+      android:paddingBottom="5dp">
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="01/01 10:00 - 20:00"
+          android:id="@+id/candidate_date_body"
+          android:singleLine="true"
+          android:textSize="20sp"
+          android:focusableInTouchMode="false"/>
+      <LinearLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/answer_person_view"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/ic_action_person"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" android:layout_weight="1">
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="01/01 10:00 - 20:00"
-                android:id="@+id/candidate_date_body"
-                android:singleLine="true"
-                android:textSize="20sp"
-                android:focusableInTouchMode="false"/>
-        <LinearLayout             android:layout_width="fill_parent"
-                                  android:layout_height="wrap_content"
-                                  android:orientation="horizontal">
-                <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:id="@+id/answer_person_view" android:layout_gravity="center_horizontal|bottom"
-                        android:src="@drawable/ic_action_person"/>
-
-
-            <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:id="@+id/date_candidate_answer_yes"
-                        android:gravity="center_horizontal"
-                        android:layout_gravity="center"
-                        android:textSize="11dp"/>
-            <HorizontalScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom" android:layout_marginLeft="5dp">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Text Text Text Text"
-                    android:textColor="@color/font_color_gray"
-                    android:id="@+id/positive_friend_names"/>
+            android:text="1"
+            android:id="@+id/date_candidate_answer_yes"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="11dp"/>
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="5dp">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Text Text Text Text"
+              android:textColor="@color/font_color_gray"
+              android:id="@+id/positive_friend_names"/>
         </HorizontalScrollView>
-        </LinearLayout>
+      </LinearLayout>
     </LinearLayout>
-    <RadioGroup android:layout_height="fill_parent"
-                android:layout_width="wrap_content"
-                android:id="@+id/answer_selections"
-                android:orientation="horizontal">
-        <!--
-        申し訳ないが，以下のchecked属性は3つともfalseにしておいていただきたく…
-        ラジオボタンのcheck変化でサーバに回答を通信しているのだけど，check変化イベントは，システムがRadioButton
-        のchecked属性を書き換えても呼ばれる，で，Activityを遷移するタイミングで不意に呼ばれたりして，
-        ちょっと制御がつらかった-->
-        <RadioButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="@string/ok"
-                android:id="@+id/answer_ok" android:background="@drawable/toggle_btn_color_stateful"
-                android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="24dp" android:gravity="center"
-                android:button="@null" android:layout_gravity="center"/>
-        <RadioButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="@string/tentative"
-                android:id="@+id/answer_tentative" android:background="@drawable/toggle_btn_color_stateful"
-                android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="24dp" android:gravity="center"
-                android:button="@null" android:layout_gravity="center"/>
-        <RadioButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="@string/ng"
-                android:id="@+id/answer_ng" android:background="@drawable/toggle_btn_color_stateful"
-                android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="24dp" android:gravity="center"
-                android:button="@null" android:layout_gravity="center"/>
+    <RadioGroup
+        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:id="@+id/answer_selections"
+        android:orientation="horizontal">
+      <!--
+      申し訳ないが，以下のchecked属性は3つともfalseにしておいていただきたく…
+      ラジオボタンのcheck変化でサーバに回答を通信しているのだけど，check変化イベントは，システムがRadioButton
+      のchecked属性を書き換えても呼ばれる，で，Activityを遷移するタイミングで不意に呼ばれたりして，
+      ちょっと制御がつらかった-->
+      <RadioButton
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:text="@string/ok"
+          android:id="@+id/answer_ok"
+          android:background="@drawable/toggle_btn_color_stateful"
+          android:checked="false"
+          android:textColor="@drawable/toggle_btn_txt_color_stateful"
+          android:textSize="24dp"
+          android:gravity="center"
+          android:button="@null"
+          android:layout_gravity="center"/>
+      <RadioButton
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:text="@string/tentative"
+          android:id="@+id/answer_tentative"
+          android:background="@drawable/toggle_btn_color_stateful"
+          android:checked="false"
+          android:textColor="@drawable/toggle_btn_txt_color_stateful"
+          android:textSize="24dp"
+          android:gravity="center"
+          android:button="@null"
+          android:layout_gravity="center"/>
+      <RadioButton
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:text="@string/ng"
+          android:id="@+id/answer_ng"
+          android:background="@drawable/toggle_btn_color_stateful"
+          android:checked="false"
+          android:textColor="@drawable/toggle_btn_txt_color_stateful"
+          android:textSize="24dp"
+          android:gravity="center"
+          android:button="@null"
+          android:layout_gravity="center"/>
     </RadioGroup>
-
-</LinearLayout>
-
+  </LinearLayout>
 </LinearLayout>

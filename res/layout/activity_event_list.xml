@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:background="@color/background_color_gray"
+              android:layout_height="match_parent"
+              android:background="@color/background_color_gray"
               android:baselineAligned="false">
   <ListView
       android:layout_width="wrap_content"
@@ -25,6 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:id="@+id/no_event_create_new"
-        android:text="@string/no_event_then_create_new" />
+        android:text="@string/no_event_then_create_new"/>
   </LinearLayout>
 </LinearLayout>

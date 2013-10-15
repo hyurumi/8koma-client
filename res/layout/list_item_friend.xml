@@ -11,7 +11,6 @@
       android:adjustViewBounds="true"
       android:scaleType="centerCrop"
       android:src="@drawable/ic_contact_picture"/>
-
   <LinearLayout
       android:orientation="vertical"
       android:layout_width="fill_parent"
@@ -19,12 +18,10 @@
       android:paddingLeft="12dp"
       android:id="@+id/friend_name_container"
       android:gravity="center_vertical">
-
     <TextView
         android:id="@+id/friend_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,5 +29,4 @@
         android:lines="1"
         android:id="@+id/friend_email"/>
   </LinearLayout>
-
 </LinearLayout>
