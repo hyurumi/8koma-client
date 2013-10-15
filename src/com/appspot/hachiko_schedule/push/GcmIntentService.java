@@ -134,12 +134,12 @@ public class GcmIntentService extends IntentService {
      */
     private boolean requestUnknownFriendInfo(final JSONObject body, final List<Long> friendIds) {
         UserTableHelper userTableHelper = new UserTableHelper(getApplicationContext());
-        Map<Long, String> idToName = userTableHelper.getIdToNameMap(friendIds);
         long myHachikoId = Long.parseLong(HachikoPreferences.getDefault(getApplicationContext())
                 .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, ""));
         if (friendIds.contains(myHachikoId)) {
             friendIds.remove(myHachikoId);
         }
+        Map<Long, String> idToName = userTableHelper.getIdToNameMap(friendIds);
         if (idToName.size() == friendIds.size()) {
             return false;
         }
