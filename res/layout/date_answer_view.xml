@@ -86,12 +86,24 @@
                     android:id="@+id/positive_friend_names" android:paddingLeft="5dp"/>
         </HorizontalScrollView>
     </LinearLayout>
-    <Button android:layout_width="46dp" android:layout_height="46dp"
-                  android:text="@string/dontknow" android:id="@+id/night"
-                  android:layout_alignParentBottom="true" android:background="@drawable/toggle_btn_color_stateful"
-                  android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                  android:textSize="32dp"
-                  android:checked="false" android:layout_gravity="center" android:layout_marginLeft="5dp"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="5dp" android:layout_marginBottom="0dp"
+            android:layout_gravity="center" android:background="@color/background">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dontknow"
+                android:id="@+id/user_answer"
+                android:background="@color/background"
+                android:gravity="center_horizontal" android:layout_gravity="center"
+                android:textColor="@color/font_color_white" android:textSize="32sp" />
+    </LinearLayout>
 </LinearLayout>
 
 </LinearLayout>

@@ -39,6 +39,7 @@ import static com.appspot.hachiko_schedule.data.CandidateDate.AnswerState;
  */
 public class UnfixedGuestPlanView extends LinearLayout implements PlanView<UnfixedPlan> {
     private TextView titleView;
+
     private TextView participantsView;
     private ViewGroup candidateDateContainer;
     private PlansTableHelper plansTableHelper;
@@ -95,6 +96,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
         private TextView numOfNgText;
         private TextView numOfOkText;
         private TextView candidateText;
+        private TextView useranswerview;
         private CandidateDate candidateDate;
         private int index;
         private long planId;
@@ -120,6 +122,36 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             //numOfNgText = (TextView) layout.findViewById(R.id.date_candidate_answer_no);
             numOfOkText = (TextView) layout.findViewById(R.id.date_candidate_answer_yes);
             candidateText = (TextView) layout.findViewById(R.id.candidate_date_body);
+
+            //ここから
+            useranswerview = (TextView) layout.findViewById(R.id.user_answer);
+            useranswerview.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    TextView textview = ((TextView)view);
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if(textview.getText() == "O"){
+                                ((TextView)view).setText("X");
+                            }else{
+                                ((TextView)view).setText("O");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    return false;
+                }
+            });
+            useranswerview.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ((TextView)view).setText(R.string.dontknow);
+                    return false;
+                }
+            });
+            //ここまで
+
             candidateText.setOnTouchListener(new HorizontalSwipeListener(getContext()) {
 
                 @Override
