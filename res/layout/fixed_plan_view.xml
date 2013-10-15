@@ -5,19 +5,29 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginBottom="20dp"
-              android:background="@drawable/border">
+              android:background="@color/background_white" android:padding="5dp">
   <include layout="@layout/plan_view_title_text"/>
   <include layout="@layout/horizontal_line_gray"/>
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="participants"
-      android:id="@+id/event_participants"
-      android:paddingTop="3dp"
-      android:paddingBottom="3dp"
-      android:singleLine="true"/>
-  <include layout="@layout/horizontal_line_gray"/>
-  <TextView
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_white"
+            android:padding="5dp" android:layout_marginTop="5dp" android:layout_marginBottom="5dp">
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/imageView" android:layout_gravity="center_horizontal|bottom"
+                android:src="@drawable/ic_action_person" android:layout_marginRight="5dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="participants"
+                android:id="@+id/event_participants"/>
+    </LinearLayout>
+    <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="2010/01/01 1:00 - 2:00"
