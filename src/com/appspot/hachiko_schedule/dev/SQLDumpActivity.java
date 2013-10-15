@@ -18,7 +18,7 @@ import com.appspot.hachiko_schedule.util.HachikoLogger;
  */
 public class SQLDumpActivity extends Activity {
     private static final String[] TABLE_NAMES
-            = new String[] {"users", "plans", "candiate_dates"};
+            = new String[] {"users", "non_friend_names", "plans", "candiate_dates"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +55,13 @@ public class SQLDumpActivity extends Activity {
         int numOfColumns = c.getColumnCount();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < numOfColumns; i++) {
-            builder.append(c.getColumnName(i)).append(",");
+            builder.append(c.getColumnName(i)).append("| ");
         }
         builder.append("\n");
         builder.append("-----\n");
         do {
             for (int i = 0; i < numOfColumns; i++) {
-                builder.append(c.getString(i)).append(",");
+                builder.append(c.getString(i)).append("| ");
             }
             builder.append("\n");
         } while (c.moveToNext());

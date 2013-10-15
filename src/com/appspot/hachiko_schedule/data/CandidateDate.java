@@ -4,10 +4,9 @@ import android.content.Context;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.util.DateUtils;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,14 +42,7 @@ public class CandidateDate {
 
     public String getPositiveFriendNames(Context context) {
         UserTableHelper userTableHelper = new UserTableHelper(context);
-        List<String> hachikoIds = userTableHelper.getFriendsNameForHachikoIds(
-                Collections2.transform(positiveFriendIds,
-                new Function<Long, String>() {
-                    @Override
-                    public String apply(Long val) {
-                        return Long.toString(val);
-                    }
-                }));
+        Collection<String> hachikoIds = userTableHelper.getFriendsNameForHachikoIds(positiveFriendIds);
         return Joiner.on(", ").join(hachikoIds);
     }
     public int getPositiveFriendsNum() {

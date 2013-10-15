@@ -9,7 +9,9 @@ import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 
 import java.util.*;
 
@@ -142,8 +144,15 @@ public class PlansTableHelper {
                         planId,
                         title,
                         isHost,
-                        userTableHelper.getFriendsNameForHachikoIds(
-                                Arrays.asList(participantIds.split(","))),
+                        userTableHelper.getFriendsNameForHachikoIds(Collections2.transform(
+                                Arrays.asList(participantIds.split(",")),
+                                new Function<String, Long>() {
+                                    @Override
+                                    public Long apply(String val) {
+                                        return Long.parseLong(val);
+                                    }
+                                }
+                        )),
                         queryCandidateDates(db, planId)
                 ));
             }

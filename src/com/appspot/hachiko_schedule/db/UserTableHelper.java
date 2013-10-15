@@ -9,10 +9,7 @@ import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Usersテーブルまわりのヘルパ.
@@ -26,6 +23,8 @@ public class UserTableHelper {
     private static final String PROFILE_PIC_URI = "profile_pic_uri";
     private static final String PRIMARY_EMAIL = "primary_email";
 
+    private static final String NON_FRIEND_NAME_TABLE_NAME = "non_friend_names";
+
     private HachikoDBOpenHelper dbHelper;
 
     public static void onCreateDatabase(SQLiteDatabase database) {
@@ -37,7 +36,12 @@ public class UserTableHelper {
                 .addColumn(LOCAL_CONTACT_ID, SQLiteType.INTEGER)
                 .addColumn(PRIMARY_EMAIL, SQLiteType.TEXT)
                 .toString();
+        String createNonFriendNamesTable = new SQLiteCreateTableBuilder(NON_FRIEND_NAME_TABLE_NAME)
+                .addColumn(HACHIKO_ID, SQLiteType.TEXT, SQLiteConstraint.PRIMARY_KEY)
+                .addColumn(DISPLAY_NAME, SQLiteType.TEXT)
+                .toString();
         database.execSQL(createUsersTable);
+        database.execSQL(createNonFriendNamesTable);
     }
 
     public static void onUpgradeDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {}
@@ -122,24 +126,57 @@ public class UserTableHelper {
         return c.getString(c.getColumnIndex(HACHIKO_ID));
     }
 
-    public List<String> getFriendsNameForHachikoIds(Collection<String> hachikoIds) {
+    public Map<Long, String> getIdToNameMap(Collection<Long> hachikoIds) {
         if (hachikoIds.size() == 0) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("select " + DISPLAY_NAME + " from " + USER_TABLE_NAME + " where "
-                + HACHIKO_ID + " IN (" + Joiner.on(",").join(hachikoIds) + ");", null);
-        if (!c.moveToFirst()) {
-            HachikoLogger.debug("No name found for ids ", hachikoIds);
-            HachikoLogger.debug("select " + DISPLAY_NAME + " from " + USER_TABLE_NAME + " where "
-                    + HACHIKO_ID + " in (" + Joiner.on(",").join(hachikoIds) + ");");
-            return Collections.emptyList();
+        Map<Long, String> names = new HashMap<Long, String>();
+        queryAndPutNames(db, names, USER_TABLE_NAME, hachikoIds);
+        if (names.size() == hachikoIds.size()) {
+            return names;
         }
-        List<String> names = new ArrayList<String>();
-        do {
-            names.add(c.getString(c.getColumnIndex(DISPLAY_NAME)));
-        } while (c.moveToNext());
+        Set<Long> unresolvedIds = new HashSet<Long>();
+        for (Long id: hachikoIds) {
+            if (!names.containsKey(id)) {
+                unresolvedIds.add(id);
+            }
+        }
+        queryAndPutNames(db, names, NON_FRIEND_NAME_TABLE_NAME, unresolvedIds);
         return names;
+    }
+
+    public Collection<String> getFriendsNameForHachikoIds(Collection<Long> hachikoIds) {
+        return getIdToNameMap(hachikoIds).values();
+    }
+
+    private void queryAndPutNames(SQLiteDatabase db, Map<Long, String> names,
+                                  String tableNameToQuery, Collection<Long> idsToQuery) {
+        Cursor c = db.query(tableNameToQuery, new String[]{HACHIKO_ID, DISPLAY_NAME},
+                HACHIKO_ID + " in (" + Joiner.on(",").join(idsToQuery) + ")", null,
+                null, null, null);
+        if (c.moveToFirst()) {
+            int idIndex = c.getColumnIndex(HACHIKO_ID);
+            int displayNameIndex = c.getColumnIndex(DISPLAY_NAME);
+            do {
+                names.put(c.getLong(idIndex), c.getString(displayNameIndex));
+            } while (c.moveToNext());
+        }
+    }
+
+    /**
+     * 直接の友達ではない相手の表示名(サーバから取得した)を保持する
+     * @param names HachikoIdと表示名の組
+     */
+    public void persistNonFriendName(Map<Long, String> names) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        for (Map.Entry<Long, String> name: names.entrySet()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(HACHIKO_ID, name.getKey());
+            contentValues.put(DISPLAY_NAME, name.getValue());
+            db.insert(NON_FRIEND_NAME_TABLE_NAME, null, contentValues);
+        }
+        db.close();
     }
 
     public List<FriendItem> getListOfContactEntries() {
