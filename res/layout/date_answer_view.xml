@@ -92,28 +92,28 @@
                 android:id="@+id/date_range_selections"
                 android:orientation="horizontal">
         <RadioButton
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="@string/ok"
                 android:id="@+id/answer_ok" android:background="@drawable/toggle_btn_color_stateful"
                 android:checked="true" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="12dp" android:gravity="center"
+                android:textSize="24dp" android:gravity="center"
                 android:button="@null" android:layout_gravity="center"/>
         <RadioButton
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="@string/tentative"
                 android:id="@+id/answer_tentative" android:background="@drawable/toggle_btn_color_stateful"
                 android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="12dp" android:gravity="center"
+                android:textSize="24dp" android:gravity="center"
                 android:button="@null" android:layout_gravity="center"/>
         <RadioButton
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="@string/ng"
                 android:id="@+id/answer_ng" android:background="@drawable/toggle_btn_color_stateful"
                 android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
-                android:textSize="12dp" android:gravity="center"
+                android:textSize="24dp" android:gravity="center"
                 android:button="@null" android:layout_gravity="center"/>
     </RadioGroup>
 
