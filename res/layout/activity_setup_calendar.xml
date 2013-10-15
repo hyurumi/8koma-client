@@ -15,14 +15,15 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:id="@+id/setup_calendar_list_container">
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/setup_calendar_confirm"
-        android:id="@+id/setup_calendar_complete_button"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        />
+      <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/setup_calendar_confirm"
+      android:id="@+id/setup_calendar_complete_button"
+      android:layout_alignParentBottom="true"
+      android:layout_gravity="bottom"
+      android:background="@drawable/btn_color_stateful"
+      android:textColor="@color/font_color_white"/>
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
