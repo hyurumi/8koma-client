@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content" android:paddingLeft="5dp" android:paddingRight="5dp">
+              android:layout_height="wrap_content">
     <include layout="@layout/horizontal_line_gray"
              android:layout_width="fill_parent"/>
     <LinearLayout
