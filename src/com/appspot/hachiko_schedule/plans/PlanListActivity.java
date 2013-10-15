@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
@@ -98,6 +99,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                         HachikoLogger.error("confirm fail", volleyError);
                     }
                 });
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
         HachikoApp.defaultRequestQueue().add(request);
     }
 

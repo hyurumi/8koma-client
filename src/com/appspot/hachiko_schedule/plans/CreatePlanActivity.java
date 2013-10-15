@@ -16,7 +16,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -24,6 +23,7 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
@@ -258,8 +258,7 @@ public class CreatePlanActivity extends Activity {
                         HachikoLogger.error("plan creation error", volleyError);
                     }
                 });
-        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                /* num of retry */3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
         HachikoApp.defaultRequestQueue().add(request);
     }
 

@@ -7,11 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
@@ -185,9 +185,7 @@ public class GoogleAuthActivity extends Activity {
                     }
                 }
         );
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, 3,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
         HachikoApp.defaultRequestQueue().add(request);
     }
 
