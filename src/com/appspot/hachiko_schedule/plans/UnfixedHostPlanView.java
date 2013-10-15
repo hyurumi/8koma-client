@@ -83,8 +83,8 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
     private class CandidateDateView extends LinearLayout {
         private TextView dateTextView;
         private TextView numOfPositiveFriendsView;
-        private TextView numOfNeutralFriendsView;
-        private TextView numOfNegativeFriendsView;
+        //private TextView numOfNeutralFriendsView;
+        //private TextView numOfNegativeFriendsView;
         private TextView positiveFriendNames;
 
         private CandidateDateView(Context context) {
@@ -106,17 +106,15 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
             View layout = LayoutInflater.from(context).inflate(R.layout.date_answer_state_view, this);
             dateTextView = (TextView) layout.findViewById(R.id.event_title);
             numOfPositiveFriendsView = (TextView) layout.findViewById(R.id.num_of_ok);
-            numOfNeutralFriendsView = (TextView) layout.findViewById(R.id.num_of_neutral);
-            numOfNegativeFriendsView = (TextView) layout.findViewById(R.id.num_of_ng);
             positiveFriendNames = (TextView) layout.findViewById(R.id.positive_friend_names);
         }
 
         private void setCandidate(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
             dateTextView.setText(candidateDate.getDateText());
             numOfPositiveFriendsView.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
-            numOfNegativeFriendsView.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
-            numOfNeutralFriendsView.setText(Integer.toString(numOfPotentialParticipants
-                    - candidateDate.getPositiveFriendsNum() - candidateDate.getNegativeFriendsNum()));
+            //numOfNegativeFriendsView.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
+            //numOfNeutralFriendsView.setText(Integer.toString(numOfPotentialParticipants
+            //        - candidateDate.getPositiveFriendsNum() - candidateDate.getNegativeFriendsNum()));
             positiveFriendNames.setText(candidateDate.getPositiveFriendNames(getContext()));
             setOnClickListener(new OnClickListener() {
                 @Override
