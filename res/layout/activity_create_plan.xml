@@ -27,17 +27,17 @@
                 android:background="@color/background_white"
                 android:layout_margin="5dp" android:padding="5dp" android:hint="@string/what_to_do_default"/>
         <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_white"
                 android:layout_margin="5dp" android:padding="5dp">
 
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/with_who_label"/>
-            <include layout="@layout/horizontal_line_gray"/>
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:id="@+id/imageView" android:layout_gravity="center_horizontal|bottom"
+                    android:src="@drawable/ic_action_person" android:layout_marginRight="5dp"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="〜"
-                          android:layout_gravity="center"/>
+                          android:layout_gravity="center" android:gravity="center"/>
                 </FrameLayout>
                 <Spinner
                         android:layout_width="wrap_content"
