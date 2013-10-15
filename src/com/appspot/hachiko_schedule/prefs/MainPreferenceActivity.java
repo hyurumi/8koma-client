@@ -154,13 +154,18 @@ public class MainPreferenceActivity extends PreferenceActivity {
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                String info = "Build Date: " + getBuildTimeString() + "\n"
+                        + "Latest commit: " + getCommitInfo() + "\n"
+                        + "Gcm Info: "
+                        + HachikoPreferences.getDefault(MainPreferenceActivity.this)
+                        .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found") + "\n"
+                        + "Google Auth: "
+                        + new GoogleAuthPreferences(MainPreferenceActivity.this).getAccountName()
+                        + "/" + new GoogleAuthPreferences(MainPreferenceActivity.this).getToken();
                 new AlertDialog.Builder(MainPreferenceActivity.this)
-                        .setMessage("Build Date: " + getBuildTimeString() + "\n"
-                                + "Latest commit: " + getCommitInfo()
-                                + "Gcm Info:"
-                                + HachikoPreferences.getDefault(MainPreferenceActivity.this)
-                                .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found"))
+                        .setMessage(info)
                         .show();
+                HachikoLogger.debug(info);
                 return true;
             }
         });
