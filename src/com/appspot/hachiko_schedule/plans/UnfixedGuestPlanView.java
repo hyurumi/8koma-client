@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,9 +18,9 @@ import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
-import com.appspot.hachiko_schedule.ui.HorizontalSwipeListener;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableBiMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -93,10 +89,14 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
     }
 
     private class CandidateDateAnswerView extends RelativeLayout {
-        private TextView numOfNgText;
-        private TextView numOfOkText;
+        private final ImmutableBiMap<Integer, AnswerState> BUTTON_TO_ANSWER = ImmutableBiMap.of(
+                R.id.answer_ok, AnswerState.OK,
+                R.id.answer_tentative, AnswerState.NEUTRAL,
+                R.id.answer_ng, AnswerState.NG);
         private TextView candidateText;
-        private TextView useranswerview;
+        private TextView numOfPositiveFriends;
+        private TextView positiveFriendNamesView;
+        private RadioGroup answerRadioGroup;
         private CandidateDate candidateDate;
         private int index;
         private long planId;
@@ -119,49 +119,21 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
 
         private void init(Context context) {
             View layout = LayoutInflater.from(context).inflate(R.layout.date_answer_view, this);
-            //numOfNgText = (TextView) layout.findViewById(R.id.date_candidate_answer_no);
-            numOfOkText = (TextView) layout.findViewById(R.id.date_candidate_answer_yes);
+            numOfPositiveFriends = (TextView) layout.findViewById(R.id.date_candidate_answer_yes);
+            positiveFriendNamesView = (TextView) layout.findViewById(R.id.positive_friend_names);
             candidateText = (TextView) layout.findViewById(R.id.candidate_date_body);
-
-
-            candidateText.setOnTouchListener(new HorizontalSwipeListener(getContext()) {
+            answerRadioGroup = (RadioGroup) layout.findViewById(R.id.answer_selections);
+            answerRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
                 @Override
-                protected void onSwipeMove(View v, MotionEvent e) {
-                    float deltaX = e.getX() + v.getTranslationX() - getSwipeStartX();
-                    if (Math.abs(deltaX / v.getWidth()) > 0.1) {
-                        setAnswerState(deltaX > 0 ? AnswerState.OK : AnswerState.NG);
-                    } else {
-                        setAnswerState(AnswerState.NEUTRAL);
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    AnswerState answerState = BUTTON_TO_ANSWER.get(checkedId);
+                    if (lastPersistedState == null // RadioGroupの初期化時に呼ばれるのを防ぐ
+                            || lastPersistedState == answerState) {
+                        return;
                     }
-                }
-
-                @Override
-                protected boolean onSwipeEnd(View v, MotionEvent e) {
-                    return false;
-                }
-
-                @Override
-                protected void onTouchEnd(View v, MotionEvent e, boolean swiping) {
-                    if (!swiping) {
-                        setAnswerState(AnswerState.NEUTRAL);
-                    }
-                    persistCurrentState();
-                }
-            });
-
-            /*numOfNgText.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setAnswerState(AnswerState.NG);
-                    persistCurrentState();
-                }
-            });*/
-            numOfOkText.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setAnswerState(AnswerState.OK);
-                    persistCurrentState();
+                    plansTableHelper.updateOwnAnswer(planId, candidateDate.getAnswerId(), answerState);
+                    sendResponse(planId, index, answerState);
                 }
             });
         }
@@ -170,29 +142,11 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             this.planId = planId;
             this.candidateDate = candidateDate;
             this.index = index;
-        }
-
-        private void updateTextAndBgColor() {
             candidateText.setText(candidateDate.getDateText());
-            numOfOkText.setText(Integer.toString(candidateDate.getPositiveFriendsNum()
-                    + (candidateDate.getMyAnswerState() == AnswerState.OK ? 1 : 0)));
-        }
-
-        private void setAnswerState(AnswerState answerState) {
-            if (answerState == candidateDate.getMyAnswerState()) {
-                return;
-            }
-            candidateDate.setMyAnswerState(answerState);
-        }
-
-        private void persistCurrentState() {
-            AnswerState answerState = candidateDate.getMyAnswerState();
-            if (lastPersistedState == answerState) {
-                return;
-            }
-            plansTableHelper.updateOwnAnswer(planId, candidateDate.getAnswerId(), answerState);
-            sendResponse(planId, index, answerState);
-            lastPersistedState = answerState;
+            numOfPositiveFriends.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
+            positiveFriendNamesView.setText(candidateDate.getPositiveFriendNames(getContext()));
+            lastPersistedState = candidateDate.getMyAnswerState();
+            answerRadioGroup.check(BUTTON_TO_ANSWER.inverse().get(lastPersistedState));
         }
     }
 

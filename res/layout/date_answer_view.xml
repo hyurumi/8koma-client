@@ -1,40 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="5dp">
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="0"
-      android:id="@+id/date_candidate_answer_no"
-      android:background="@color/ng_red"
-      android:padding="10dp"
-      android:textSize="20dp"
-      android:layout_alignParentLeft="true"/>
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="3"
-      android:id="@+id/date_candidate_answer_yes"
-      android:background="@color/ok_green"
-      android:padding="10dp"
-      android:textSize="20dp"
-      android:layout_alignParentRight="true"/>
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="10/2 18:00 - 19:00"
-      android:id="@+id/candidate_date_body"
-      android:background="@color/neutral_yellow"
-      android:layout_toLeftOf="@id/date_candidate_answer_yes"
-      android:layout_toRightOf="@id/date_candidate_answer_no"
-      android:layout_alignWithParentIfMissing="false"
-      android:padding="10dp"
-      android:textSize="20dp"
-      android:gravity="center_horizontal"/>
-</RelativeLayout>-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
@@ -63,7 +27,7 @@
                 <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:id="@+id/imageView" android:layout_gravity="center_horizontal|bottom"
+                        android:id="@+id/answer_person_view" android:layout_gravity="center_horizontal|bottom"
                         android:src="@drawable/ic_action_person"/>
 
 
@@ -72,7 +36,8 @@
                         android:layout_height="wrap_content"
                         android:text="1"
                         android:id="@+id/date_candidate_answer_yes"
-                        android:gravity="center_horizontal" android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:textSize="11dp"/>
             <HorizontalScrollView
                 android:layout_width="fill_parent"
@@ -89,14 +54,19 @@
     </LinearLayout>
     <RadioGroup android:layout_height="fill_parent"
                 android:layout_width="wrap_content"
-                android:id="@+id/date_range_selections"
+                android:id="@+id/answer_selections"
                 android:orientation="horizontal">
+        <!--
+        申し訳ないが，以下のchecked属性は3つともfalseにしておいていただきたく…
+        ラジオボタンのcheck変化でサーバに回答を通信しているのだけど，check変化イベントは，システムがRadioButton
+        のchecked属性を書き換えても呼ばれる，で，Activityを遷移するタイミングで不意に呼ばれたりして，
+        ちょっと制御がつらかった-->
         <RadioButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="@string/ok"
                 android:id="@+id/answer_ok" android:background="@drawable/toggle_btn_color_stateful"
-                android:checked="true" android:textColor="@drawable/toggle_btn_txt_color_stateful"
+                android:checked="false" android:textColor="@drawable/toggle_btn_txt_color_stateful"
                 android:textSize="24dp" android:gravity="center"
                 android:button="@null" android:layout_gravity="center"/>
         <RadioButton
