@@ -35,7 +35,7 @@ public class JSONUtils {
         return object;
     }
 
-    public static List<Long> toJsonList(JSONArray array) throws JSONException {
+    public static List<Long> toList(JSONArray array) throws JSONException {
         List<Long> retList = new ArrayList<Long>(array.length());
         for (int i = 0; i < array.length(); i++) {
             retList.add(array.getLong(i));

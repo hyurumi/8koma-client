@@ -78,7 +78,7 @@ public class GcmIntentService extends IntentService {
     // invited
     private void sendInviteNotification(JSONObject body) {
         try {
-            List<Long> friendIds = JSONUtils.toJsonList(body.getJSONArray("friendsId"));
+            List<Long> friendIds = JSONUtils.toList(body.getJSONArray("friendsId"));
             if (!requestUnknownFriendInfo(body, friendIds)) {
                 // もし上の条件がfalseなら，notificationは通信が終了したあと非同期で追加される．
                 sendInviteNotification(body, friendIds);
