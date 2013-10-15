@@ -1,7 +1,11 @@
 package com.appspot.hachiko_schedule.util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link org.json.JSONObject} とか {@link org.json.JSONArray} とかまわりの便利メソッド
@@ -29,5 +33,13 @@ public class JSONUtils {
             }
         }
         return object;
+    }
+
+    public static List<Long> toJsonList(JSONArray array) throws JSONException {
+        List<Long> retList = new ArrayList<Long>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            retList.add(array.getLong(i));
+        }
+        return retList;
     }
 }

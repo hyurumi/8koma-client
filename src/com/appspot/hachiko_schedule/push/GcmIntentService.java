@@ -9,14 +9,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
+import com.appspot.hachiko_schedule.apis.HachiStringRequest;
+import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.PlanListActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.util.JSONUtils;
+import com.google.common.base.Joiner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,17 +75,25 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
+    // invited
     private void sendInviteNotification(JSONObject body) {
+        try {
+            List<Long> friendIds = JSONUtils.toJsonList(body.getJSONArray("friendsId"));
+            if (!requestUnknownFriendInfo(body, friendIds)) {
+                // もし上の条件がfalseなら，notificationは通信が終了したあと非同期で追加される．
+                sendInviteNotification(body, friendIds);
+            }
+        } catch (JSONException e) {
+            HachikoLogger.error(body.toString(), e);
+        }
+    }
+
+    private void sendInviteNotification(JSONObject body, List<Long> friendIds) {
         try {
             Long planId = body.getLong("planId");
             String title = body.getString("title");
-            List<String> friendIds = new ArrayList<String>();
-            JSONArray array = body.getJSONArray("friendsId");
-            for (int i = 0; i < array.length(); i++) {
-                friendIds.add(array.getString(i));
-            }
             List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
-            array = body.getJSONArray("candidates");
+            JSONArray array = body.getJSONArray("candidates");
             for (int i = 0; i < array.length(); i++) {
                 JSONObject candidateDateJson = array.getJSONObject(i);
                 JSONObject timeRange = candidateDateJson.getJSONObject("time");
@@ -109,6 +127,69 @@ public class GcmIntentService extends IntentService {
         }
     }
 
+    /**
+     * 渡されたIDの中に知らないものがあれば，サーバに問い合わせる
+     *
+     * @return 問い合わせが発生したかどうか
+     */
+    private boolean requestUnknownFriendInfo(final JSONObject body, final List<Long> friendIds) {
+        UserTableHelper userTableHelper = new UserTableHelper(getApplicationContext());
+        Map<Long, String> idToName = userTableHelper.getIdToNameMap(friendIds);
+        long myHachikoId = Long.parseLong(HachikoPreferences.getDefault(getApplicationContext())
+                .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, ""));
+        if (friendIds.contains(myHachikoId)) {
+            friendIds.remove(myHachikoId);
+        }
+        if (idToName.size() == friendIds.size()) {
+            return false;
+        }
+
+        final List<Long> unknownIds = new ArrayList<Long>(friendIds.size() - idToName.size());
+        for (Long id: friendIds) {
+            if (!idToName.containsKey(id)) {
+                unknownIds.add(id);
+            }
+        }
+        String url = UserAPI.GET_NAMES.getUrl() + "?userIds=" + Joiner.on(",").join(unknownIds);
+        HachikoLogger.debug("unknown friend ids:", unknownIds, "asking server..");
+        HachikoLogger.debug(url);
+        RequestQueue queue = new HachiRequestQueue(getApplicationContext());
+        Request request = new HachiStringRequest(
+                getApplicationContext(),
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String array) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(array);
+                            UserTableHelper userTableHelper
+                                    = new UserTableHelper(getApplicationContext());
+                            Map<Long, String> names = new HashMap<Long, String>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                names.put(unknownIds.get(i), jsonArray.getString(i));
+                            }
+                            HachikoLogger.debug("name resolved", names);
+                            userTableHelper.persistNonFriendName(names);
+                        } catch (JSONException e) {
+                            HachikoLogger.error("json error " + array, e);
+                        } finally {
+                            sendInviteNotification(body, friendIds);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("get non-friend name ", volleyError);
+                        sendInviteNotification(body, friendIds);
+                    }
+                });
+        queue.start();
+        queue.add(request);
+        return true;
+    }
+
+    // allResponded
     private void sendRespondedNotification(JSONObject body) {
         try {
             String title = body.getString("title");
@@ -124,6 +205,7 @@ public class GcmIntentService extends IntentService {
         }
     }
 
+    // confirmed
     private void sendEventRegisteredNotification(JSONObject body) {
         try {
             String planId = body.getString("planId");
