@@ -2,13 +2,13 @@ package com.appspot.hachiko_schedule.friends;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.appspot.hachiko_schedule.*;
+import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
@@ -107,12 +107,17 @@ public class FriendsFragment extends Fragment {
         private void addSelectedFriendNameView(long friendId, String friendName) {
             TextView friendNameView = new TextView(getActivity());
             friendNameView.setText(friendName);
-            friendNameView.setPadding(7, 5, 10, 5);
+            friendNameView.setPadding(
+                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_left),
+                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_top),
+                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_right),
+                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_bottom));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.leftMargin = 20;
+            params.leftMargin =
+                    (int) getResources().getDimension(R.dimen.friend_name_text_margin_left);
             friendNameView.setLayoutParams(params);
-            friendNameView.setBackgroundColor(Color.rgb(230, 230, 230));
+            friendNameView.setBackgroundColor(getResources().getColor(R.color.friend_name_gray));
             selectedFriendsNameContainer.addView(friendNameView);
             selectedFriendsNamesScrollView.post(new Runnable() {
                 @Override
