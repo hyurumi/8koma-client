@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
 import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
@@ -187,6 +188,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                         HachikoLogger.error("respond", volleyError);
                     }
                 });
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
         HachikoApp.defaultRequestQueue().add(request);
     }
 
