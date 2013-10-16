@@ -94,6 +94,9 @@ public class HachiRequestQueue extends RequestQueue {
                     public void onResponse(String s) {
                         HachikoLogger.debug("auth success, please retry");
                         originalRequest.deliverError(new VolleyError());
+                        // reset RequestQueue
+                        HachikoApp.defaultRequestQueue().stop();
+                        HachikoApp.defaultRequestQueue().start();
                     }
                 },
                 new Response.ErrorListener() {
