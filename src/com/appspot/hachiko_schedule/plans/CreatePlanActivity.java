@@ -372,7 +372,7 @@ public class CreatePlanActivity extends Activity {
         List<Hours> preferredTimeRange = getPreferredTimeRange();
         Calendar startDay = (Calendar) startDateSpinner.getSelectedItem();
         Calendar endDay = (Calendar) endDateSpinner.getSelectedItem();
-        int durationMin = TEXT_TO_MIN.get(durationSpinner.getSelectedItem());
+        final int durationMin = TEXT_TO_MIN.get(durationSpinner.getSelectedItem());
         if (preferredTimeRange.size() == 0 || endDay.before(startDay)) {
             HachikoLogger.debug("ignore invalid date or time input");
             return;
@@ -390,8 +390,21 @@ public class CreatePlanActivity extends Activity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray array) {
+                        schedulesContainer.removeAllViews();
+                        for (int i = 0; i < array.length(); i++) {
+                            Date date;
+                            try {
+                                date = DateUtils.parseISO8601(array.getString(i));
+                            } catch (JSONException e) {
+                                HachikoLogger.error("Json parse error", e);
+                                continue;
+                            }
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date);
+                            cal.add(Calendar.MINUTE, durationMin);
+                            addNewScheduleTextView(new Timeslot(date, cal.getTime(), false));
+                        }
                         loadingCandidateView.setVisibility(View.GONE);
-                        HachikoLogger.debug(array);
                     }
                 },
                 new Response.ErrorListener() {

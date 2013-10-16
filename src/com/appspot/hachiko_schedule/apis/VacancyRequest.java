@@ -91,5 +91,14 @@ public class VacancyRequest extends HachiJsonArrayRequest {
             this.start = start;
             this.end = end;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Hours)) {
+                return false;
+            }
+            Hours opp = (Hours) o;
+            return start == opp.start && end == opp.end;
+        }
     }
 }
