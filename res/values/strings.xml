@@ -26,6 +26,7 @@
   <string name="icon_question_sign">&#xf059;</string>
   <string name="icon_smile">&#xf118;</string>
   <string name="icon_frown">&#xf119;</string>
+  <string name="icon_check">&#xf046;</string>
 
 
   <string-array name="positive_num_list">

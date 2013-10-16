@@ -20,5 +20,6 @@
       android:layout_height="wrap_content"
       android:layout_above="@id/new_plan_button_wrapper"
       android:layout_below="@id/search_friend"
+      android:listSelector="@drawable/friend_list_selector"
       android:drawSelectorOnTop="true"/>
 </RelativeLayout>

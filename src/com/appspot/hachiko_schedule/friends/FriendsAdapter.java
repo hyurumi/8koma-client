@@ -3,9 +3,11 @@ package com.appspot.hachiko_schedule.friends;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
+import android.graphics.Typeface;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendItem;
@@ -37,6 +39,10 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         FriendItem item = getItem(position);
         ((TextView) view.findViewById(R.id.friend_name)).setText(item.getDisplayName());
         ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
+
+        Typeface fontForAnswer = Typeface.createFromAsset( getContext().getAssets(), "fonts/fontawesome-webfont.ttf" );
+        ((TextView)view.findViewById(R.id.icon_check)).setTypeface(fontForAnswer);
+
         String emailOrHachikoUser;
         if (userTableHelper.isHachikoUser(item.getLocalContactId())) {
             emailOrHachikoUser = getContext().getResources().getString(R.string.hachiko_user);
@@ -64,13 +70,18 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         ImageView imageView = (ImageView) wrapperView.findViewById(R.id.friend_picture);
         View nameView = wrapperView.findViewById(R.id.friend_name_container);
         TextView textView = (TextView) wrapperView.findViewById(R.id.friend_name);
+        TextView iconView = (TextView)wrapperView.findViewById(R.id.icon_check);
         if (apply) {
-            imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
-            nameView.setBackgroundColor(Color.GRAY);
+            //imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
+            nameView.setBackgroundResource(R.color.background_white);
+            textView.setTypeface(null, Typeface.BOLD);
+            iconView.setVisibility(View.VISIBLE);
             filteredItem.add(textView.getText().toString());
         } else {
-            imageView.clearColorFilter();
-            nameView.setBackgroundColor(Color.WHITE);
+            //imageView.clearColorFilter();
+            nameView.setBackgroundResource(R.color.background_color_gray);
+            textView.setTypeface(null, Typeface.NORMAL);
+            iconView.setVisibility(View.GONE);
             filteredItem.remove(textView.getText().toString());
         }
     }
