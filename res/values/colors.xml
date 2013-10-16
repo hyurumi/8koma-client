@@ -25,5 +25,6 @@
 
   <color name="friend_name_gray">#e6e6e6</color>
 
-  <color name="friend_list_selector">#9900AAAA</color>
+  <color name="friend_list_selector_focused">#9900AAAA</color>
+  <color name="friend_list_selector_pressed">#9900AAAA</color>
 </resources>
