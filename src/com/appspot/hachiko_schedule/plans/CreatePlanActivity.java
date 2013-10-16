@@ -1,7 +1,5 @@
 package com.appspot.hachiko_schedule.plans;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
@@ -74,9 +71,7 @@ public class CreatePlanActivity extends Activity {
     private Set<Timeslot> suggestingTimeslots = new HashSet<Timeslot>();
     private Button confirmButton;
     private Parcelable[] friends;
-    private ScheduleSuggester scheduleSuggester;
     private Map<View, Timeslot> viewToTimeslots = new HashMap<View, Timeslot>();
-    private Handler hander = new Handler();
     private Long[] friendIds;
     private ProgressBar loadingCandidateView;
     private ProgressDialog progressDialog;
@@ -88,7 +83,6 @@ public class CreatePlanActivity extends Activity {
         setContentView(R.layout.activity_create_plan);
         setTitle(R.string.create_event_detail_text);
 
-        scheduleSuggester = new ScheduleSuggester(this);
         eventTitleView = (EditText) findViewById(R.id.what_to_do);
         startDateSpinner = (Spinner) findViewById(R.id.start_date_spinner);
         endDateSpinner = (Spinner) findViewById(R.id.end_date_spinner);
@@ -318,9 +312,7 @@ public class CreatePlanActivity extends Activity {
                             if (suggestingTimeslots.isEmpty()) {
                                 confirmButton.setEnabled(false);
                             }
-                            scheduleSuggester.notifyInconvenientTimeslot(inconvenientTimeslot);
                             HachikoLogger.debug("swipe end");
-                            tryToAddNewScheduleTextViewWithDelayAndAnimation(300);
                         }
                     }
                 }));
@@ -328,25 +320,6 @@ public class CreatePlanActivity extends Activity {
         confirmButton.setEnabled(true);
         suggestingTimeslots.add(schedule);
         return scheduleView;
-    }
-
-    private void tryToAddNewScheduleTextViewWithDelayAndAnimation(int delayInMillis) {
-        hander.postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Timeslot nextRecommended = scheduleSuggester.popNextRecommendedTimeslot();
-                        if (nextRecommended != null) {
-                            View view = addNewScheduleTextView(nextRecommended);
-                            AnimatorSet set = new AnimatorSet();
-                            set.play(ObjectAnimator.ofFloat(view, View.SCALE_X, 0f, 1f))
-                                    .with(ObjectAnimator.ofFloat(view, View.SCALE_Y, 0f, 1f));
-                            set.setDuration(700);
-                            set.start();
-                        }
-                    }
-                },
-                delayInMillis);
     }
 
     private List<Hours> getPreferredTimeRange() {
