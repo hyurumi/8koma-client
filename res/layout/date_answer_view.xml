@@ -30,8 +30,8 @@
           android:layout_height="wrap_content"
           android:orientation="horizontal">
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:id="@+id/answer_person_view"
             android:layout_gravity="center_horizontal|bottom"
             android:src="@drawable/ic_action_person"/>
@@ -42,7 +42,7 @@
             android:id="@+id/date_candidate_answer_yes"
             android:gravity="center_horizontal"
             android:layout_gravity="center"
-            android:textSize="11dp"/>
+            android:textSize="12dp"/>
         <HorizontalScrollView
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -70,15 +70,14 @@
       <RadioButton
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:text="@string/ok"
           android:id="@+id/answer_ok"
           android:background="@drawable/toggle_btn_color_stateful"
           android:checked="false"
           android:textColor="@drawable/toggle_btn_txt_color_stateful"
           android:textSize="24dp"
           android:gravity="center"
-          android:button="@null"
-          android:layout_gravity="center"/>
+          android:layout_gravity="center" android:clickable="false"
+          android:text="@string/ok" android:button="@null"/>
       <RadioButton
           android:layout_width="40dp"
           android:layout_height="40dp"
