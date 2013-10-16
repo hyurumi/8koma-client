@@ -44,7 +44,12 @@ public class DateUtils {
             }
             return new SimpleDateFormat(DATE_FORMAT_ISO8601).parse(iso8601);
         } catch (ParseException e) {
-            HachikoLogger.error("Date parse error" + iso8601, e);
+            try {
+                HachikoLogger.error("Error parsing " + iso8601 + ", assume as UTC", e);
+                return new SimpleDateFormat(DATE_FORMAT_ISO8601_WITHOUT_TIMEZONE).parse(iso8601.substring(0, 19));
+            } catch (ParseException e1) {
+                HachikoLogger.error("Date parse error" + iso8601.substring(0, 19), e);
+            }
             return null;
         }
     }
