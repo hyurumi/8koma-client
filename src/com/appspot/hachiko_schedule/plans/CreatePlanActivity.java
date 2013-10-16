@@ -379,7 +379,7 @@ public class CreatePlanActivity extends Activity {
         }
         VacancyRequest.Param param = new VacancyRequest.Param(
                 Arrays.asList(friendIds), preferredTimeRange, startDay, endDay, durationMin);
-        schedulesContainer.removeAllViews();
+        clearTimeSlots();
         loadingCandidateView.setVisibility(View.VISIBLE);
 
         if (param.equals(lastRequestedVacancyParam)) {
@@ -390,7 +390,7 @@ public class CreatePlanActivity extends Activity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray array) {
-                        schedulesContainer.removeAllViews();
+                        clearTimeSlots();
                         for (int i = 0; i < array.length(); i++) {
                             Date date;
                             try {
@@ -417,7 +417,10 @@ public class CreatePlanActivity extends Activity {
         lastRequestedVacancyParam = param;
     }
 
-
+    private void clearTimeSlots() {
+        suggestingTimeslots.clear();
+        schedulesContainer.removeAllViews();
+    }
 
     private class ConfirmButtonListener implements View.OnClickListener {
 
