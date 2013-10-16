@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * @author Kazuki Nishiura
  */
-public class VacancyRequest extends HachiJsonObjectRequest {
+public class VacancyRequest extends HachiJsonArrayRequest {
     public VacancyRequest(Context context, Param param,
-                          Response.Listener<JSONObject> listener,
+                          Response.Listener<JSONArray> listener,
                           Response.ErrorListener errorListener) {
         super(context,
                 Method.POST,
                 HachikoAPI.BASE + "vacancy",
-                constructParams(param),
+                constructParams(param).toString(),
                 listener,
                 errorListener);
     }

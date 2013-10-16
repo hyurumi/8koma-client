@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -19,9 +20,21 @@ public class HachiJsonArrayRequest extends JsonRequest<JSONArray> {
     private HachikoCookieManager cookieManager;
 
     public HachiJsonArrayRequest(
+            Context context, int method, String url, JSONObject params,
+            Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+        this(context, method, url, params == null ? null : params.toString(), listener, errorListener);
+    }
+
+    public HachiJsonArrayRequest(
             Context context, int method, String url, JSONArray params,
             Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
-        super(method, url, params == null ? null : params.toString(), listener, errorListener);
+        this(context, method, url, params == null ? null : params.toString(), listener, errorListener);
+    }
+
+    public HachiJsonArrayRequest(
+            Context context, int method, String url, String params,
+            Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+        super(method, url, params, listener, errorListener);
         cookieManager = new HachikoCookieManager(context);
 
         HachikoLogger.debug("request body");

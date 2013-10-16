@@ -387,11 +387,11 @@ public class CreatePlanActivity extends Activity {
         }
         Request vacancyRequest = new VacancyRequest(
                 this, param,
-                new Response.Listener<JSONObject>() {
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject object) {
+                    public void onResponse(JSONArray array) {
                         loadingCandidateView.setVisibility(View.GONE);
-
+                        HachikoLogger.debug(array);
                     }
                 },
                 new Response.ErrorListener() {
