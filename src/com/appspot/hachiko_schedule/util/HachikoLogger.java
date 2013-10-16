@@ -2,6 +2,10 @@ package com.appspot.hachiko_schedule.util;
 
 import android.util.Log;
 import com.android.volley.VolleyError;
+import com.deploygate.sdk.DeployGate;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
 
@@ -25,6 +29,7 @@ public class HachikoLogger {
     }
 
     static public int error(String msg) {
+        DeployGate.logError(msg);
         return Log.e(DEFAULT_TAG, msg);
     }
 
@@ -37,23 +42,37 @@ public class HachikoLogger {
     }
 
     static public int error(String msg, Throwable throwable) {
+        DeployGate.logError(msg);
+        DeployGate.logError(toString(throwable));
         return Log.e(DEFAULT_TAG, msg, throwable);
     }
 
     static public int error(String msg, VolleyError volleyError) {
         if (volleyError != null && volleyError.networkResponse != null) {
+            DeployGate.logError(msg + " [" + volleyError.networkResponse.statusCode + "] "
+                    + new String(volleyError.networkResponse.data));
+            DeployGate.logError(toString(volleyError));
             return Log.e(DEFAULT_TAG, msg + " [" + volleyError.networkResponse.statusCode + "] "
             + new String(volleyError.networkResponse.data), volleyError);
         } else {
+            DeployGate.logError("null response " + toString(volleyError));
             return Log.e(DEFAULT_TAG, msg + " null response ", volleyError);
         }
+    }
+
+    static private String toString(Throwable throwable) {
+        StringWriter writer = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
     }
 
     static public int debug(String msg) {
         if (!IS_DEVELOPER) {
             return 0;
         }
-        return Log.d(DEFAULT_TAG, calcFileNameAndLineNumberUsingException() + msg);
+        msg = calcFileNameAndLineNumberUsingException() + msg;
+        DeployGate.logDebug(msg);
+        return Log.d(DEFAULT_TAG, msg);
     }
 
     static public int debug(Object... objects) {
