@@ -76,7 +76,7 @@
           android:textColor="@drawable/toggle_btn_txt_color_stateful"
           android:textSize="24dp"
           android:gravity="center"
-          android:layout_gravity="center" android:clickable="false"
+          android:layout_gravity="center"
           android:text="@string/icon_smile" android:button="@null"/>
       <RadioButton
           android:layout_width="40dp"
