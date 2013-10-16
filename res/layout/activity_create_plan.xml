@@ -241,5 +241,6 @@
       android:id="@+id/invite_button"
       android:layout_alignParentBottom="true"
       android:background="@drawable/btn_color_stateful"
-      android:textColor="@color/font_color_white"/>
+      android:textColor="@color/font_color_white"
+      android:enabled="false"/>
 </RelativeLayout>

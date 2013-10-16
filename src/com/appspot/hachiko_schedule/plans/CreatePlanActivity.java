@@ -404,6 +404,7 @@ public class CreatePlanActivity extends Activity {
                             cal.add(Calendar.MINUTE, durationMin);
                             addNewScheduleTextView(new Timeslot(date, cal.getTime(), false));
                         }
+                        confirmButton.setEnabled(true);
                         loadingCandidateView.setVisibility(View.GONE);
                     }
                 },
@@ -420,6 +421,7 @@ public class CreatePlanActivity extends Activity {
     private void clearTimeSlots() {
         suggestingTimeslots.clear();
         schedulesContainer.removeAllViews();
+        confirmButton.setEnabled(false);
     }
 
     private class ConfirmButtonListener implements View.OnClickListener {
