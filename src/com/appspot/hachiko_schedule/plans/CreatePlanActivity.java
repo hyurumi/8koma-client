@@ -384,6 +384,7 @@ public class CreatePlanActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        HachikoDialogs.showNetworkErrorDialog(CreatePlanActivity.this, volleyError);
                         HachikoLogger.error("err", volleyError);
                     }
                 });
