@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
 import com.appspot.hachiko_schedule.dev.FakeRequestQueue;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.deploygate.sdk.DeployGate;
 
 /**
  * アプリケーション全体で利用する管理するクラスなどを管理する
@@ -24,6 +25,8 @@ public class HachikoApp extends Application {
         fakeRequestQueue = new FakeRequestQueue(appContext);
         requestQueue = new HachiRequestQueue(appContext);
         requestQueue.start();
+
+        DeployGate.install(this);
     }
 
     public static RequestQueue defaultRequestQueue() {

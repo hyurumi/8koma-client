@@ -74,6 +74,7 @@
       <echo>ORIGINAL jars.path : ${toString:project.all.jars.path}</echo>
       <path id="project.all.jars.path.new">
         <path path="${toString:project.all.jars.path}"/>
+        <path path="libs/jar/deploygatesdk.jar"/>
         <path path="libs/jar/volley.jar"/>
         <path path="libs/jar/android-support-v4.jar"/>
         <path path="libs/jar/guava-14.0.1.jar"/>
