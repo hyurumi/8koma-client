@@ -4,12 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * あるタイムスロット(何時から何時),あるいは終日の時間幅を示すデータクラス
  */
-public class Timeslot implements Parcelable {
+public class Timeslot implements Comparable<Timeslot>, Parcelable {
     private final Date startDate;
     private final Date endDate;
     private final boolean isAllDay;
@@ -30,6 +29,14 @@ public class Timeslot implements Parcelable {
 
     public boolean isAllDay() {
         return isAllDay;
+    }
+
+    @Override
+    public int compareTo(Timeslot another) {
+        if (!startDate.equals(another)) {
+            return startDate.compareTo(another.startDate);
+        }
+        return endDate.compareTo(another.endDate);
     }
 
     @Override

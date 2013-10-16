@@ -440,7 +440,9 @@ public class CreatePlanActivity extends Activity {
                     .append(System.getProperty("line.separator"))
                     .append("候補日:")
                     .append(System.getProperty("line.separator"));
-            for (Timeslot timeslot: suggestingTimeslots) {
+            List<Timeslot> sortedTimeslot = new ArrayList<Timeslot>(suggestingTimeslots);
+            Collections.sort(sortedTimeslot);
+            for (Timeslot timeslot: sortedTimeslot) {
                 content.append(DateUtils.timeslotString(
                         timeslot.getStartDate(), timeslot.getEndDate()));
                 content.append(System.getProperty("line.separator"));
