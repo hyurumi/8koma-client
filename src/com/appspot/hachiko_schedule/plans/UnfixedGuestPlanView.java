@@ -2,6 +2,7 @@ package com.appspot.hachiko_schedule.plans;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +137,11 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     sendResponse(planId, index, answerState);
                 }
             });
+            Typeface fontForAnswer = Typeface.createFromAsset( context.getAssets(), "fonts/fontawesome-webfont.ttf" );
+            ((RadioButton)layout.findViewById(R.id.answer_ok)).setTypeface(fontForAnswer);
+            ((RadioButton)layout.findViewById(R.id.answer_tentative)).setTypeface(fontForAnswer);
+            ((RadioButton)layout.findViewById(R.id.answer_ng)).setTypeface(fontForAnswer);
+
         }
 
         private void setCandidate(long planId, CandidateDate candidateDate, int index) {

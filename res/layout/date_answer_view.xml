@@ -77,11 +77,11 @@
           android:textSize="24dp"
           android:gravity="center"
           android:layout_gravity="center" android:clickable="false"
-          android:text="@string/ok" android:button="@null"/>
+          android:text="@string/icon_smile" android:button="@null"/>
       <RadioButton
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:text="@string/tentative"
+          android:text="@string/icon_question_sign"
           android:id="@+id/answer_tentative"
           android:background="@drawable/toggle_btn_color_stateful"
           android:checked="false"
@@ -93,7 +93,7 @@
       <RadioButton
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:text="@string/ng"
+          android:text="@string/icon_frown"
           android:id="@+id/answer_ng"
           android:background="@drawable/toggle_btn_color_stateful"
           android:checked="false"
@@ -101,7 +101,7 @@
           android:textSize="24dp"
           android:gravity="center"
           android:button="@null"
-          android:layout_gravity="center"/>
+          android:layout_gravity="center" android:singleLine="false"/>
     </RadioGroup>
   </LinearLayout>
 </LinearLayout>

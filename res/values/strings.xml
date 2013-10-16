@@ -22,9 +22,11 @@
   <string name="days_after_label">日後ごろ</string>
   <string name="minutes">分</string>
 
-    <string name="ok">O</string>
-    <string name="tentative">\?</string>
-    <string name="ng">X</string>
+
+  <string name="icon_question_sign">&#xf059;</string>
+  <string name="icon_smile">&#xf118;</string>
+  <string name="icon_frown">&#xf119;</string>
+
 
   <string-array name="positive_num_list">
     <item>1</item>
