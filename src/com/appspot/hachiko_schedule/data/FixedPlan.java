@@ -5,8 +5,8 @@ import android.content.Context;
 public class FixedPlan extends Plan {
     private final CandidateDate date;
 
-    public FixedPlan(long planId, String title, boolean isFixed, CandidateDate date) {
-        super(planId, title, true, isFixed);
+    public FixedPlan(long planId, String title, boolean isHost, CandidateDate date) {
+        super(planId, title, isHost, true);
         this.date = date;
     }
 
