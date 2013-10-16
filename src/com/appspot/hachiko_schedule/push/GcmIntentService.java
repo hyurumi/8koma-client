@@ -207,15 +207,20 @@ public class GcmIntentService extends IntentService {
 
     // confirmed
     private void sendEventRegisteredNotification(JSONObject body) {
+        String title = "";
+        Date startDate = null;
         try {
-            String planId = body.getString("planId");
+            long planId = body.getLong("planId");
+            long answerId = body.getLong("id");
             PlansTableHelper plansTableHelper = new PlansTableHelper(this);
-            String title = plansTableHelper.queryTitle(planId);
-            Date startDate
-                    = DateUtils.parseISO8601(body.getJSONObject("time").getString("start"));
-            sendNotification("予定がカレンダーに登録されました", title, calendarIntent(startDate));
+            title = plansTableHelper.queryTitle(planId);
+            plansTableHelper.confirmCandidateDate(planId, answerId);
+            startDate = DateUtils.parseISO8601(body.getJSONObject("time").getString("start"));
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
+        } finally {
+            sendNotification("予定がカレンダーに登録されました", title,
+                    calendarIntent(startDate == null ? new Date() : startDate));
         }
     }
 
