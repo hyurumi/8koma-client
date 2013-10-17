@@ -135,27 +135,29 @@ public class PlansTableHelper {
         List<Plan> plans = new ArrayList<Plan>();
         do {
             long planId = c.getLong(c.getColumnIndex(PLAN_ID));
-            String participantIds = c.getString(c.getColumnIndex(FRIEND_IDS));
+            Collection<Long> participantIds = Collections2.transform(
+                    Arrays.asList(c.getString(c.getColumnIndex(FRIEND_IDS)).split(",")),
+                    new Function<String, Long>() {
+                        @Override
+                        public Long apply(String val) {
+                            return Long.parseLong(val);
+                        }
+                    });
             String title = c.getString(c.getColumnIndex(TITLE));
-            boolean isHost = c.getInt(c.getColumnIndex(IS_HOST)) == 1;
+            long ownerId = c.getLong(c.getColumnIndex(OWNER_ID));
+            if (participantIds.contains(ownerId)) {
+                participantIds.remove(ownerId);
+            }
             boolean isFixed = c.getInt(c.getColumnIndex(IS_FIXED)) == 1;
             if (isFixed) {
                 plans.add(new FixedPlan(
-                        planId, title, isHost, queryCandidateDates(db, planId).get(0)));
+                        planId, title, ownerId, queryCandidateDates(db, planId).get(0)));
             } else {
                 plans.add(new UnfixedPlan(
                         planId,
                         title,
-                        isHost,
-                        userTableHelper.getFriendsNameForHachikoIds(Collections2.transform(
-                                Arrays.asList(participantIds.split(",")),
-                                new Function<String, Long>() {
-                                    @Override
-                                    public Long apply(String val) {
-                                        return Long.parseLong(val);
-                                    }
-                                }
-                        )),
+                        ownerId,
+                        userTableHelper.getFriendsNameForHachikoIds(participantIds),
                         queryCandidateDates(db, planId)
                 ));
             }

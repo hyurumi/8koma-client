@@ -28,11 +28,11 @@ class PlanAdapter extends ArrayAdapter<Plan> {
         Plan plan = plans[position];
         if (plan.isFixed() && (convertView == null || !(convertView instanceof FixedPlanView))) {
             convertView = new FixedPlanView(getContext());
-        } else if (!plan.isFixed() && plan.isHost()
+        } else if (!plan.isFixed() && plan.isHost(getContext())
                 && (convertView == null || !(convertView instanceof UnfixedHostPlanView))) {
             convertView = new UnfixedHostPlanView(getContext());
             ((UnfixedHostPlanView) convertView).setOnConfirmListener(onConfirmListener);
-        } else if (!plan.isFixed() && !plan.isHost()
+        } else if (!plan.isFixed() && !plan.isHost(getContext())
             && (convertView == null || !(convertView instanceof UnfixedGuestPlanView))) {
             convertView = new UnfixedGuestPlanView(getContext());
         }

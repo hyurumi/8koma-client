@@ -119,13 +119,6 @@ public class UserTableHelper {
         return hachikoId;
     }
 
-    public String getUserName() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("select " + HACHIKO_ID + " from " + USER_TABLE_NAME + ";", null);
-        c.moveToFirst();
-        return c.getString(c.getColumnIndex(HACHIKO_ID));
-    }
-
     public Map<Long, String> getIdToNameMap(Collection<Long> hachikoIds) {
         if (hachikoIds.size() == 0) {
             return Collections.emptyMap();

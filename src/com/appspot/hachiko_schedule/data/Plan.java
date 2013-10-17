@@ -1,5 +1,12 @@
 package com.appspot.hachiko_schedule.data;
 
+import android.content.Context;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.google.common.collect.Iterables;
+
+import java.util.Arrays;
+
 /**
  * 予定を表すデータクラス
  */
@@ -7,13 +14,13 @@ public class Plan {
     private final long planId;
     private final String title;
     private final boolean isFixed;
-    private final boolean isHost;
+    private final long ownerId;
 
-    public Plan(long planId, String title, boolean isHost, boolean isFixed) {
+    public Plan(long planId, String title, long ownerId, boolean isFixed) {
         this.planId = planId;
         this.title = title;
         this.isFixed = isFixed;
-        this.isHost = isHost;
+        this.ownerId = ownerId;
     }
 
     public long getPlanId() {
@@ -28,7 +35,15 @@ public class Plan {
         return isFixed;
     }
 
-    public boolean isHost() {
-        return isHost;
+    public String getOwnerName(Context context) {
+        UserTableHelper userTableHelper = new UserTableHelper(context);
+        return Iterables.get(
+                userTableHelper.getFriendsNameForHachikoIds(Arrays.asList(new Long[]{ownerId})),
+                0);
+    }
+
+    public boolean isHost(Context context) {
+        String id = HachikoPreferences.getDefault(context).getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
+        return  (id.length() > 0 && Long.parseLong(id) == ownerId);
     }
 }

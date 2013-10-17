@@ -23,6 +23,7 @@ import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
@@ -84,7 +85,10 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                     public void onResponse(String s) {
                         HachikoLogger.debug("Confirmed");
                         FixedPlan fixedPlan = new FixedPlan(
-                                unfixedPlan.getPlanId(), unfixedPlan.getTitle(), true, candidateDate);
+                                unfixedPlan.getPlanId(), unfixedPlan.getTitle(),
+                                Long.parseLong(HachikoPreferences.getDefault(PlanListActivity.this)
+                                        .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "")),
+                                candidateDate);
                         plansTableHelper.confirmCandidateDate(
                                 unfixedPlan.getPlanId(), candidateDate.getAnswerId());
                         planAdapter.updatePlan(unfixedPlan, fixedPlan);

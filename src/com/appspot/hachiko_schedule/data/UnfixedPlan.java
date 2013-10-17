@@ -10,10 +10,10 @@ public class UnfixedPlan extends Plan {
     private final Collection<String> potentialParticipants;
     private final List<CandidateDate> candidateDates;
 
-    public UnfixedPlan(long planId, String title, boolean isHost,
+    public UnfixedPlan(long planId, String title, long ownerId,
                        Collection<String> potentialParticipants,
                        List<CandidateDate> candidateDates) {
-        super(planId, title, isHost, false);
+        super(planId, title, ownerId, false);
         this.potentialParticipants = potentialParticipants;
         this.candidateDates = candidateDates;
     }
