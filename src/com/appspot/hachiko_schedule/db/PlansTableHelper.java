@@ -146,6 +146,7 @@ public class PlansTableHelper {
             String title = c.getString(c.getColumnIndex(TITLE));
             long ownerId = c.getLong(c.getColumnIndex(OWNER_ID));
             if (participantIds.contains(ownerId)) {
+                participantIds = new ArrayList<Long>(participantIds);
                 participantIds.remove(ownerId);
             }
             boolean isFixed = c.getInt(c.getColumnIndex(IS_FIXED)) == 1;
