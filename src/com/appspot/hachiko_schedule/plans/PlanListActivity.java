@@ -86,8 +86,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                         HachikoLogger.debug("Confirmed");
                         FixedPlan fixedPlan = new FixedPlan(
                                 unfixedPlan.getPlanId(), unfixedPlan.getTitle(),
-                                Long.parseLong(HachikoPreferences.getDefault(PlanListActivity.this)
-                                        .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "")),
+                                HachikoPreferences.getMyHachikoId(PlanListActivity.this),
                                 candidateDate);
                         plansTableHelper.confirmCandidateDate(
                                 unfixedPlan.getPlanId(), candidateDate.getAnswerId());

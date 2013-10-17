@@ -43,7 +43,6 @@ public class Plan {
     }
 
     public boolean isHost(Context context) {
-        String id = HachikoPreferences.getDefault(context).getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
-        return  (id.length() > 0 && Long.parseLong(id) == ownerId);
+        return HachikoPreferences.getMyHachikoId(context) == ownerId;
     }
 }

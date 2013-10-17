@@ -46,8 +46,7 @@ public class GoogleAuthActivity extends Activity {
         authPreferences  = new GoogleAuthPreferences(this);
         progressDialog = new ProgressDialog(this);
         if (authPreferences.isAuthSetuped()) {
-            if (HachikoPreferences.getDefault(this)
-                    .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "").equals("")) {
+            if (!HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
                 sendRegisterRequest(
                         authPreferences.getAccountName(), authPreferences.getToken());
             } else {
@@ -163,7 +162,7 @@ public class GoogleAuthActivity extends Activity {
                         HachikoLogger.debug("Registration completed: ", s);
                         new SetupUserTableTask(getApplicationContext()).execute();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
-                                .putString(HachikoPreferences.KEY_MY_HACHIKO_ID, s)
+                                .putLong(HachikoPreferences.KEY_MY_HACHIKO_ID, Long.parseLong(s))
                                 .commit();
                         transitToNextActivity();
                     }

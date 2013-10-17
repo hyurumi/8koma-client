@@ -44,7 +44,7 @@ abstract class GcmIntentHandlerBase<T> {
      */
     public abstract void handle(T body);
 
-    protected void updateAttendanceInfo(long planId, String myHachikoId, JSONArray attendance)
+    protected void updateAttendanceInfo(long planId, long myHachikoId, JSONArray attendance)
             throws JSONException {
         PlansTableHelper tableHelper = new PlansTableHelper(context);
         Set<Long> positiveFriendIds = new HashSet<Long>();
@@ -58,7 +58,7 @@ abstract class GcmIntentHandlerBase<T> {
                 String guestId = guestIds.next();
                 CandidateDate.AnswerState answer
                         = CandidateDate.AnswerState.fromString(answers.getString(guestId));
-                if (guestId.equals(myHachikoId)) {
+                if (Long.parseLong(guestId) == myHachikoId) {
                     tableHelper.updateOwnAnswer(planId, candidateId, answer);
                     continue;
                 }

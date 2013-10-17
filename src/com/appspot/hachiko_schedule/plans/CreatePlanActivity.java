@@ -254,9 +254,9 @@ public class CreatePlanActivity extends Activity {
                         PlansTableHelper plansTableHelper
                                 = new PlansTableHelper(CreatePlanActivity.this);
                         plansTableHelper.insertNewPlan(planId, title,
-                                Long.parseLong(HachikoPreferences.getDefault(CreatePlanActivity.this)
-                                        .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "")),
-                                /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
+                                HachikoPreferences.getMyHachikoId(CreatePlanActivity.this),
+                                /* you are host */ true, Arrays.<Long>asList(friendIds),
+                                candidateDates);
                         Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
                         intent.addFlags(
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -66,13 +66,11 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
                         CandidateDate.AnswerState.NEUTRAL));
             }
             PlansTableHelper tableHelper = new PlansTableHelper(getContext());
-            String hostId = body.getString("owner");
-            String myHachikoId = HachikoPreferences.getDefault(getContext())
-                    .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
-            boolean isHost = myHachikoId.equals(hostId);
-            if (!isHost) {
+            long hostId = Long.parseLong(body.getString("owner"));
+            long myHachikoId = HachikoPreferences.getMyHachikoId(getContext());
+            if (myHachikoId != hostId) {
                 tableHelper.insertNewPlan(
-                        planId, title, Long.parseLong(hostId), false, friendIds, candidateDates);
+                        planId, title, hostId, false, friendIds, candidateDates);
             } else {
                 for (CandidateDate candidateDate: candidateDates) {
                     tableHelper.updateAnswerIdByStartDate(
@@ -82,7 +80,7 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
             updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent
                     = getActivityIntent(new Intent(getContext(), PlanListActivity.class));
-            if (!isHost) {
+            if (myHachikoId != hostId) {
                 putNotification("イベントへの招待が届きました", title, pendingIntent);
             }
         } catch (JSONException e) {
@@ -97,8 +95,7 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
      */
     private boolean requestUnknownFriendInfo(final JSONObject body, final List<Long> friendIds) {
         UserTableHelper userTableHelper = new UserTableHelper(getContext());
-        long myHachikoId = Long.parseLong(HachikoPreferences.getDefault(getContext())
-                .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, ""));
+        long myHachikoId = HachikoPreferences.getMyHachikoId(getContext());
         if (friendIds.contains(myHachikoId)) {
             friendIds.remove(myHachikoId);
         }

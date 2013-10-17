@@ -158,7 +158,7 @@ public class ReauthActivity extends Activity {
                     public void onResponse(String s) {
                         HachikoLogger.debug("Registration/login completed: ", s);
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
-                                .putString(HachikoPreferences.KEY_MY_HACHIKO_ID, s)
+                                .putLong(HachikoPreferences.KEY_MY_HACHIKO_ID, Long.parseLong(s))
                                 .commit();
                         transitToNextActivity();
                     }

@@ -22,8 +22,7 @@ public class AllRespondedIntentHelper extends GcmIntentHandlerBase<JSONObject> {
         try {
             String title = body.getString("title");
             Long planId = body.getLong("planId");
-            String myHachikoId = HachikoPreferences.getDefault(getContext())
-                    .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
+            long myHachikoId = HachikoPreferences.getMyHachikoId(getContext());
             updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent
                     = getActivityIntent(new Intent(getContext(), PlanListActivity.class));

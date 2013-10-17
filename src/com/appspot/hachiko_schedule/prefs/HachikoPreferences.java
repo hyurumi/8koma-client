@@ -30,6 +30,22 @@ public class HachikoPreferences {
         return PREFERENCES_NAME;
     }
 
+    public static boolean hasHachikoId(Context context) {
+        return getDefault(context).contains(HachikoPreferences.KEY_MY_HACHIKO_ID);
+    }
+
+    /**
+     * @return 自身のHachikoId
+     * @throws IllegalStateException HachikoIDが存在しないとき
+     */
+    public static long getMyHachikoId(Context context) {
+        long ret =  getDefault(context).getLong(HachikoPreferences.KEY_MY_HACHIKO_ID, -1);
+        if (ret == -1) {
+            throw new IllegalStateException("Hachiko ID is not found on your device");
+        }
+        return ret;
+    }
+
     public static final String KEY_APP_VERSION = "app_version";
     public static final int APP_VERSION_DEFAULT = 0;
     public static final String KEY_IS_CALENDAR_SETUP = "is_calendar_setup";
