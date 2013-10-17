@@ -21,6 +21,7 @@
   <string name="when_label">いつ？</string>
   <string name="days_after_label">日後ごろ</string>
   <string name="minutes">分</string>
+  <string name="recent_schedules">直近の予定を確認</string>
 
 
   <string name="icon_question_sign">&#xf059;</string>

@@ -1,7 +1,9 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -104,6 +106,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
         private int index;
         private long planId;
         private AnswerState lastPersistedState;
+        private Typeface fontForAnswer;
 
         private CandidateDateAnswerView(Context context) {
             super(context);
@@ -139,10 +142,48 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     sendResponse(planId, index, answerState);
                 }
             });
-            Typeface fontForAnswer = Typeface.createFromAsset( context.getAssets(), "fonts/fontawesome-webfont.ttf" );
+            fontForAnswer = Typeface.createFromAsset( context.getAssets(), "fonts/fontawesome-webfont.ttf" );
             ((RadioButton)layout.findViewById(R.id.answer_ok)).setTypeface(fontForAnswer);
             ((RadioButton)layout.findViewById(R.id.answer_tentative)).setTypeface(fontForAnswer);
             ((RadioButton)layout.findViewById(R.id.answer_ng)).setTypeface(fontForAnswer);
+
+            candidateText.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    final View calendarView = ((Activity)getContext()).getLayoutInflater().inflate(R.layout.calendar_dialog, null);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder((Activity)getContext());
+                    builder.setIcon(null);
+                    builder.setTitle(R.string.recent_schedules);
+                    builder.setView(calendarView);
+                    builder.setPositiveButton(R.string.icon_smile, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            answerRadioGroup.check(R.id.answer_ok);
+                        }
+                    });
+                    builder.setNeutralButton(R.string.icon_question_sign, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            answerRadioGroup.check(R.id.answer_tentative);
+                        }
+                    });
+
+                    builder.setNegativeButton(R.string.icon_frown, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            answerRadioGroup.check(R.id.answer_ng);
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    fontForAnswer = Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf" );
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTypeface(fontForAnswer);
+                    dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTypeface(fontForAnswer);
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTypeface(fontForAnswer);
+                }
+            });
 
         }
 
