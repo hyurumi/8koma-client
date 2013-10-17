@@ -2,23 +2,27 @@ package com.appspot.hachiko_schedule.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-/**
- * @author Kazuki Nishiura
- */
 public class HachikoDialogs {
     public static AlertDialog.Builder networkErrorDialogBuilder(
             Activity activity, VolleyError volleyError, String where) {
-        String statusCode = volleyError.networkResponse == null ? ""
-                : "(" + volleyError.networkResponse.statusCode + ")";
+        where = where == null ? "" : where;
+        String msg;
+        if (volleyError instanceof TimeoutError) {
+            msg = "通信がタイムアウトしました";
+        } else {
+            String statusCode = volleyError.networkResponse == null ? ""
+                    : "(" + volleyError.networkResponse.statusCode + ")";
+            msg = "通信中にエラーが発生しました " + statusCode + "\n時間をおいて再度お試しください";
+        }
         return new AlertDialog.Builder(activity)
-                .setMessage((where == null ? "" : where)
-                        + "通信中にエラーが発生しました " + statusCode + "\n時間をおいて再度お試しください");
+                .setMessage(where + msg);
     }
 
     public static AlertDialog.Builder networkErrorDialogBuilder(
