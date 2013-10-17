@@ -19,6 +19,7 @@ public class PlansTableHelper {
     private static final String PLAN_TABLE_NAME = "plans";
     private static final String PLAN_ID = "plan_id";
     private static final String TITLE = "title";
+    private static final String OWNER_ID = "owner_id";
     private static final String IS_HOST = "is_host";
     private static final String IS_FIXED = "is_fixed";
     private static final String FRIEND_IDS = "friend_ids";
@@ -39,6 +40,7 @@ public class PlansTableHelper {
         String createUsersTable = new SQLiteCreateTableBuilder(PLAN_TABLE_NAME)
                 .addColumn(PLAN_ID, SQLiteType.INTEGER, SQLiteConstraint.PRIMARY_KEY)
                 .addColumn(TITLE, SQLiteType.TEXT)
+                .addColumn(OWNER_ID, SQLiteType.INTEGER)
                 .addColumn(IS_HOST, SQLiteType.INTEGER)
                 .addColumn(IS_FIXED, SQLiteType.INTEGER)
                 .addColumn(FRIEND_IDS, SQLiteType.TEXT)
@@ -67,12 +69,13 @@ public class PlansTableHelper {
     /**
      * (Unfixedな)予定を追加する
      */
-    public long insertNewPlan(
-            long planId, String title, boolean isHost, List friendIds, List<CandidateDate> dates) {
+    public long insertNewPlan(long planId, String title, long ownerId, boolean isHost,
+                              List<Long> friendIds, List<CandidateDate> dates) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues planValue = new ContentValues();
         planValue.put(PLAN_ID, planId);
         planValue.put(TITLE, title);
+        planValue.put(OWNER_ID, ownerId);
         planValue.put(IS_HOST, isHost ? 1 : 0);
         planValue.put(IS_FIXED, 0);
         planValue.put(FRIEND_IDS, Joiner.on(",").join(friendIds));

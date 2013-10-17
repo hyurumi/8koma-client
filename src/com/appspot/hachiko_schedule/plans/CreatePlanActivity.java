@@ -27,6 +27,7 @@ import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
@@ -253,6 +254,8 @@ public class CreatePlanActivity extends Activity {
                         PlansTableHelper plansTableHelper
                                 = new PlansTableHelper(CreatePlanActivity.this);
                         plansTableHelper.insertNewPlan(planId, title,
+                                Long.parseLong(HachikoPreferences.getDefault(CreatePlanActivity.this)
+                                        .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "")),
                                 /* you are host */ true, Arrays.<Long>asList(friendIds), candidateDates);
                         Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
                         intent.addFlags(

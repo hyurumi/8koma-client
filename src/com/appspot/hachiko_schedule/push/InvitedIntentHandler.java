@@ -36,7 +36,11 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
     @Override
     public void handle(JSONObject body) {
         try {
+            long ownerIds = body.getLong("owner");
             List<Long> friendIds = JSONUtils.toList(body.getJSONArray("friendsId"));
+            if (!friendIds.contains(ownerIds)) {
+                friendIds.add(ownerIds);
+            }
             if (!requestUnknownFriendInfo(body, friendIds)) {
                 // もし上の条件がfalseなら，notificationは通信が終了したあと非同期で追加される．
                 sendInviteNotification(body, friendIds);
@@ -67,7 +71,8 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
                     .getString(HachikoPreferences.KEY_MY_HACHIKO_ID, "");
             boolean isHost = myHachikoId.equals(hostId);
             if (!isHost) {
-                tableHelper.insertNewPlan(planId, title, isHost, friendIds, candidateDates);
+                tableHelper.insertNewPlan(
+                        planId, title, Long.parseLong(hostId), false, friendIds, candidateDates);
             } else {
                 for (CandidateDate candidateDate: candidateDates) {
                     tableHelper.updateAnswerIdByStartDate(
