@@ -35,6 +35,10 @@ public class Plan {
         return isFixed;
     }
 
+    public long getOwnerId() {
+        return ownerId;
+    }
+
     public String getOwnerName(Context context) {
         UserTableHelper userTableHelper = new UserTableHelper(context);
         return Iterables.get(

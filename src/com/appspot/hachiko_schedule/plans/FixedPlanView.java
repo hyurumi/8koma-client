@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FixedPlan;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
 /**
  * 確定した予定を表すView
@@ -42,7 +43,10 @@ public class FixedPlanView extends LinearLayout implements PlanView<FixedPlan> {
     @Override
     public PlanView setPlan(FixedPlan plan) {
         titleView.setText(plan.getTitle());
-        participantsView.setText(plan.getPositiveFriendNames(getContext()));
+        long ownerId = plan.getOwnerId();
+        String prefix = (HachikoPreferences.getMyHachikoId(getContext()) != ownerId) ?
+                (plan.getOwnerName(getContext()) + " | ") : "";
+        participantsView.setText(prefix +  plan.getPositiveFriendNames(getContext()));
         dateView.setText(plan.getDateText());
         return null;
     }
