@@ -59,6 +59,10 @@ public class HachikoPreferences {
     public static final String KEY_SESSION_KEY = "session_key";
     public static final String KEY_SESSION_EXPIRES = "session_expires";
     public static final String KEY_MY_HACHIKO_ID = "my_hachiko_id";
+
+    // Debugまわり
+    public static final String KEY_USE_SUPER_LONG_LIFE_REQUEST = "use_super_long_life_request";
+    public static final boolean USE_SUPER_LONG_LIFE_REQUEST = false;
     public static final String KEY_USE_FAKE_CONTACT = "use_fake_contact";
     public static final boolean USE_FAKE_CONTACT_DEFAULT = false;
     public static final String KEY_USE_FAKE_REQUEST_QUEUE = "use_fake_request_queue";

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.io.File;
 public class HachiRequestQueue extends RequestQueue {
     private static final String DEFAULT_CACHE_DIR = "volley";
     private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
+    private final Context context;
 
     public HachiRequestQueue(final Context context) {
         super(
@@ -40,6 +42,7 @@ public class HachiRequestQueue extends RequestQueue {
                         }
                     }
                 });
+        this.context = context;
     }
 
     private static Network createNetwork(Context context) {
@@ -57,6 +60,19 @@ public class HachiRequestQueue extends RequestQueue {
             // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
             return new BasicNetwork(new HttpClientStack(AndroidHttpClient.newInstance(userAgent)));
         }
+    }
+
+    @Override
+    public Request add(Request request) {
+        if (HachikoPreferences.getBooleanFromDefaultPref(
+                context,
+                HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST,
+                HachikoPreferences.USE_SUPER_LONG_LIFE_REQUEST)) {
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    /* デバッグのためタイムアウトを1日に設定 */ 36000 * 1000,
+                    1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        }
+        return super.add(request);
     }
 
     private static boolean isAuthFailure(VolleyError error) {

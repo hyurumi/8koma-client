@@ -148,6 +148,9 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
+        Preference superLongTimeout = new CheckBoxPreference(this);
+        superLongTimeout.setTitle("通信タイムアウト時間を長く");
+
         Preference confirmVersion = new Preference(this);
         confirmVersion.setTitle("ビルド情報を確認");
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -172,6 +175,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         category.addPreference(restartHachiko);
         category.addPreference(showDb);
         category.addPreference(deletePlans);
+        category.addPreference(superLongTimeout);
         category.addPreference(confirmVersion);
     }
 
