@@ -70,29 +70,6 @@
       <RadioButton
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:id="@+id/answer_ok"
-          android:background="@color/background_white"
-          android:checked="false"
-          android:textColor="@drawable/ok_toggle_btn_txt_color_stateful"
-          android:textSize="24dp"
-          android:gravity="center"
-          android:layout_gravity="center"
-          android:text="@string/icon_smile" android:button="@null" android:singleLine="true"/>
-      <RadioButton
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:text="@string/icon_question_sign"
-          android:id="@+id/answer_tentative"
-          android:background="@color/background_white"
-          android:checked="false"
-          android:textColor="@drawable/tentative_toggle_btn_txt_color_stateful"
-          android:textSize="24dp"
-          android:gravity="center"
-          android:button="@null"
-          android:layout_gravity="center"/>
-      <RadioButton
-          android:layout_width="40dp"
-          android:layout_height="40dp"
           android:text="@string/icon_frown"
           android:id="@+id/answer_ng"
           android:background="@color/background_white"
@@ -103,5 +80,30 @@
           android:layout_gravity="center" android:singleLine="false"
           android:textColor="@drawable/ng_toggle_btn_txt_color_stateful"/>
     </RadioGroup>
+    <RadioButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="@string/icon_question_sign"
+        android:id="@+id/answer_tentative"
+        android:background="@color/background_white"
+        android:checked="false"
+        android:textColor="@drawable/tentative_toggle_btn_txt_color_stateful"
+        android:textSize="24dp"
+        android:gravity="center"
+        android:button="@null"
+        android:layout_gravity="center"/>
+    <RadioButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/answer_ok"
+        android:background="@color/background_white"
+        android:checked="false"
+        android:textColor="@drawable/ok_toggle_btn_txt_color_stateful"
+        android:textSize="24dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/icon_smile" android:button="@null" android:singleLine="true"/>
+
+
   </LinearLayout>
 </LinearLayout>
