@@ -70,7 +70,8 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
     @Override
     public UnfixedGuestPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
-        participantsView.setText(Joiner.on(", ").join(plan.getpotentialParticipants()));
+        participantsView.setText(plan.getOwnerName(getContext())
+                + "|" + Joiner.on(", ").join(plan.getpotentialParticipants()));
         candidateDateContainer.removeAllViews();
         List<CandidateDate> candidateDates = plan.getCandidateDates();
         Collections.sort(candidateDates, new Comparator<CandidateDate>() {
