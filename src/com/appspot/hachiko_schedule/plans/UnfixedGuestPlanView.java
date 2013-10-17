@@ -177,12 +177,14 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     });
 
                     AlertDialog dialog = builder.create();
-                    fontForAnswer = Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf" );
 
                     dialog.show();
                     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTypeface(fontForAnswer);
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(24);
                     dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTypeface(fontForAnswer);
+                    dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextSize(24);
                     dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTypeface(fontForAnswer);
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(24);
                 }
             });
 
