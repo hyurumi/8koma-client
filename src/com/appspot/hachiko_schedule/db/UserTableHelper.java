@@ -70,7 +70,6 @@ public class UserTableHelper {
         values.put(LOCAL_CONTACT_ID, localContact);
         values.put(PRIMARY_EMAIL, primaryEmail);
         db.insert(USER_TABLE_NAME, null, values);
-        HachikoLogger.debug("insert", localContact, primaryEmail);
     }
 
     public void updateHachikoId(SQLiteDatabase db, long hachikoId, long localContactId, boolean isHachikoUser) {
