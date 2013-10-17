@@ -32,6 +32,7 @@ import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
@@ -280,9 +281,11 @@ public class CreatePlanActivity extends Activity {
     private void showFriendsName(Parcelable[] friends) {
         StringBuilder friendsNameToInvite = new StringBuilder();
         for (Parcelable friend: friends) {
-            friendsNameToInvite.append(((FriendIdentifier) friend).getName()).append(" ");
+            friendsNameToInvite.append(((FriendIdentifier) friend).getName()).append(", ");
         }
-        ((TextView) findViewById(R.id.friends_name_to_invite))
+        friendsNameToInvite.deleteCharAt(friendsNameToInvite.length()-1);
+        friendsNameToInvite.deleteCharAt(friendsNameToInvite.length()-1);
+                ((TextView) findViewById(R.id.friends_name_to_invite))
                 .setText(friendsNameToInvite.toString());
     }
 
