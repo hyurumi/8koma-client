@@ -50,6 +50,8 @@ abstract class GcmIntentHandlerBase<T> {
         Set<Long> positiveFriendIds = new HashSet<Long>();
         Set<Long> negativeFriendIds = new HashSet<Long>();
         for (int i = 0; i < attendance.length(); i++) {
+            positiveFriendIds.clear();
+            negativeFriendIds.clear();
             JSONObject attendanceJson = attendance.getJSONObject(i);
             long candidateId = attendanceJson.getLong("candId");
             JSONObject answers = attendanceJson.getJSONObject("attendance");
