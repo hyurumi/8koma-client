@@ -7,8 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
 import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
-import com.appspot.hachiko_schedule.apis.HachiStringRequest;
 import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
@@ -23,10 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * invited
@@ -115,24 +112,25 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
         HachikoLogger.debug("unknown friend ids:", unknownIds, "asking server..");
         HachikoLogger.debug(url);
         RequestQueue queue = new HachiRequestQueue(getContext());
-        Request request = new HachiStringRequest(
+        Request request = new HachiJsonObjectRequest(
                 getContext(),
                 url,
-                new Response.Listener<String>() {
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String array) {
+                    public void onResponse(JSONObject dictionary) {
                         try {
-                            JSONArray jsonArray = new JSONArray(array);
                             UserTableHelper userTableHelper
                                     = new UserTableHelper(getContext());
+                            Iterator<String> userIds = dictionary.keys();
                             Map<Long, String> names = new HashMap<Long, String>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                names.put(unknownIds.get(i), jsonArray.getString(i));
+                            while (userIds.hasNext()) {
+                                String userId = userIds.next();
+                                names.put(Long.parseLong(userId), dictionary.getString(userId));
                             }
                             HachikoLogger.debug("name resolved", names);
                             userTableHelper.persistNonFriendName(names);
                         } catch (JSONException e) {
-                            HachikoLogger.error("json error " + array, e);
+                            HachikoLogger.error("json error " + dictionary, e);
                         } finally {
                             sendInviteNotification(body, friendIds);
                         }
