@@ -140,6 +140,9 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                         return;
                     }
                     plansTableHelper.updateOwnAnswer(planId, candidateDate.getAnswerId(), answerState);
+                    if (CandidateDateAnswerView.this.candidateDate != null) {
+                        CandidateDateAnswerView.this.candidateDate.setMyAnswerState(answerState);
+                    }
                     sendResponse(planId, index, answerState);
                 }
             });
