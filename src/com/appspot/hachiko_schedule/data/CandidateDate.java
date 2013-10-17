@@ -74,7 +74,7 @@ public class CandidateDate {
     }
 
     public static enum AnswerState {
-        OK(R.color.ok_green), NEUTRAL(R.color.neutral_yellow), NG(R.color.ng_red);
+        OK(R.color.ok), NEUTRAL(R.color.tentative), NG(R.color.ng);
 
         private final int colorResource;
         private AnswerState(int colorResource) {

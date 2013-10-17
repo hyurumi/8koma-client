@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="main_accent_color">#00AAAA</color>
-    <color name="ok_green">#73F25C</color>
-    <color name="neutral_yellow">#F3FC8B</color>
-    <color name="ng_red">#FC4949</color>
+  <color name="main_accent_color">#00AAAA</color>
+  <color name="ok">#1778E4</color>
+  <color name="tentative">#555555</color>
+  <color name="ng">#BB4E2F</color>
+  <color name="unselected">#e6e6e6</color>
 
-    <color name="font_color_normal">#555555</color>
-    <color name="font_color_white">#FFFFFF</color>
-    <color name="background">#00AAAA</color>
-    <color name="background_white">#FFFFFF</color>
-    <color name="background_color_gray">#f5f5f5</color>
-    <color name="font_color_gray">#666666</color>
+  <color name="font_color_normal">#555555</color>
+  <color name="font_color_white">#FFFFFF</color>
+  <color name="background">#00AAAA</color>
+  <color name="background_white">#FFFFFF</color>
+  <color name="background_color_gray">#f5f5f5</color>
+  <color name="font_color_gray">#666666</color>
 
-    <color name="btn_normal">#00AAAA</color>
-    <color name="btn_focused">#007777</color>
-    <color name="btn_pressed">#007777</color>
-    <color name="btn_unactive">#AAAAAA</color>
+  <color name="btn_normal">#00AAAA</color>
+  <color name="btn_focused">#007777</color>
+  <color name="btn_pressed">#007777</color>
+  <color name="btn_unactive">#AAAAAA</color>
 
-    <color name="toggle_btn_normal">#f5f5f5</color>
-    <color name="toggle_btn_checked">#00AAAA</color>
+  <color name="toggle_btn_normal">#f5f5f5</color>
+  <color name="toggle_btn_checked">#00AAAA</color>
 
-    <color name="toggle_btn_txt_normal">#666666</color>
+  <color name="toggle_btn_txt_normal">#666666</color>
   <color name="toggle_btn_txt_checked">#ffffff</color>
 
   <color name="friend_name_gray">#e6e6e6</color>
