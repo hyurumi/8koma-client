@@ -79,7 +79,6 @@
           android:button="@null"
           android:layout_gravity="center" android:singleLine="false"
           android:textColor="@drawable/ng_toggle_btn_txt_color_stateful"/>
-    </RadioGroup>
     <RadioButton
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -104,6 +103,7 @@
         android:layout_gravity="center"
         android:text="@string/icon_smile" android:button="@null" android:singleLine="true"/>
 
+    </RadioGroup>
 
   </LinearLayout>
 </LinearLayout>
