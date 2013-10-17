@@ -149,6 +149,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         });
 
         Preference superLongTimeout = new CheckBoxPreference(this);
+        superLongTimeout.setKey(HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST);
         superLongTimeout.setTitle("通信タイムアウト時間を長く");
 
         Preference confirmVersion = new Preference(this);
