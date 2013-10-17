@@ -9,15 +9,17 @@ import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 
+import java.util.List;
+
 /**
  * {@link PlanListActivity}で使われる，予定一覧を表示するためのAdapter
  */
 class PlanAdapter extends ArrayAdapter<Plan> {
-    private final Plan[] plans;
+    private final List<Plan> plans;
     private final UnfixedHostPlanView.OnConfirmListener onConfirmListener;
 
     public PlanAdapter(
-            Context context, Plan[] plans, UnfixedHostPlanView.OnConfirmListener onConfirmListener) {
+            Context context, List<Plan> plans, UnfixedHostPlanView.OnConfirmListener onConfirmListener) {
         super(context, R.layout.unfixed_guest_plan_view, plans);
         this.plans = plans;
         this.onConfirmListener = onConfirmListener;
@@ -25,7 +27,7 @@ class PlanAdapter extends ArrayAdapter<Plan> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Plan plan = plans[position];
+        Plan plan = plans.get(position);
         if (plan.isFixed() && (convertView == null || !(convertView instanceof FixedPlanView))) {
             convertView = new FixedPlanView(getContext());
         } else if (!plan.isFixed() && plan.isHost(getContext())
@@ -41,7 +43,7 @@ class PlanAdapter extends ArrayAdapter<Plan> {
     }
 
     public void updatePlan(UnfixedPlan unfixedPlan, FixedPlan fixedplan) {
-        plans[getPosition(unfixedPlan)] = fixedplan;
+        plans.set(getPosition(unfixedPlan), fixedplan);
         notifyDataSetChanged();
     }
 

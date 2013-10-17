@@ -38,6 +38,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     private ProgressDialog progressDialog;
     private PlanAdapter planAdapter;
     private PlansTableHelper plansTableHelper;
+    private ListView eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +55,23 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         progressDialog = new ProgressDialog(this);
         plansTableHelper = new PlansTableHelper(this);
 
-        ListView eventList = ((ListView) findViewById(R.id.event_list));
-        List<Plan> plans = plansTableHelper.queryPlans();
-        planAdapter = new PlanAdapter(this, plans.toArray(new Plan[0]), this);
-        eventList.setAdapter(planAdapter);
-        findViewById(R.id.view_for_no_event).setVisibility(
-                plans.size() == 0 ? View.VISIBLE : View.GONE);
+        eventList = ((ListView) findViewById(R.id.event_list));
         findViewById(R.id.no_event_create_new).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startCreatingEvent();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        List<Plan> plans = plansTableHelper.queryPlans();
+        planAdapter = new PlanAdapter(this, plans, this);
+        eventList.setAdapter(planAdapter);
+        findViewById(R.id.view_for_no_event).setVisibility(
+                plans.size() == 0 ? View.VISIBLE : View.GONE);
+        super.onResume();
     }
 
     @Override
