@@ -150,9 +150,9 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
 
             candidateText.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    final View calendarView = ((Activity)getContext()).getLayoutInflater().inflate(R.layout.calendar_dialog, null);
+                    final View calendarView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.calendar_dialog, null);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder((Activity)getContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder((Activity) getContext());
                     builder.setIcon(null);
                     builder.setTitle(R.string.recent_schedules);
                     builder.setView(calendarView);
@@ -233,7 +233,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                         HachikoLogger.error("respond", volleyError);
                     }
                 });
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
         HachikoApp.defaultRequestQueue().add(request);
     }
 

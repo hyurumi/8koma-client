@@ -186,7 +186,7 @@ public class GoogleAuthActivity extends Activity {
                     }
                 }
         );
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
         HachikoApp.defaultRequestQueue().add(request);
     }
 }

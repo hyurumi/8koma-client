@@ -273,7 +273,7 @@ public class CreatePlanActivity extends Activity {
                         HachikoLogger.error("plan creation error", volleyError);
                     }
                 });
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
         HachikoApp.defaultRequestQueue().add(request);
     }
 

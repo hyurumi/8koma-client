@@ -103,7 +103,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                         HachikoLogger.error("confirm fail", volleyError);
                     }
                 });
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
+        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
         HachikoApp.defaultRequestQueue().add(request);
     }
 

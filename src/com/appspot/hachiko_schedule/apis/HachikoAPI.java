@@ -8,9 +8,9 @@ import com.android.volley.RetryPolicy;
  */
 public class HachikoAPI {
     public static final String BASE = "http://hachiko.yutopio.net/api/";
-    public static final RetryPolicy RETRY_POLICY_LONG_AND_RETRY
-            = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-            /* Num of retry*/ 3,
+    public static final RetryPolicy RETRY_POLICY_LONG
+            = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
     private final int method;
