@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,8 +73,8 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
     @Override
     public UnfixedGuestPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
-        participantsView.setText(plan.getOwnerName(getContext())
-                + "|" + Joiner.on(", ").join(plan.getpotentialParticipants()));
+        String source = "<b>" + plan.getOwnerName(getContext()) + "</b>, " + Joiner.on(", ").join(plan.getpotentialParticipants());
+        participantsView.setText(Html.fromHtml(source));
         candidateDateContainer.removeAllViews();
         List<CandidateDate> candidateDates = plan.getCandidateDates();
         Collections.sort(candidateDates, new Comparator<CandidateDate>() {
