@@ -71,6 +71,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     public void onConfirm(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
         int answerId = candidateDate.getAnswerId();
         progressDialog.setMessage("予定を確定中");
+        progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
         HachikoLogger.debug("confirm: " + PlanAPI.CONFIRM.getUrl() + answerId);

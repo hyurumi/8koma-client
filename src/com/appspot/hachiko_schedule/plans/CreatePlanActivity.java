@@ -233,7 +233,7 @@ public class CreatePlanActivity extends Activity {
                         List<CandidateDate> candidateDates;
                         try {
                             planId = json.getLong("planId");
-                            HachikoLogger.debug("plan successfully created", planId);
+                            HachikoLogger.debug("plan successfully created", planId, json);
                             candidateDates = new ArrayList<CandidateDate>();
                             JSONArray candidatesJson = json.getJSONArray("candidates");
                             for (int i = 0; i < candidatesJson.length(); i++) {

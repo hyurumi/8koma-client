@@ -31,7 +31,6 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
 
     private TextView titleView;
     private ViewGroup candidateDateContainer;
-    private int numOfPotentialParticipants;
     private OnConfirmListener onConfirmListener;
 
     public UnfixedHostPlanView(Context context) {
@@ -58,7 +57,6 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
     @Override
     public UnfixedHostPlanView setPlan(UnfixedPlan plan) {
         titleView.setText(plan.getTitle());
-        numOfPotentialParticipants = plan.getpotentialParticipants().size();
         candidateDateContainer.removeAllViews();
         List<CandidateDate> candidateDates = plan.getCandidateDates();
         Collections.sort(candidateDates, new Comparator<CandidateDate>() {
