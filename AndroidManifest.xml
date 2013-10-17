@@ -78,11 +78,6 @@
         android:label="@string/app_name"
         android:theme="@style/hachiko_theme">
     </activity>
-    <activity
-        android:name=".util.ReauthActivity"
-        android:label="@string/app_name"
-        android:theme="@style/hachiko_theme">
-    </activity>
 
     <receiver
         android:name=".push.GcmBroadcastReceiver"

@@ -15,7 +15,6 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.dev.SQLDumpActivity;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.appspot.hachiko_schedule.util.ReauthActivity;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -160,8 +159,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                         + HachikoPreferences.getDefault(MainPreferenceActivity.this)
                         .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found") + "\n"
                         + "Google Auth: "
-                        + new GoogleAuthPreferences(MainPreferenceActivity.this).getAccountName()
-                        + "/" + new GoogleAuthPreferences(MainPreferenceActivity.this).getToken();
+                        + new GoogleAuthPreferences(MainPreferenceActivity.this).getAccountName();
                 new AlertDialog.Builder(MainPreferenceActivity.this)
                         .setMessage(info)
                         .show();
@@ -170,22 +168,11 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
-        Preference reauth = new Preference(this);
-        reauth.setTitle("再認証");
-        reauth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(MainPreferenceActivity.this, ReauthActivity.class);
-                startActivity(intent);
-                return true;
-            }
-        });
         PreferenceCategory category = newPreferenceCategory("デバッグ");
         category.addPreference(restartHachiko);
         category.addPreference(showDb);
         category.addPreference(deletePlans);
         category.addPreference(confirmVersion);
-        category.addPreference(reauth);
     }
 
     private String getBuildTimeString() {

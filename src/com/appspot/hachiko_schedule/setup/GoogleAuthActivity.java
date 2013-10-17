@@ -29,12 +29,17 @@ import java.io.IOException;
 public class GoogleAuthActivity extends Activity {
     private static final int CHOOSE_ACCOUNT_RESULT_CODE = 1001;
     private static final int REQUEST_AUTH_RESULT_CODE = 1002;
+    private static final String HACHIKO_APP_ID
+            = "715637255810-bqg5i0p4mdvi0kb5cdftof6voc10kft6.apps.googleusercontent.com";
+    private static final String GOOGLE_PLUS = "https://www.googleapis.com/auth/plus.login";
     private static final String PROFILE_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
     private static final String OWN_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     private static final String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
     private static final String EMAIL_SCOPE = "https://mail.google.com/";
-    public static final String SCOPE = "oauth2:" + PROFILE_SCOPE + " " + OWN_EMAIL_SCOPE + " "
+    public static final String SCOPE_FOR_SERVER = "oauth2:server:client_id:" + HACHIKO_APP_ID
+            + ":api_scope:" + GOOGLE_PLUS + " " + PROFILE_SCOPE + " " + OWN_EMAIL_SCOPE + " "
             + CALENDAR_SCOPE + " " + EMAIL_SCOPE;
+
     private static final String COM_GOOGLE = "com.google";
 
     private ProgressDialog progressDialog;
@@ -47,8 +52,7 @@ public class GoogleAuthActivity extends Activity {
         progressDialog = new ProgressDialog(this);
         if (authPreferences.isAuthSetuped()) {
             if (!HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
-                sendRegisterRequest(
-                        authPreferences.getAccountName(), authPreferences.getToken());
+                sendRegisterRequest(authPreferences.getAuthCode());
             } else {
                 transitToNextActivity();
             }
@@ -85,14 +89,10 @@ public class GoogleAuthActivity extends Activity {
                 case CHOOSE_ACCOUNT_RESULT_CODE:
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     authPreferences.setAccountName(accountName);
-
-                    // invalidate old tokens which might be cached. we want a fresh
-                    // one, which is guaranteed to work
-                    invalidateToken();
-                    requestToken();
+                    requestAuthCode();
                     break;
                 case REQUEST_AUTH_RESULT_CODE:
-                    requestToken();
+                    requestAuthCode();
                     break;
                 default:
                     HachikoLogger.error("on result no action" + requestCode);
@@ -103,19 +103,20 @@ public class GoogleAuthActivity extends Activity {
         }
     }
 
-    private void requestToken() {
+    private void requestAuthCode() {
         HachikoLogger.debug("Request token as " + authPreferences.getAccountName());
         showProgressDialog("認証を行っています...");
         AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String token = null;
+                String authCode = null;
                 try {
-                    token = GoogleAuthUtil.getToken(
-                            GoogleAuthActivity.this, authPreferences.getAccountName(), SCOPE);
-                    authPreferences.setToken(token);
-                    sendRegisterRequest(
-                            authPreferences.getAccountName(), authPreferences.getToken());
+                    authCode = GoogleAuthUtil.getToken(
+                            GoogleAuthActivity.this,
+                            authPreferences.getAccountName(),
+                            SCOPE_FOR_SERVER);
+                    authPreferences.setAuthCode(authCode);
+                    sendRegisterRequest(authCode);
                 } catch (IOException transientEx) {
                     HachikoLogger.error("Google auth network error?", transientEx);
                 } catch (UserRecoverableAuthException recoverableException) {
@@ -126,12 +127,12 @@ public class GoogleAuthActivity extends Activity {
                     // that Google Play services is installed.
                     HachikoLogger.error("auth exception", authEx);
                 }
-                return token;
+                return authCode;
             }
 
             @Override
-            protected void onPostExecute(String token) {
-                HachikoLogger.debug("Token obtained: ", token);
+            protected void onPostExecute(String authCode) {
+                HachikoLogger.debug("AuthCode obtained: ", authCode);
             }
         };
         task.execute();
@@ -144,8 +145,8 @@ public class GoogleAuthActivity extends Activity {
         progressDialog.show();
     }
 
-    private void sendRegisterRequest(String gmail, String authToken) {
-        JSONObject params = JSONUtils.jsonObject("gmail", gmail, "google_token", authToken);
+    private void sendRegisterRequest(String authCode) {
+        JSONObject params = JSONUtils.jsonObject("authCode", authCode);
         HachikoLogger.debug("register request");
         runOnUiThread(new Runnable() {
             @Override
@@ -187,18 +188,5 @@ public class GoogleAuthActivity extends Activity {
         );
         request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG_AND_RETRY);
         HachikoApp.defaultRequestQueue().add(request);
-    }
-
-
-    /**
-     * call this method if your token expired, or you want to request a new
-     * token for whatever reason. call requestToken() again afterwards in order
-     * to get a new token.
-     */
-    private void invalidateToken() {
-        HachikoLogger.debug("invalidate token");
-        AccountManager accountManager = AccountManager.get(this);
-        accountManager.invalidateAuthToken(COM_GOOGLE, authPreferences.getToken());
-        authPreferences.setToken(null);
     }
 }

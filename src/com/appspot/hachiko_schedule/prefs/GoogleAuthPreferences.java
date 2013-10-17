@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class GoogleAuthPreferences {
     private static final String ACCOUNT_NAME = "account_name";
+    private static final String KEY_AUTH_CODE = "authCode";
     private static final String KEY_TOKEN = "token";
 
     private SharedPreferences preferences;
@@ -21,9 +22,9 @@ public class GoogleAuthPreferences {
         editor.commit();
     }
 
-    public void setToken(String token) {
+    public void setAuthCode(String authCode) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_TOKEN, token);
+        editor.putString(KEY_AUTH_CODE, authCode);
         editor.commit();
     }
 
@@ -31,11 +32,11 @@ public class GoogleAuthPreferences {
         return preferences.getString(ACCOUNT_NAME, null);
     }
 
-    public String getToken() {
-        return preferences.getString(KEY_TOKEN, null);
+    public String getAuthCode() {
+        return preferences.getString(KEY_AUTH_CODE, null);
     }
 
     public boolean isAuthSetuped() {
-        return getAccountName() != null && getToken() != null;
+        return getAccountName() != null && getAuthCode() != null;
     }
 }
