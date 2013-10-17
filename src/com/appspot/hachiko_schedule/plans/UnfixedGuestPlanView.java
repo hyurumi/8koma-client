@@ -203,41 +203,42 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             lastPersistedState = candidateDate.getMyAnswerState();
             answerRadioGroup.check(BUTTON_TO_ANSWER.inverse().get(lastPersistedState));
         }
-    }
 
-    private void sendResponse(long planId, long answerId, AnswerState answerState) {
-        JSONObject param = new JSONObject();
-        try {
-            param.put("planId", planId);
-            JSONObject responses = new JSONObject();
-            responses.put(Long.toString(answerId), answerState.toString());
-            param.put("responses", responses);
-        } catch (JSONException e) {
-            HachikoLogger.error("JSONERROR", e);
-            return;
+        private void sendResponse(long planId, long answerId, final AnswerState answerState) {
+            JSONObject param = new JSONObject();
+            try {
+                param.put("planId", planId);
+                JSONObject responses = new JSONObject();
+                responses.put(Long.toString(answerId), answerState.toString());
+                param.put("responses", responses);
+            } catch (JSONException e) {
+                HachikoLogger.error("JSONERROR", e);
+                return;
+            }
+            HachikoLogger.debug("respond", param);
+            Request request = new JSONStringRequest(
+                    getContext(),
+                    PlanAPI.RESPOND.getMethod(),
+                    PlanAPI.RESPOND.getUrl(),
+                    param,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                            CandidateDateAnswerView.this.lastPersistedState = answerState;
+                            HachikoLogger.debug("respond success: ", s);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            HachikoDialogs.showNetworkErrorDialog(
+                                    (Activity) getContext(), volleyError, "回答");
+                            HachikoLogger.error("respond", volleyError);
+                        }
+                    });
+            request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
+            HachikoApp.defaultRequestQueue().add(request);
         }
-        HachikoLogger.debug("respond", param);
-        Request request = new JSONStringRequest(
-                getContext(),
-                PlanAPI.RESPOND.getMethod(),
-                PlanAPI.RESPOND.getUrl(),
-                param,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        HachikoLogger.debug("respond success: ", s);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        HachikoDialogs.showNetworkErrorDialog(
-                                (Activity) getContext(), volleyError, "回答");
-                        HachikoLogger.error("respond", volleyError);
-                    }
-                });
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
-        HachikoApp.defaultRequestQueue().add(request);
     }
 
     private class OnExpandButtonClick implements OnClickListener {
