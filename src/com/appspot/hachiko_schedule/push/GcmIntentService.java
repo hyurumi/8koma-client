@@ -16,6 +16,7 @@ public class GcmIntentService extends IntentService {
     private static final String TAG_ALL_RESPONDED = "allResponded";
     private static final String TAG_CONFIRMED = "confirmed";
     private static final String TAG_RESPONDED = "responded";
+    private static final String TAG_UPDATE_AFTER_ALL_RESPONSE = "updateAfterAllResponse";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -44,6 +45,8 @@ public class GcmIntentService extends IntentService {
             } else if (tag.equals(TAG_CONFIRMED)) {
                 new ConfirmedIntentHelper(this).handle(new JSONObject(body));
             } else if (tag.equals(TAG_RESPONDED)) {
+                new RespondedIntentHandler(this).handle(new JSONObject(body));
+            } else if (tag.equals(TAG_UPDATE_AFTER_ALL_RESPONSE)) {
                 new RespondedIntentHandler(this).handle(new JSONObject(body));
             } else {
                 reportUnknownTypeNotification(notificationManager, intent, tag);
