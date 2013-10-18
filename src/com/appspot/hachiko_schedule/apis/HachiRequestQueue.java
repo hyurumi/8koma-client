@@ -64,6 +64,12 @@ public class HachiRequestQueue extends RequestQueue {
 
     @Override
     public Request add(Request request) {
+        // TODO: remove
+        // TechCrunch審査のため，アドホックにタイムアウトを長く設定
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10 * 1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         if (HachikoPreferences.getBooleanFromDefaultPref(
                 context,
                 HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST,
