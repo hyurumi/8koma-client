@@ -32,7 +32,6 @@ import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
@@ -43,7 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.appspot.hachiko_schedule.apis.VacancyRequest.Hours;
-import static com.appspot.hachiko_schedule.util.ViewUtils.removeView;
 
 /**
  * {@link Activity} for creating new plan.
@@ -314,7 +312,11 @@ public class CreatePlanActivity extends Activity {
                         if (removed) {
                             Timeslot inconvenientTimeslot = viewToTimeslots.get(view);
                             suggestingTimeslots.remove(inconvenientTimeslot);
-                            removeView(view);
+                            synchronized (this) {
+                                if (view.getParent() != null) {
+                                    ((ViewGroup) view.getParent()).removeView(view);
+                                }
+                            }
                             if (suggestingTimeslots.isEmpty()) {
                                 confirmButton.setEnabled(false);
                             }
@@ -398,7 +400,7 @@ public class CreatePlanActivity extends Activity {
         lastRequestedVacancyParam = param;
     }
 
-    private void clearTimeSlots() {
+    private synchronized void clearTimeSlots() {
         suggestingTimeslots.clear();
         schedulesContainer.removeAllViews();
         confirmButton.setEnabled(false);
