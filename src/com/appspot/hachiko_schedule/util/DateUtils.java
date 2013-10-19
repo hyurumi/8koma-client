@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class DateUtils {
     private static final SimpleDateFormat START_DATE_FORMAT = new SimpleDateFormat("MM/dd HH:mm");
@@ -25,9 +24,7 @@ public class DateUtils {
     }
 
     public static String formatAsISO8601(Date date) {
-        TimeZone timeZone = TimeZone.getTimeZone("UTC");
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_ISO8601);
-        dateFormat.setTimeZone(timeZone);
         return dateFormat.format(date);
     }
 
