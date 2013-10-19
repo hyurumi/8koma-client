@@ -126,7 +126,10 @@ public class MainPreferenceActivity extends PreferenceActivity {
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                String info = "Build Date: " + getBuildTimeString() + "\n"
+                String info = "HachikoID: " + HachikoPreferences
+                        .getDefault(MainPreferenceActivity.this)
+                        .getLong(HachikoPreferences.KEY_MY_HACHIKO_ID, -1) + "\n"
+                        + "Build Date: " + getBuildTimeString() + "\n"
                         + "Latest commit: " + getCommitInfo() + "\n"
                         + "Gcm Info: "
                         + HachikoPreferences.getDefault(MainPreferenceActivity.this)
