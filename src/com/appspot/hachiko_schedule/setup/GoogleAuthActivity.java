@@ -58,6 +58,7 @@ public class GoogleAuthActivity extends Activity {
             }
         } else {
             HachikoLogger.debug("choose account");
+
             chooseAccount();
         }
     }
@@ -89,6 +90,7 @@ public class GoogleAuthActivity extends Activity {
                 case CHOOSE_ACCOUNT_RESULT_CODE:
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     authPreferences.setAccountName(accountName);
+                    invalidateToken();
                     requestAuthCode();
                     break;
                 case REQUEST_AUTH_RESULT_CODE:
@@ -188,5 +190,12 @@ public class GoogleAuthActivity extends Activity {
         );
         request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
         HachikoApp.defaultRequestQueue().add(request);
+    }
+
+    private void invalidateToken() {
+        HachikoLogger.debug("invalidate token");
+        AccountManager accountManager = AccountManager.get(this);
+        accountManager.invalidateAuthToken(COM_GOOGLE, authPreferences.getAccountName());
+        authPreferences.setAuthCode(null);
     }
 }
