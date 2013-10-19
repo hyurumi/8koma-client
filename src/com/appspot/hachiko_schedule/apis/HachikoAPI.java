@@ -28,4 +28,8 @@ public class HachikoAPI {
     public String getUrl() {
         return BASE + subUrl;
     }
+
+    public static String getUrl(String path) {
+        return BASE + path;
+    }
 }

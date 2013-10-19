@@ -20,7 +20,7 @@ public class VacancyRequest extends HachiJsonArrayRequest {
                           Response.ErrorListener errorListener) {
         super(context,
                 Method.POST,
-                HachikoAPI.BASE + "vacancy",
+                HachikoAPI.getUrl("vacancy"),
                 constructParams(param).toString(),
                 listener,
                 errorListener);

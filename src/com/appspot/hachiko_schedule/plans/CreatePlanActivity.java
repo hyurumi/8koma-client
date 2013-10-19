@@ -19,10 +19,7 @@ import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
-import com.appspot.hachiko_schedule.apis.HachikoAPI;
-import com.appspot.hachiko_schedule.apis.PlanAPI;
-import com.appspot.hachiko_schedule.apis.VacancyRequest;
+import com.appspot.hachiko_schedule.apis.*;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.Timeslot;
@@ -198,40 +195,18 @@ public class CreatePlanActivity extends Activity {
     }
 
     private void sendCreatePlanRequest() {
-        JSONObject param = new JSONObject();
-        List<CandidateDate> candidateDates = new ArrayList<CandidateDate>();
-        final String title = getEventTitle();
-        try {
-            JSONArray dates = new JSONArray();
-            for (Timeslot timeslot: suggestingTimeslots) {
-                JSONObject candidateJson = new JSONObject();
-                JSONObject timeslotJson = new JSONObject();
-                timeslotJson.put("start", DateUtils.formatAsISO8601(timeslot.getStartDate()));
-                timeslotJson.put("end", DateUtils.formatAsISO8601(timeslot.getEndDate()));
-                candidateJson.put("time", timeslotJson);
-                dates.put(candidateJson);
-                candidateDates.add(new CandidateDate(-1, timeslot.getStartDate(),
-                        timeslot.getEndDate(), CandidateDate.AnswerState.NEUTRAL));
-            }
-            JSONArray friendIdsJson = new JSONArray(Arrays.asList(friendIds));
-            param.put("friendsId", friendIdsJson);
-            param.put("candidates", dates);
-            param.put("title", title);
-        } catch (JSONException e) {
-            HachikoLogger.error("JSON error/Never happen", e);
-            return;
-        }
-        HachikoLogger.debug(param);
-        Request request = new HachiJsonObjectRequest(this,
-                PlanAPI.NEW_PLAN.getMethod(),
-                PlanAPI.NEW_PLAN.getUrl(),
-                param,
+        Request request = new NewPlanRequest(this,
+                getEventTitle(),
+                Arrays.asList(friendIds),
+                suggestingTimeslots,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject json) {
                         long planId;
                         List<CandidateDate> candidateDates;
+                        String title;
                         try {
+                            title = json.getString("title");
                             planId = json.getLong("planId");
                             HachikoLogger.debug("plan successfully created", planId, json);
                             candidateDates = new ArrayList<CandidateDate>();
