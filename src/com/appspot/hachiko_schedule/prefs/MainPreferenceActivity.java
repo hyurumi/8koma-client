@@ -102,19 +102,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
             return;
         }
 
-        Preference restartHachiko = new Preference(this);
-        restartHachiko.setTitle("Hachikoを再起動");
-        restartHachiko.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-            }
-        });
-
         Preference showDb = new Preference(this);
         showDb.setTitle("データベースの中身を確認");
         showDb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -163,8 +150,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         });
 
         PreferenceCategory category = newPreferenceCategory("デバッグ");
-        category.addPreference(restartHachiko);
-        category.addPreference(showDb);
+         category.addPreference(showDb);
         category.addPreference(deletePlans);
         category.addPreference(superLongTimeout);
         category.addPreference(confirmVersion);
