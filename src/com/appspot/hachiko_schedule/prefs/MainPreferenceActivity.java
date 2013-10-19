@@ -40,7 +40,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
         screen = preferenceManager.createPreferenceScreen(this);
 
         setupCalendarPrefs();
-        setupContactPrefs();
         setupNetworkPrefs();
         setupDebugPrefs();
         setPreferenceScreen(screen);
@@ -82,15 +81,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 }
             });
             calendarPrefs.addPreference(resetCalendarSetup);
-        }
-    }
-
-    private void setupContactPrefs() {
-        if (Constants.IS_DEVELOPER) {
-            CheckBoxPreference useDummyContact = new CheckBoxPreference(this);
-            useDummyContact.setTitle("ダミーの電話帳データを使う");
-            useDummyContact.setKey(HachikoPreferences.KEY_USE_FAKE_CONTACT);
-            newPreferenceCategory("コンタクト設定", useDummyContact);
         }
     }
 
