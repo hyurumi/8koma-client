@@ -359,7 +359,9 @@ public class CreatePlanActivity extends Activity {
             return;
         }
         VacancyRequest.Param param = new VacancyRequest.Param(
-                Arrays.asList(friendIds), preferredTimeRange, startDay, endDay, durationMin);
+                Arrays.asList(friendIds), preferredTimeRange, startDay, endDay,
+                dateRangeRadioGroup.getCheckedRadioButtonId() == R.id.date_range_asap,
+                durationMin);
         clearTimeSlots();
         loadingCandidateView.setVisibility(View.VISIBLE);
 

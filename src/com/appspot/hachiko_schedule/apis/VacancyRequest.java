@@ -48,6 +48,7 @@ public class VacancyRequest extends HachiJsonArrayRequest {
                 day.add(Calendar.DAY_OF_YEAR, 1);
             }
             param.put("windows", windows);
+            param.put("asap", parameter.shouldAsap);
         } catch (JSONException e) {
             HachikoLogger.error("Parameter error in vacancy" + param, e);
             return param;
@@ -60,14 +61,16 @@ public class VacancyRequest extends HachiJsonArrayRequest {
         private final List<Hours> preferredTimeRanges;
         private final Calendar startDay;
         private final Calendar endDay;
+        private final boolean shouldAsap;
         private final int durationMin;
 
         public Param(List<Long> friendIds, List<Hours> preferredTimeRanges, Calendar startDay,
-                     Calendar endDay, int durationMin) {
+                     Calendar endDay, boolean shouldAsap, int durationMin) {
             this.friendIds = friendIds;
             this.preferredTimeRanges = preferredTimeRanges;
             this.startDay = startDay;
             this.endDay = endDay;
+            this.shouldAsap = shouldAsap;
             this.durationMin = durationMin;
         }
 
@@ -81,6 +84,7 @@ public class VacancyRequest extends HachiJsonArrayRequest {
                     && preferredTimeRanges.equals(opp.preferredTimeRanges)
                     && startDay.equals(opp.startDay)
                     && endDay.equals(opp.endDay)
+                    && shouldAsap == opp.shouldAsap
                     && durationMin == opp.durationMin;
         }
     }
