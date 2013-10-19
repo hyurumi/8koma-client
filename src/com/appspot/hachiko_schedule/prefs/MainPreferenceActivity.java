@@ -40,7 +40,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
         screen = preferenceManager.createPreferenceScreen(this);
 
         setupCalendarPrefs();
-        setupNetworkPrefs();
         setupDebugPrefs();
         setPreferenceScreen(screen);
     }
@@ -84,7 +83,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         }
     }
 
-    private void setupNetworkPrefs() {
+    private void setupDebugPrefs() {
         if (!Constants.IS_DEVELOPER) {
             return;
         }
@@ -94,13 +93,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
         useFakeHttpStack.setSummary("FakeHttpRequestクラスを利用して偽の通信結果を返す");
         useFakeHttpStack.setDefaultValue(HachikoPreferences.USE_FAKE_REQUEST_QUEUE_DEFAULT);
         useFakeHttpStack.setKey(HachikoPreferences.KEY_USE_FAKE_REQUEST_QUEUE);
-        newPreferenceCategory("ネットワーク", useFakeHttpStack);
-    }
-
-    private void setupDebugPrefs() {
-        if (!Constants.IS_DEVELOPER) {
-            return;
-        }
 
         Preference showDb = new Preference(this);
         showDb.setTitle("データベースの中身を確認");
@@ -149,11 +141,8 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
-        PreferenceCategory category = newPreferenceCategory("デバッグ");
-         category.addPreference(showDb);
-        category.addPreference(deletePlans);
-        category.addPreference(superLongTimeout);
-        category.addPreference(confirmVersion);
+        newPreferenceCategory(
+                "デバッグ", useFakeHttpStack, showDb, deletePlans, superLongTimeout, confirmVersion);
     }
 
     private String getBuildTimeString() {
