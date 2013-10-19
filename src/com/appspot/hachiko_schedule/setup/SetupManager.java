@@ -24,11 +24,14 @@ public class SetupManager {
         GoogleAuthPreferences googleAuthPreferences = new GoogleAuthPreferences(context);
         if (!googleAuthPreferences.isAuthSetuped() || !HachikoPreferences.hasHachikoId(context)) {
             return new Intent(context, GoogleAuthActivity.class);
-        } else if (!prefs.getBoolean(
-                HachikoPreferences.KEY_IS_CALENDAR_SETUP,
-                HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT)) {
-            return new Intent(context, SetupCalendarActivity.class);
         }
+
+// TODO: uncomment out this: #115
+//        else if (!prefs.getBoolean(
+//                HachikoPreferences.KEY_IS_CALENDAR_SETUP,
+//                HachikoPreferences.IS_CALENDAR_SETUP_DEFAULT)) {
+//            return new Intent(context, SetupCalendarActivity.class);
+//        }
 
         return null;
     }
