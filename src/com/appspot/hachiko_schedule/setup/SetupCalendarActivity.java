@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CalendarIdentifier;
-import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
+import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.plans.EventManager;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.google.common.base.Function;
@@ -61,7 +61,7 @@ public class SetupCalendarActivity extends Activity {
     private void transitToNextActivity() {
         Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
         if (intent == null) {
-            intent = new Intent(this, NewEventChooseGuestActivity.class);
+            intent = new Intent(this, ChooseGuestActivity.class);
         }
         startActivity(intent);
         finish();

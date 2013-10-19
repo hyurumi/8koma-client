@@ -13,7 +13,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
-import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
+import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
@@ -66,7 +66,7 @@ public class GoogleAuthActivity extends Activity {
     private void transitToNextActivity() {
         Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
         if (intent == null) {
-            intent = new Intent(this, NewEventChooseGuestActivity.class);
+            intent = new Intent(this, ChooseGuestActivity.class);
         }
         startActivity(intent);
         finish();

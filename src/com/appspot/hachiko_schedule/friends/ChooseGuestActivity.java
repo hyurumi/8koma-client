@@ -21,7 +21,7 @@ import com.appspot.hachiko_schedule.util.HachikoLogger;
 /**
  * 新しいイベントを作るときに，招待する友達を選ぶためのアクティビティ
  */
-public class NewEventChooseGuestActivity extends Activity {
+public class ChooseGuestActivity extends Activity {
     private Filter filter;
 
     @Override

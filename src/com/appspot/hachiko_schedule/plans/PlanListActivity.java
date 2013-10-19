@@ -22,7 +22,7 @@ import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
-import com.appspot.hachiko_schedule.friends.NewEventChooseGuestActivity;
+import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
@@ -149,7 +149,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     }
 
     private void startCreatingEvent() {
-        Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
+        Intent intent = new Intent(this, ChooseGuestActivity.class);
         startActivity(intent);
     }
 
@@ -171,7 +171,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && shouldBackToChooseGuestActivity) {
-            Intent intent = new Intent(this, NewEventChooseGuestActivity.class);
+            Intent intent = new Intent(this, ChooseGuestActivity.class);
             startActivity(intent);
             finish();
             return true;
