@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import com.appspot.hachiko_schedule.data.FriendItem;
-import com.appspot.hachiko_schedule.dev.FakeContactManager;
-import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +28,6 @@ public class ContactManager {
     }
 
     public static ContactManager getInstance(Context context) {
-        if (HachikoPreferences.getDefault(context).getBoolean(
-                HachikoPreferences.KEY_USE_FAKE_CONTACT,
-                HachikoPreferences.USE_FAKE_CONTACT_DEFAULT)) {
-            return new FakeContactManager(context);
-        }
         return new ContactManager(context);
     }
 
