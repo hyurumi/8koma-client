@@ -6,7 +6,7 @@
     android:layout_alignParentBottom="true"
     android:visibility="gone">
   <Button
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/new_plan_button"
       android:layout_alignParentRight="true"
@@ -16,17 +16,4 @@
       android:paddingLeft="16dp"
       android:paddingRight="10dp"
       android:clickable="true"/>
-  <HorizontalScrollView
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:id="@+id/selected_friends_wrapper_scrollable"
-      android:layout_toLeftOf="@id/new_plan_button"
-      android:layout_centerVertical="true"
-      android:clickable="false">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/selected_friends">
-    </LinearLayout>
-  </HorizontalScrollView>
 </RelativeLayout>

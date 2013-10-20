@@ -23,21 +23,16 @@ import java.util.*;
  */
 public class FriendsFragment extends Fragment {
     private FriendsAdapter adapter;
-    private Map<Long, View> selectedFriendNameViews = new HashMap<Long, View>();
 
     private ListView listView;
     private View createPlanButtonWrapper;
-    private HorizontalScrollView selectedFriendsNamesScrollView;
-    private ViewGroup selectedFriendsNameContainer;
+    private ChipsAutoCompleteTextView searchFriendView;
     private Button createPlanButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friend_list, container, false);
         createPlanButtonWrapper = view.findViewById(R.id.new_plan_button_wrapper);
-        selectedFriendsNamesScrollView
-                = (HorizontalScrollView) view.findViewById(R.id.selected_friends_wrapper_scrollable);
-        selectedFriendsNameContainer = (ViewGroup) view.findViewById(R.id.selected_friends);
         createPlanButton = (Button) view.findViewById(R.id.new_plan_button);
         listView = (ListView) view.findViewById(R.id.contact_list);
 
@@ -66,10 +61,9 @@ public class FriendsFragment extends Fragment {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
-        ChipsAutoCompleteTextView searchFriendView=
-                (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
+        searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
         searchFriendView.setAdapter(adapter);
-        searchFriendView.addOnItemClickListener(new OnFriendItemClickListener());
+        searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
         return view;
     }
 
@@ -90,47 +84,48 @@ public class FriendsFragment extends Fragment {
         super.onPause();
     }
 
+    private void setConfirmButtonState() {
+        boolean shouldEnable = !adapter.getSelectedEntries().isEmpty();
+        createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
+        createPlanButton.setEnabled(shouldEnable);
+    }
+
     private class OnFriendItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (adapter.notifySelect(view, position)) {
-
-                addSelectedFriendNameView(
-                        id,
-                        ((FriendItem) listView.getItemAtPosition(position)).getDisplayName());
+                CharSequence name = adapter.getNameTextFromItem(view);
+                String textInSearchField = searchFriendView.getText().toString();
+                HachikoLogger.debug(textInSearchField);
+                String trimmed = trimEndOfTextToComma(textInSearchField);
+                searchFriendView.setText(trimmed.trim() + (trimmed.length() > 0 ? ", " : "") + name + ", ");
+                searchFriendView.setupChips();
             } else {
-                View unselectedFriendNameView = selectedFriendNameViews.get(id);
-                selectedFriendsNameContainer.removeView(unselectedFriendNameView);
-                selectedFriendNameViews.remove(id);
+                // TODO:
             }
-            boolean shouldEnable = !selectedFriendNameViews.isEmpty();
-            createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
-            createPlanButton.setEnabled(shouldEnable);
+            setConfirmButtonState();
+
         }
 
-        private void addSelectedFriendNameView(long friendId, String friendName) {
-            TextView friendNameView = new TextView(getActivity());
-            friendNameView.setText(friendName);
-            friendNameView.setPadding(
-                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_left),
-                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_top),
-                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_right),
-                    (int) getResources().getDimension(R.dimen.friend_name_text_padding_bottom));
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.leftMargin =
-                    (int) getResources().getDimension(R.dimen.friend_name_text_margin_left);
-            friendNameView.setLayoutParams(params);
-            friendNameView.setBackgroundColor(getResources().getColor(R.color.friend_name_gray));
-            selectedFriendsNameContainer.addView(friendNameView);
-            selectedFriendsNamesScrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    selectedFriendsNamesScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-                }
-            });
-            selectedFriendNameViews.put(friendId, friendNameView);
+        private String trimEndOfTextToComma(String str) {
+            if (str.length() == 0) {
+                return str;
+            }
+            int last = str.length() - 1;
+            while (last > 0 && str.charAt(last) != ',') {
+                last--;
+            }
+            return str.substring(0, last);
+        }
+    }
+
+    private class OnFriendAutoCompleteClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            adapter.notifySelect(view, position);
+            setConfirmButtonState();
         }
     }
 }

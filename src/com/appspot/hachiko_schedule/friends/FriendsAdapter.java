@@ -64,6 +64,10 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         return convertView;
     }
 
+    public CharSequence getNameTextFromItem(View v) {
+        return ((TextView) v.findViewById(R.id.friend_name)).getText();
+    }
+
     /**
      * あるViewがクリックされたことを知らせる
      *
