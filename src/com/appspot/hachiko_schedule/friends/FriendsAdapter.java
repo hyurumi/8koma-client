@@ -1,13 +1,12 @@
 package com.appspot.hachiko_schedule.friends;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendItem;
@@ -15,7 +14,10 @@ import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Class that stands between cursor from Contacts and our own GridView.
@@ -35,13 +37,21 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.list_item_friend, null);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_item_friend, null);
+            Typeface fontForAnswer = Typeface.createFromAsset(
+                    getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
+            ((TextView) convertView.findViewById(R.id.icon_check)).setTypeface(fontForAnswer);
+        }
         FriendItem item = getItem(position);
-        ((TextView) view.findViewById(R.id.friend_name)).setText(item.getDisplayName());
-        ((ImageView) view.findViewById(R.id.friend_picture)).setImageURI(item.getPhotoUri());
-
-        Typeface fontForAnswer = Typeface.createFromAsset( getContext().getAssets(), "fonts/fontawesome-webfont.ttf" );
-        ((TextView)view.findViewById(R.id.icon_check)).setTypeface(fontForAnswer);
+        ((TextView) convertView.findViewById(R.id.friend_name)).setText(item.getDisplayName());
+        ImageView pictureView = (ImageView) convertView.findViewById(R.id.friend_picture);
+        if (item.getPhotoUri() == null) {
+            pictureView.setImageDrawable(
+                    getContext().getResources().getDrawable(R.drawable.ic_contact_picture));
+        } else {
+            pictureView.setImageURI(item.getPhotoUri());
+        }
 
         String emailOrHachikoUser;
         if (userTableHelper.isHachikoUser(item.getLocalContactId())) {
@@ -49,9 +59,9 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         } else {
             emailOrHachikoUser = userTableHelper.queryPrimaryEmail(item.getLocalContactId());
         }
-        ((TextView) view.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
-        applyFilterToIcon(filteredItem.contains(item.getDisplayName()), view, position);
-        return view;
+        ((TextView) convertView.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
+        applyFilter(filteredItem.contains(item.getDisplayName()), convertView);
+        return convertView;
     }
 
     /**
@@ -62,23 +72,20 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
     public boolean notifySelect(View view, int position) {
         String key = ((TextView) view.findViewById(R.id.friend_name)).getText().toString();
         boolean isSelected = filteredItem.contains(key);
-        applyFilterToIcon(!isSelected, view, position);
+        applyFilter(!isSelected, view);
         return !isSelected;
     }
 
-    public void applyFilterToIcon(boolean apply, View wrapperView, int position) {
-        ImageView imageView = (ImageView) wrapperView.findViewById(R.id.friend_picture);
+    private void applyFilter(boolean apply, View wrapperView) {
         View nameView = wrapperView.findViewById(R.id.friend_name_container);
         TextView textView = (TextView) wrapperView.findViewById(R.id.friend_name);
         TextView iconView = (TextView)wrapperView.findViewById(R.id.icon_check);
         if (apply) {
-            //imageView.setColorFilter(new LightingColorFilter(Color.GRAY, 0));
             nameView.setBackgroundResource(R.color.background_white);
             textView.setTypeface(null, Typeface.BOLD);
             iconView.setVisibility(View.VISIBLE);
             filteredItem.add(textView.getText().toString());
         } else {
-            //imageView.clearColorFilter();
             nameView.setBackgroundResource(R.color.background_color_gray);
             textView.setTypeface(null, Typeface.NORMAL);
             iconView.setVisibility(View.GONE);
