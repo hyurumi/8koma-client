@@ -73,11 +73,17 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
      *
      * @return クリックの結果要素が選択された状態になればtrue
      */
-    public boolean notifySelect(View view, int position) {
+    public synchronized boolean notifySelect(View view, int position) {
         String key = ((TextView) view.findViewById(R.id.friend_name)).getText().toString();
         boolean isSelected = filteredItem.contains(key);
         applyFilter(!isSelected, view);
         return !isSelected;
+    }
+
+    public synchronized void unselectByName(String name) {
+        if (filteredItem.contains(name)) {
+            filteredItem.remove(name);
+        }
     }
 
     private void applyFilter(boolean apply, View wrapperView) {

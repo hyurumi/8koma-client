@@ -2,8 +2,10 @@ package com.appspot.hachiko_schedule.friends;
 
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.MultiAutoCompleteTextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.ui.TexttipSpan;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
@@ -22,7 +23,12 @@ import java.util.Set;
 // https://github.com/kpbird/chips-edittext-libraryを参考に実装
 public class ChipsAutoCompleteTextView
         extends MultiAutoCompleteTextView implements OnItemClickListener {
+    public interface OnNameDeletedListener {
+        public void onNameDeleted(String name);
+    }
+
     private Set<OnItemClickListener> onItemClickListeners = new HashSet<OnItemClickListener>();
+    private OnNameDeletedListener onNameDeletedListener;
 
     public ChipsAutoCompleteTextView(Context context) {
         super(context);
@@ -42,6 +48,11 @@ public class ChipsAutoCompleteTextView
     public void init(Context context){
         setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         setOnItemClickListener(this);
+        addTextChangedListener(new NameDeletedWatcher());
+    }
+
+    public void setOnNameDeletedListener(OnNameDeletedListener listener) {
+        onNameDeletedListener = listener;
     }
 
     public void addOnItemClickListener(OnItemClickListener listener) {
@@ -57,7 +68,6 @@ public class ChipsAutoCompleteTextView
         if (!text.contains(",")) {
             return;
         }
-        HachikoLogger.debug(":" + nameToRemove);
         List<String> chips = new ArrayList<String>();
         for (String item: text.trim().split(",")) {
             item = item.trim();
@@ -96,6 +106,26 @@ public class ChipsAutoCompleteTextView
         setupChips();
         for (OnItemClickListener listener: onItemClickListeners) {
             listener.onItemClick(parent, view, position, id);
+        }
+    }
+
+    private class NameDeletedWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (after == 0) {
+                String str = s.subSequence(start, start + count).toString().trim();
+                if (str.length() > 0 && !",".equals(str) && onNameDeletedListener != null) {
+                    onNameDeletedListener.onNameDeleted(str);
+                }
+            }
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
         }
     }
 }

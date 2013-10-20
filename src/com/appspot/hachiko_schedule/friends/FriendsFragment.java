@@ -64,6 +64,7 @@ public class FriendsFragment extends Fragment {
         searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
         searchFriendView.setAdapter(adapter);
         searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
+        searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;
     }
 
@@ -125,6 +126,15 @@ public class FriendsFragment extends Fragment {
             if (!adapter.notifySelect(view, position)) {
                 searchFriendView.removeName(adapter.getNameTextFromItem(view).toString());
             }
+            setConfirmButtonState();
+        }
+    }
+
+    private class OnFriendNameDeletedListener
+            implements ChipsAutoCompleteTextView.OnNameDeletedListener {
+        @Override
+        public void onNameDeleted(String name) {
+            adapter.unselectByName(name);
             setConfirmButtonState();
         }
     }
