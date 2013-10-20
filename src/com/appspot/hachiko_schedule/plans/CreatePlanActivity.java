@@ -195,8 +195,9 @@ public class CreatePlanActivity extends Activity {
     }
 
     private void sendCreatePlanRequest() {
+        final String title = getEventTitle();
         Request request = new NewPlanRequest(this,
-                getEventTitle(),
+                title,
                 Arrays.asList(friendIds),
                 suggestingTimeslots,
                 new Response.Listener<JSONObject>() {
@@ -204,9 +205,7 @@ public class CreatePlanActivity extends Activity {
                     public void onResponse(JSONObject json) {
                         long planId;
                         List<CandidateDate> candidateDates;
-                        String title;
                         try {
-                            title = json.getString("title");
                             planId = json.getLong("planId");
                             HachikoLogger.debug("plan successfully created", planId, json);
                             candidateDates = new ArrayList<CandidateDate>();
