@@ -65,6 +65,11 @@ public class FriendsFragment extends Fragment {
         adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend, getListOfFriends());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
+
+        ChipsAutoCompleteTextView searchFriendView=
+                (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
+        searchFriendView.setAdapter(adapter);
+        searchFriendView.addOnItemClickListener(new OnFriendItemClickListener());
         return view;
     }
 

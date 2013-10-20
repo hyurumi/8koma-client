@@ -9,17 +9,41 @@
   <include
       layout="@layout/selected_friends_container"
       android:id="@+id/new_plan_button_wrapper"/>
-  <SearchView
-      android:id="@+id/search_friend"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:queryHint="@string/hint_on_search_friends"/>
+      android:id="@+id/search_friend_wrapper"
+      >
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center">
+      <ImageView
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:src="@android:drawable/ic_search_category_default"
+          android:layout_gravity="center"/>
+    </FrameLayout>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/horizontalScrollView"
+        android:fillViewport="true">
+      <com.appspot.hachiko_schedule.friends.ChipsAutoCompleteTextView
+          android:id="@+id/search_friend"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/hint_on_search_friends">
+        <requestFocus />
+      </com.appspot.hachiko_schedule.friends.ChipsAutoCompleteTextView>
+    </HorizontalScrollView>
+  </LinearLayout>
   <ListView
       android:id="@+id/contact_list"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_above="@id/new_plan_button_wrapper"
-      android:layout_below="@id/search_friend"
+      android:layout_below="@id/search_friend_wrapper"
       android:listSelector="@drawable/friend_list_selector"
       android:drawSelectorOnTop="true"/>
 </RelativeLayout>
