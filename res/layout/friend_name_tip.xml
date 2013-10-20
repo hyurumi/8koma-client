@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/friend_name_gray" >
+  <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="24dp"
+      android:layout_gravity="center">
+    <ImageView
+        android:id="@+id/friend_name_tip_image"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_contact_picture" />
+  </FrameLayout>
+  <TextView
+      android:id="@+id/friend_name_tip_name"
+      android:layout_width="wrap_content"
+      android:layout_height="fill_parent"
+      android:paddingLeft="@dimen/friend_name_text_padding_left"
+      android:paddingTop="@dimen/friend_name_text_padding_top"
+      android:paddingBottom="@dimen/friend_name_text_padding_bottom"
+      android:paddingRight="@dimen/friend_name_text_padding_right"
+      android:gravity="clip_vertical"
+      android:text="Name" />
+</LinearLayout>

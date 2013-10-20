@@ -4,17 +4,20 @@ package com.appspot.hachiko_schedule.friends;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.MultiAutoCompleteTextView;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.ui.TexttipSpan;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 // https://github.com/kpbird/chips-edittext-libraryを参考に実装
 public class ChipsAutoCompleteTextView
@@ -74,8 +77,9 @@ public class ChipsAutoCompleteTextView
         int x =0;
         for(String chipText : chips){
             spannableStringBuilder.setSpan(
-                    new BackgroundColorSpan(
-                            getContext().getResources().getColor(R.color.friend_name_gray)),
+                    new TexttipSpan(getContext(), R.layout.friend_name_tip,
+                            R.id.friend_name_tip_name, R.id.friend_name_tip_image,
+                            R.drawable.ic_contact_picture, chipText),
                     x, x + chipText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             x = x + chipText.length() + 2;
         }
