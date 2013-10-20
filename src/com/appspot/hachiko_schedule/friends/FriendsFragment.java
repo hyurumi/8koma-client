@@ -94,18 +94,16 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            CharSequence name = adapter.getNameTextFromItem(view);
             if (adapter.notifySelect(view, position)) {
-                CharSequence name = adapter.getNameTextFromItem(view);
                 String textInSearchField = searchFriendView.getText().toString();
-                HachikoLogger.debug(textInSearchField);
                 String trimmed = trimEndOfTextToComma(textInSearchField);
                 searchFriendView.setText(trimmed.trim() + (trimmed.length() > 0 ? ", " : "") + name + ", ");
                 searchFriendView.setupChips();
             } else {
-                // TODO:
+                searchFriendView.removeName(name.toString());
             }
             setConfirmButtonState();
-
         }
 
         private String trimEndOfTextToComma(String str) {
@@ -124,7 +122,9 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            adapter.notifySelect(view, position);
+            if (!adapter.notifySelect(view, position)) {
+                searchFriendView.removeName(adapter.getNameTextFromItem(view).toString());
+            }
             setConfirmButtonState();
         }
     }

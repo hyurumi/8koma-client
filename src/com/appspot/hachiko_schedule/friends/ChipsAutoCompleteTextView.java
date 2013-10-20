@@ -11,9 +11,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.MultiAutoCompleteTextView;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Joiner;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 // https://github.com/kpbird/chips-edittext-libraryを参考に実装
 public class ChipsAutoCompleteTextView
@@ -44,23 +45,46 @@ public class ChipsAutoCompleteTextView
         onItemClickListeners.add(listener);
     }
 
-    public void setupChips(){
+    public void setupChips() {
+        setupChips(null);
+    }
+
+    private void setupChips(String nameToRemove){
         String text = getText().toString();
         if (!text.contains(",")) {
             return;
         }
-        String chips[] = text.trim().split(",");
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+        HachikoLogger.debug(":" + nameToRemove);
+        List<String> chips = new ArrayList<String>();
+        for (String item: text.trim().split(",")) {
+            item = item.trim();
+            if (nameToRemove != null && nameToRemove.equals(item)) {
+                continue;
+            }
+            chips.add(item);
+        }
+
+        SpannableStringBuilder spannableStringBuilder
+                = new SpannableStringBuilder(Joiner.on(", ").join(chips));
+        if (chips.size() == 0) {
+            setText("");
+            return;
+        }
+        spannableStringBuilder.append(", ");
         int x =0;
         for(String chipText : chips){
             spannableStringBuilder.setSpan(
                     new BackgroundColorSpan(
                             getContext().getResources().getColor(R.color.friend_name_gray)),
                     x, x + chipText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            x = x + chipText.length() + 1;
+            x = x + chipText.length() + 2;
         }
         setText(spannableStringBuilder);
         setSelection(getText().length());
+    }
+
+    public void removeName(String name) {
+        setupChips(name.trim());
     }
 
     @Override
