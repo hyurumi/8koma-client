@@ -50,6 +50,7 @@ public class FakeRequestQueue extends RequestQueue {
 
     @Override
     public Request add(Request request) {
+        HachikoLogger.warn("Note: FakeRequestQueue is used");
         HachikoLogger.debug(
                 "New request ", request.getUrl(), " is added with priority ", request.getPriority());
         try {
