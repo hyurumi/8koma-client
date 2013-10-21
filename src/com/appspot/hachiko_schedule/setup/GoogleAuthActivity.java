@@ -94,6 +94,7 @@ public class GoogleAuthActivity extends Activity {
                     requestAuthCode();
                     break;
                 case REQUEST_AUTH_RESULT_CODE:
+                    invalidateToken();
                     requestAuthCode();
                     break;
                 default:
