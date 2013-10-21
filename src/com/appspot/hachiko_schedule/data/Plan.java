@@ -6,6 +6,7 @@ import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.google.common.collect.Iterables;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * 予定を表すデータクラス
@@ -41,9 +42,14 @@ public class Plan {
 
     public String getOwnerName(Context context) {
         UserTableHelper userTableHelper = new UserTableHelper(context);
-        return Iterables.get(
-                userTableHelper.getFriendsNameForHachikoIds(Arrays.asList(new Long[]{ownerId})),
-                0);
+        Collection<String> names
+                = userTableHelper.getFriendsNameForHachikoIds(Arrays.asList(new Long[]{ownerId}));
+        if (names.size() > 0) {
+            return Iterables.get(names, 0);
+        } else if (HachikoPreferences.getMyHachikoId(context) == ownerId) {
+            return "あなた";
+        }
+        return "";
     }
 
     public boolean isHost(Context context) {
