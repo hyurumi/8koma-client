@@ -36,9 +36,10 @@ public abstract class HorizontalSwipeListener implements View.OnTouchListener {
                 onSwipeStart(v, event);
                 break;
             case MotionEvent.ACTION_CANCEL:
-                v.setTranslationX(0);
+                if (!onSwipeCancel(v, event)) {
+                    v.setTranslationX(0);
+                }
                 itemPressed = false;
-                onSwipeCancel(v);
                 break;
             case MotionEvent.ACTION_MOVE:{
                 float x = event.getX() + v.getTranslationX();
@@ -71,9 +72,10 @@ public abstract class HorizontalSwipeListener implements View.OnTouchListener {
     }
 
     /**
-     * デフォルト実装はNo-op
+     * @return trueを返すとデフォルトの動作(ただちにもとの位置に戻る)がキャンセルされる
      */
-    protected void onSwipeCancel(View v) {
+    protected boolean onSwipeCancel(View v, MotionEvent e) {
+        return false;
     }
 
     /**
