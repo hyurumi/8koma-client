@@ -90,6 +90,12 @@ public class SwipeToDismissTouchListener extends HorizontalSwipeListener {
         return true;
     }
 
+    @Override
+    protected boolean onSwipeCancel(View v, MotionEvent e) {
+        executeSwipeAnimation(v, e.getX());
+        return true;
+    }
+
     private void executeSwipeAnimation(final View view, float eventX) {
         float x = eventX + view.getTranslationX();
         float deltaXAbs = Math.abs(x - getSwipeStartX());
