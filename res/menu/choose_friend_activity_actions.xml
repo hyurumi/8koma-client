@@ -5,7 +5,4 @@
         android:icon="@drawable/ic_action_view_as_list"
         android:title="@string/action_create_event"
         android:showAsAction="always" />
-  <item android:id="@+id/action_config"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/action_config" />
 </menu>

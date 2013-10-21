@@ -60,9 +60,6 @@ public class ChooseGuestActivity extends Activity {
             case R.id.action_see_events:
                 launchEventListActivity();
                 return true;
-            case R.id.action_config:
-                launchMenuActivity();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

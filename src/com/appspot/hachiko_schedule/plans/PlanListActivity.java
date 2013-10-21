@@ -140,9 +140,6 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
             case R.id.action_launch_calendar_app:
                 launchCalendarApp();
                 return true;
-            case R.id.action_config:
-                launchMenuActivity();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
