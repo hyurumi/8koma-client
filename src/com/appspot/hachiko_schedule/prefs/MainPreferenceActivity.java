@@ -1,20 +1,24 @@
 package com.appspot.hachiko_schedule.prefs;
 
-import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.preference.*;
 import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.ImplicitLoginRequest;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.dev.SQLDumpActivity;
+import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -105,6 +109,39 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
+        Preference reauth = new Preference(this);
+        reauth.setTitle("再認証");
+        reauth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final ProgressDialog progressDialog = new ProgressDialog(MainPreferenceActivity.this);
+                progressDialog.setMessage("リクエスト中");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+                Request request = new ImplicitLoginRequest(MainPreferenceActivity.this,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject object) {
+                                progressDialog.hide();
+                                Toast.makeText(MainPreferenceActivity.this, "Success: " + object,
+                                        Toast.LENGTH_LONG);
+                                HachikoLogger.debug(object);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                HachikoDialogs.showNetworkErrorDialog(MainPreferenceActivity.this,
+                                        volleyError, "login");
+                                HachikoLogger.error("failed to login", volleyError);
+                            }
+                        });
+                HachikoApp.defaultRequestQueue().add(request);
+                return true;
+            }
+        });
+
         Preference deletePlans = new Preference(this);
         deletePlans.setTitle("予定一覧画面の予定を削除");
         deletePlans.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -145,7 +182,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         });
 
         newPreferenceCategory(
-                "デバッグ", useFakeHttpStack, showDb, deletePlans, superLongTimeout, confirmVersion);
+                "デバッグ", useFakeHttpStack, showDb, reauth, deletePlans, superLongTimeout, confirmVersion);
     }
 
     private String getBuildTimeString() {
