@@ -22,7 +22,7 @@ import java.util.*;
  * FriendIdentifier list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
-    private FriendsAdapter adapter;
+    private FriendsAdapter friendListAdapter;
 
     private ListView listView;
     private View createPlanButtonWrapper;
@@ -42,7 +42,7 @@ public class FriendsFragment extends Fragment {
                 Set<FriendIdentifier> friendsToInvite = new HashSet<FriendIdentifier>();
                 Intent intent = new Intent(getActivity(), CreatePlanActivity.class);
                 UserTableHelper tableHelper = new UserTableHelper(getActivity());
-                for (FriendItem entry: adapter.getSelectedEntries()) {
+                for (FriendItem entry: friendListAdapter.getSelectedEntries()) {
                     long hachikoId = tableHelper.getHachikoId(entry.getLocalContactId());
                     if (hachikoId == 0) {
                         //TODO: たぶんサーバからHachikoID（まだ）取得できてないので，ちゃんと対応する必要
@@ -57,12 +57,16 @@ public class FriendsFragment extends Fragment {
                 startActivityForResult(intent, 0);
             }
         });
-        adapter = new FriendsAdapter(getActivity(), R.layout.list_item_friend, getListOfFriends());
-        listView.setAdapter(adapter);
+        // 2つのアダプタで選択された友達を共有するためのSet, もっと良い感じにリファクタしたい…
+        Set<String> selectedItems = new HashSet<String>();
+        friendListAdapter = new FriendsAdapter(
+                getActivity(), R.layout.list_item_friend, getListOfFriends(), selectedItems);
+        listView.setAdapter(friendListAdapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
         searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
-        searchFriendView.setAdapter(adapter);
+        searchFriendView.setAdapter(new FriendsAdapter(
+                getActivity(), R.layout.auto_complete_item_friend, getListOfFriends(), selectedItems));
         searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
         searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;
@@ -86,7 +90,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setConfirmButtonState() {
-        boolean shouldEnable = !adapter.getSelectedEntries().isEmpty();
+        boolean shouldEnable = !friendListAdapter.getSelectedEntries().isEmpty();
         createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
         createPlanButton.setEnabled(shouldEnable);
     }
@@ -95,8 +99,8 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CharSequence name = adapter.getNameTextFromItem(view);
-            if (adapter.notifySelect(view, position)) {
+            CharSequence name = friendListAdapter.getNameTextFromItem(view);
+            if (friendListAdapter.notifySelect(view, position)) {
                 String textInSearchField = searchFriendView.getText().toString();
                 String trimmed = trimEndOfTextToComma(textInSearchField);
                 searchFriendView.setText(trimmed.trim() + (trimmed.length() > 0 ? ", " : "") + name + ", ");
@@ -123,8 +127,8 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!adapter.notifySelect(view, position)) {
-                searchFriendView.removeName(adapter.getNameTextFromItem(view).toString());
+            if (!friendListAdapter.notifySelect(view, position)) {
+                searchFriendView.removeName(friendListAdapter.getNameTextFromItem(view).toString());
             }
             setConfirmButtonState();
         }
@@ -134,7 +138,7 @@ public class FriendsFragment extends Fragment {
             implements ChipsAutoCompleteTextView.OnNameDeletedListener {
         @Override
         public void onNameDeleted(String name) {
-            adapter.unselectByName(name);
+            friendListAdapter.unselectByName(name);
             setConfirmButtonState();
         }
     }

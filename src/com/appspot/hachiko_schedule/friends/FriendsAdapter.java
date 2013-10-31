@@ -15,30 +15,30 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Class that stands between cursor from Contacts and our own GridView.
- */
 public class FriendsAdapter extends ArrayAdapter<FriendItem> {
     private LayoutInflater inflater;
-    private Set<String> filteredItem = new HashSet<String>();
+    private Set<String> filteredItem;
+    private int layoutResourceId;
     private List<FriendItem> entries;
     private UserTableHelper userTableHelper;
 
-    public FriendsAdapter(Context context, int resource, List<FriendItem> entries) {
+    public FriendsAdapter(
+            Context context, int resource, List<FriendItem> entries, Set<String> filteredItem) {
         super(context, resource, entries);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         userTableHelper = new UserTableHelper(context);
+        this.layoutResourceId = resource;
+        this.filteredItem = filteredItem;
         this.entries = entries;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_friend, null);
+            convertView = inflater.inflate(layoutResourceId, null);
             Typeface fontForAnswer = Typeface.createFromAsset(
                     getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
             ((TextView) convertView.findViewById(R.id.icon_check)).setTypeface(fontForAnswer);
