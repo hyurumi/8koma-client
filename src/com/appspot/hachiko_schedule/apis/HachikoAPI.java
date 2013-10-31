@@ -13,6 +13,8 @@ public class HachikoAPI {
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
+    public static final int TAG_VACANCY_REQUEST = 1000;
+
     private final int method;
     private final String subUrl;
 

@@ -372,6 +372,8 @@ public class CreatePlanActivity extends Activity {
                         HachikoLogger.error("err", volleyError);
                     }
                 });
+        HachikoApp.defaultRequestQueue().cancelAll(HachikoAPI.TAG_VACANCY_REQUEST);
+        vacancyRequest.setTag(HachikoAPI.TAG_VACANCY_REQUEST);
         HachikoApp.defaultRequestQueue().add(vacancyRequest);
         lastRequestedVacancyParam = param;
     }
