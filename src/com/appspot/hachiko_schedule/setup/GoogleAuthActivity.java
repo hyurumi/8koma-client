@@ -12,7 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
-import com.appspot.hachiko_schedule.apis.VolleyRequestFactory;
+import com.appspot.hachiko_schedule.apis.RegisterRequest;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -22,6 +22,7 @@ import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -156,16 +157,27 @@ public class GoogleAuthActivity extends Activity {
                 showProgressDialog("Hachikoサーバと通信中...");
             }
         });
-        JsonRequest request = VolleyRequestFactory.registerRequest(
+        JsonRequest request = new RegisterRequest(
                 this,
-                params,
-                new Response.Listener<String>() {
+                authCode,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String s) {
-                        HachikoLogger.debug("Registration completed: ", s);
+                    public void onResponse(JSONObject res) {
+                        long id;
+                        String pass;
+                        try {
+                            id = res.getLong("id");
+                            pass = res.getString("pass");
+                        } catch (JSONException e) {
+                            throw new IllegalStateException("Illegal JSON Response", e);
+                        }
+                        HachikoLogger.debug("Registration completed: ", id);
                         new SetupUserTableTask(getApplicationContext()).execute();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
-                                .putLong(HachikoPreferences.KEY_MY_HACHIKO_ID, Long.parseLong(s))
+                                .putLong(HachikoPreferences.KEY_MY_HACHIKO_ID, id)
+                                .commit();
+                        HachikoPreferences.getDefaultEditor(getApplicationContext())
+                                .putString(HachikoPreferences.KEY_HACHIKO_INTERNAL_PASSWORD, pass)
                                 .commit();
                         transitToNextActivity();
                     }
