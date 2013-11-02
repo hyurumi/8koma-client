@@ -142,7 +142,7 @@ public class GoogleAuthActivity extends Activity {
     }
 
     private void showProgressDialog(String msg) {
-        progressDialog.setMessage("認証を行っています...");
+        progressDialog.setMessage(msg);
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
