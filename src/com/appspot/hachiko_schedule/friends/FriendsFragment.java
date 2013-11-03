@@ -1,44 +1,57 @@
 package com.appspot.hachiko_schedule.friends;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.FriendGroup;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.ui.EditTextDialog;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * FriendIdentifier list where user can choose friends to invite.
  */
 public class FriendsFragment extends Fragment {
     private FriendsAdapter friendListAdapter;
+    private FriendsAdapter suggestionAdapter;
 
     private ListView listView;
     private View createPlanButtonWrapper;
+    private Set<String> selectedItems;
     private ChipsAutoCompleteTextView searchFriendView;
+    private Button createGroupButton;
     private Button createPlanButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friend_list, container, false);
         createPlanButtonWrapper = view.findViewById(R.id.new_plan_button_wrapper);
+        createGroupButton = (Button) view.findViewById(R.id.create_group_button);
         createPlanButton = (Button) view.findViewById(R.id.new_plan_button);
         listView = (ListView) view.findViewById(R.id.contact_list);
+
+        createGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createGroup();
+            }
+        });
 
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +75,7 @@ public class FriendsFragment extends Fragment {
             }
         });
         // 2つのアダプタで選択された友達を共有するためのSet, もっと良い感じにリファクタしたい…
-        Set<String> selectedItems = new HashSet<String>();
+        selectedItems = new HashSet<String>();
         List<FriendOrGroup> items = new ArrayList<FriendOrGroup>();
         UserTableHelper userTableHelper = new UserTableHelper(getActivity());
         items.addAll(userTableHelper.getListOfGroups());
@@ -73,8 +86,9 @@ public class FriendsFragment extends Fragment {
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
         searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
-        searchFriendView.setAdapter(new FriendsAdapter(
-                getActivity(), R.layout.auto_complete_item_friend, items, selectedItems));
+        suggestionAdapter = new FriendsAdapter(
+                getActivity(), R.layout.auto_complete_item_friend, items, selectedItems);
+        searchFriendView.setAdapter(suggestionAdapter);
         searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
         searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;
@@ -101,6 +115,36 @@ public class FriendsFragment extends Fragment {
         boolean shouldEnable = !friendListAdapter.getSelectedEntries().isEmpty();
         createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
         createPlanButton.setEnabled(shouldEnable);
+    }
+
+    private void createGroup() {
+        final Set<Long> friendIdsToBeGroup = new HashSet<Long>();
+        final UserTableHelper tableHelper = new UserTableHelper(getActivity());
+        final Collection<FriendItem> friends = friendListAdapter.getSelectedEntries();
+        for (FriendItem item: friends) {
+            friendIdsToBeGroup.add(tableHelper.getHachikoId(item.getLocalContactId()));
+        }
+
+        EditTextDialog.showDialog(getActivity(), "グループを作成", "グループ名", "作成",
+                new EditTextDialog.PositiveButtonListener() {
+                    @Override
+                    public boolean onPositiveButtonClicked(DialogInterface dialog, String text) {
+                        tableHelper.createGroup(text, friendIdsToBeGroup, null);
+                        FriendGroup group = new FriendGroup(
+                                text, null, new HashSet<FriendItem>(friends));
+                        friendListAdapter.insert(group, 0);
+                        suggestionAdapter.insert(group, 0);
+                        clearSelectedFriends();
+                        listView.setSelectionAfterHeaderView();
+                        return true;
+                    }
+                });
+    }
+
+    private void clearSelectedFriends() {
+        searchFriendView.setText("");
+        selectedItems.clear();
+        setConfirmButtonState();
     }
 
     private class OnFriendItemClickListener implements AdapterView.OnItemClickListener {
