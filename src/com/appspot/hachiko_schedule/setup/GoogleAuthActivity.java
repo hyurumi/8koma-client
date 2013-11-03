@@ -22,7 +22,6 @@ import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -160,17 +159,9 @@ public class GoogleAuthActivity extends Activity {
         JsonRequest request = new RegisterRequest(
                 this,
                 authCode,
-                new Response.Listener<JSONObject>() {
+                new RegisterRequest.ResponseListener() {
                     @Override
-                    public void onResponse(JSONObject res) {
-                        long id;
-                        String pass;
-                        try {
-                            id = res.getLong("id");
-                            pass = res.getString("pass");
-                        } catch (JSONException e) {
-                            throw new IllegalStateException("Illegal JSON Response", e);
-                        }
+                    public void onResponse(long id, String pass) {
                         HachikoLogger.debug("Registration completed: ", id);
                         new SetupUserTableTask(getApplicationContext()).execute();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
