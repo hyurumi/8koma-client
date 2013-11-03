@@ -10,6 +10,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
+import com.appspot.hachiko_schedule.apis.ssl.HachikoSSL;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONObject;
@@ -44,7 +45,7 @@ public class HachiRequestQueue extends RequestQueue {
         } catch (PackageManager.NameNotFoundException e) {
         }
         if (Build.VERSION.SDK_INT >= 9) {
-            return new BasicNetwork(new HurlStack());
+            return new BasicNetwork(new HurlStack(null, HachikoSSL.getSocketFactory(context)));
         } else {
             // Prior to Gingerbread, HttpUrlConnection was unreliable.
             // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html

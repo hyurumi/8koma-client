@@ -7,7 +7,7 @@ import com.android.volley.RetryPolicy;
  * Class that represents information about certain API.
  */
 public class HachikoAPI {
-    public static final String BASE = "http://hachiko.yutopio.net/api/";
+    public static final String BASE = "https://hachiko.yutopio.net/api/";
     public static final RetryPolicy RETRY_POLICY_LONG
             = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
