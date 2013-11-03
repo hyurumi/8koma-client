@@ -23,7 +23,13 @@ public class UserTableHelper {
     private static final String PROFILE_PIC_URI = "profile_pic_uri";
     private static final String PRIMARY_EMAIL = "primary_email";
 
+    // 直接の友人ではないが，同じ予定に招待されている人の表示名を格納するテーブル
     private static final String NON_FRIEND_NAME_TABLE_NAME = "non_friend_names";
+
+    private static final String GROUP_TABLE_NAME = "groups";
+    private static final String GROUP_NAME = "group_name";
+    private static final String FRIEND_IDS_COMMA_SEPARATED = "friend_ids";
+    private static final String GROUP_ICON_URI = "group_icon_uri";
 
     private HachikoDBOpenHelper dbHelper;
 
@@ -40,21 +46,20 @@ public class UserTableHelper {
                 .addColumn(HACHIKO_ID, SQLiteType.TEXT, SQLiteConstraint.PRIMARY_KEY)
                 .addColumn(DISPLAY_NAME, SQLiteType.TEXT)
                 .toString();
+        String createGroupTable = new SQLiteCreateTableBuilder(GROUP_TABLE_NAME)
+                .addColumn(GROUP_NAME, SQLiteType.TEXT)
+                .addColumn(FRIEND_IDS_COMMA_SEPARATED, SQLiteType.TEXT)
+                .addColumn(GROUP_ICON_URI, SQLiteType.TEXT)
+                .toString();
         database.execSQL(createUsersTable);
         database.execSQL(createNonFriendNamesTable);
+        database.execSQL(createGroupTable);
     }
 
     public static void onUpgradeDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     public UserTableHelper(Context context) {
         dbHelper = new HachikoDBOpenHelper(context, null);
-    }
-
-    public void insertUser(String displayName, long localContact, String profilePicUri,
-                           String primaryEmail) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        insertUserToDb(db, displayName, localContact, profilePicUri, primaryEmail);
-        db.close();
     }
 
     public SQLiteDatabase getWritableUserDB() {
@@ -197,6 +202,16 @@ public class UserTableHelper {
         } while(cursor.moveToNext());
         cursor.close();
         return entries;
+    }
+
+    public void createGroup(String groupName, Collection<Long> userIds, String groupIconUri) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GROUP_NAME, groupName);
+        values.put(FRIEND_IDS_COMMA_SEPARATED, Joiner.on(",").join(userIds));
+        values.put(GROUP_ICON_URI, groupIconUri);
+        db.insert(GROUP_TABLE_NAME, null, values);
+        db.close();
     }
 
     /**
