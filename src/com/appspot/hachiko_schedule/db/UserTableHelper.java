@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import com.appspot.hachiko_schedule.data.FriendGroup;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Joiner;
@@ -110,6 +111,24 @@ public class UserTableHelper {
         return email;
     }
 
+    public FriendItem queryUser(long hachikoid) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(USER_TABLE_NAME, null, HACHIKO_ID + "==?", new String[] {
+                Long.toString(hachikoid)
+        }, null, null, null);
+        if (!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+        String uriString = c.getString(c.getColumnIndex(PROFILE_PIC_URI));
+        FriendItem item = new FriendItem(hachikoid,
+                c.getString(c.getColumnIndex(DISPLAY_NAME)),
+                uriString == null ? null : Uri.parse(uriString),
+                c.getString(c.getColumnIndex(PRIMARY_EMAIL)));
+        c.close();
+        return item;
+    }
+
     public long getHachikoId(long localContactId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("select " + HACHIKO_ID + " from " + USER_TABLE_NAME + " where "
@@ -212,6 +231,36 @@ public class UserTableHelper {
         values.put(GROUP_ICON_URI, groupIconUri);
         db.insert(GROUP_TABLE_NAME, null, values);
         db.close();
+    }
+
+    public List<FriendGroup> getListOfGroups() {
+        List entries = new ArrayList<FriendGroup>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(GROUP_TABLE_NAME, null, null, null, null, null, null);
+        int nameIndex = cursor.getColumnIndex(GROUP_NAME);
+        int thumbnailIndex = cursor.getColumnIndex(GROUP_ICON_URI);
+        int friendIdsIndex = cursor.getColumnIndex(FRIEND_IDS_COMMA_SEPARATED);
+        if (!cursor.moveToFirst()) {
+            return Collections.EMPTY_LIST;
+        }
+        do {
+            String displayName = cursor.getString(nameIndex);
+            String uriString = cursor.getString(thumbnailIndex);
+            String[] friendIds = cursor.getString(friendIdsIndex).split(",");
+            Set<FriendItem> friends = new HashSet<FriendItem>();
+            for (String friendId: friendIds) {
+                FriendItem friend = queryUser(Long.parseLong(friendId));
+                if (friend != null) {
+                    friends.add(friend);
+                }
+            }
+            entries.add(new FriendGroup(
+                    displayName,
+                    uriString == null ? null : Uri.parse(uriString),
+                    friends));
+        } while(cursor.moveToNext());
+        cursor.close();
+        return entries;
     }
 
     /**

@@ -10,6 +10,11 @@ import java.util.Set;
 public class FriendGroup extends FriendOrGroup{
     private final Set<FriendItem> members;
 
+    @Override
+    public String getDisplayName() {
+        return super.getDisplayName() + " (" + members.size() + "人)";
+    }
+
     public FriendGroup(String groupName, Uri iconUri, Set<FriendItem> members) {
         super(groupName, iconUri);
         this.members = members;

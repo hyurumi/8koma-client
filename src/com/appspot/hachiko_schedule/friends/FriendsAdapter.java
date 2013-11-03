@@ -13,6 +13,7 @@ import com.appspot.hachiko_schedule.data.FriendGroup;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -50,7 +51,8 @@ public class FriendsAdapter extends ArrayAdapter<FriendOrGroup> {
         ImageView pictureView = (ImageView) convertView.findViewById(R.id.friend_picture);
         if (item.getPhotoUri() == null) {
             pictureView.setImageDrawable(
-                    getContext().getResources().getDrawable(R.drawable.ic_contact_picture));
+                    getContext().getResources().getDrawable(
+                            (item instanceof FriendItem) ? R.drawable.ic_contact_picture : R.drawable.ic_action_group));
         } else {
             pictureView.setImageURI(item.getPhotoUri());
         }
@@ -74,6 +76,11 @@ public class FriendsAdapter extends ArrayAdapter<FriendOrGroup> {
     }
 
     private void setGroupToView(FriendGroup item, View convertView) {
+        Set<String> names = new HashSet<String>();
+        for (FriendItem member: item.getMembers()) {
+            names.add(member.getDisplayName());
+        }
+        ((TextView) convertView.findViewById(R.id.friend_email)).setText(Joiner.on(",").join(names));
     }
 
     public CharSequence getNameTextFromItem(View v) {

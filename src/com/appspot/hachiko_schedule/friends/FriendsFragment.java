@@ -64,6 +64,8 @@ public class FriendsFragment extends Fragment {
         // 2つのアダプタで選択された友達を共有するためのSet, もっと良い感じにリファクタしたい…
         Set<String> selectedItems = new HashSet<String>();
         List<FriendOrGroup> items = new ArrayList<FriendOrGroup>();
+        UserTableHelper userTableHelper = new UserTableHelper(getActivity());
+        items.addAll(userTableHelper.getListOfGroups());
         items.addAll(getListOfFriends());
         friendListAdapter = new FriendsAdapter(
                 getActivity(), R.layout.list_item_friend, items, selectedItems);
