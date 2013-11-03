@@ -5,8 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import com.android.volley.*;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
@@ -14,34 +12,26 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
- *401エラーを自動でハンドルしてくれる{@link RequestQueue}.
+ * クッキー認証まわりのお世話をしてくれる {@link RequestQueue}.
  */
 public class HachiRequestQueue extends RequestQueue {
     private static final String DEFAULT_CACHE_DIR = "volley";
-    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
+    private boolean isReauthorizing;
+    private Queue<Request> pendingRequestBeforeAuth = new LinkedList<Request>();
     private final Context context;
 
     public HachiRequestQueue(final Context context) {
         super(
                 new DiskBasedCache(new File(context.getCacheDir(), DEFAULT_CACHE_DIR)),
-                createNetwork(context),
-                DEFAULT_NETWORK_THREAD_POOL_SIZE,
-                new ExecutorDelivery(new Handler(Looper.getMainLooper())) {
-                    @Override
-                    public void postError(final Request<?> request, VolleyError error) {
-                        if (isAuthFailure(error)
-                                && !UserAPI.REGISTER.equals(request.getUrl())) {
-                            HachikoLogger.warn("auth error, try to login...");
-                            loginAndRetry(context, request);
-                        } else {
-                            super.postError(request, error);
-                        }
-                    }
-                });
+                createNetwork(context));
         this.context = context;
     }
 
@@ -79,18 +69,52 @@ public class HachiRequestQueue extends RequestQueue {
                     /* デバッグのためタイムアウトを1日に設定 */ 36000 * 1000,
                     1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         }
-        return super.add(request);
-    }
 
-    private static boolean isAuthFailure(VolleyError error) {
-        if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-            return true;
+        reauthorizeIfNecessary(request);
+
+        if (isReauthorizing) {
+            pendingRequestBeforeAuth.add(request);
+            return request;
+        } else {
+            return super.add(request);
         }
-        return error instanceof NetworkError;
     }
 
-    private static void loginAndRetry(Context context, final Request originalRequest) {
-        // TODO: サーバとの認証方式が固まり次第実装
-        originalRequest.deliverError(new VolleyError());
+    private synchronized void reauthorizeIfNecessary(Request request) {
+        if (isReauthorizing || isAuthUrl(request.getUrl()) || !cookieWillExpireSoon()) {
+            return;
+        }
+
+        isReauthorizing = true;
+        HachikoLogger.info("session will expire in an hour, start re-authorization...");
+        Request reauthRequest = new ImplicitLoginRequest(context, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject object) {
+                isReauthorizing = false;
+                for (Request request: pendingRequestBeforeAuth) {
+                    HachiRequestQueue.super.add(request);
+                }
+                pendingRequestBeforeAuth.clear();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                HachikoLogger.error("reauthorization error", volleyError);
+                throw new IllegalStateException("Error reauthorization", volleyError);
+            }
+        });
+        super.add(reauthRequest);
+    }
+
+    private boolean cookieWillExpireSoon() {
+        long sessionExpiresMills = HachikoPreferences.getDefault(context).getLong(
+                HachikoPreferences.KEY_SESSION_EXPIRES_MILLIS, 0L);
+        long currentTimeMillis = new Date().getTime();
+        long oneHour = 60 * 60 * 1000;
+        return sessionExpiresMills - currentTimeMillis < oneHour;
+    }
+
+    private boolean isAuthUrl(String url) {
+        return UserAPI.REGISTER.getUrl().equals(url) || UserAPI.IMPLICIT_LOGIN.getUrl().equals(url);
     }
 }

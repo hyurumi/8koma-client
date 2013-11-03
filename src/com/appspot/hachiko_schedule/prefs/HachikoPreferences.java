@@ -57,7 +57,7 @@ public class HachikoPreferences {
     public static final String KEY_CALENDARS_NOT_TO_USE = "calendars_not_to_use";
     public static final Set<String> CALENDARS_NOT_TO_USE_DEFAULT = Collections.emptySet();
     public static final String KEY_SESSION_KEY = "session_key";
-    public static final String KEY_SESSION_EXPIRES = "session_expires";
+    public static final String KEY_SESSION_EXPIRES_MILLIS = "session_expires";
     public static final String KEY_MY_HACHIKO_ID = "my_hachiko_id";
     public static final String KEY_HACHIKO_INTERNAL_PASSWORD = "hachiko_internal_password";
 

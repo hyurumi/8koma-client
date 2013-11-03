@@ -1,5 +1,7 @@
 package com.appspot.hachiko_schedule.util;
 
+import org.apache.http.impl.cookie.DateParseException;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +51,17 @@ public class DateUtils {
             }
             return null;
         }
+    }
+
+    public static Date parseRFC1123(String str)  {
+        String pattern[] = {  org.apache.http.impl.cookie.DateUtils.PATTERN_RFC1123 };
+        Date date = null;
+        try {
+            date =  org.apache.http.impl.cookie.DateUtils.parseDate(str, pattern);
+        } catch ( DateParseException e ) {
+            return null;
+        }
+        return date;
     }
 
     public static String timeslotString(Date startDate, Date endDate) {

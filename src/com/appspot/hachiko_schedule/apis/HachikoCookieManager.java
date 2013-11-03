@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.android.volley.NetworkResponse;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.Collections;
@@ -39,8 +40,8 @@ public class HachikoCookieManager {
             HachikoLogger.debug(splitSessionId[1]);
             if (cookie.contains("expires=")) {
                 String expires = cookie.split("expires=")[1].split(";", 2)[0];
-                prefEditor.putString(
-                    HachikoPreferences.KEY_SESSION_EXPIRES, expires);
+                prefEditor.putLong(HachikoPreferences.KEY_SESSION_EXPIRES_MILLIS,
+                        DateUtils.parseRFC1123(expires).getTime());
                 HachikoLogger.debug(expires);
             }
             prefEditor.commit();
@@ -52,7 +53,7 @@ public class HachikoCookieManager {
     public void invalidateSessionCookie() {
         HachikoPreferences.getDefaultEditor(context)
                 .remove(HachikoPreferences.KEY_SESSION_KEY)
-                .remove(HachikoPreferences.KEY_SESSION_EXPIRES)
+                .remove(HachikoPreferences.KEY_SESSION_EXPIRES_MILLIS)
                 .commit();
     }
 
