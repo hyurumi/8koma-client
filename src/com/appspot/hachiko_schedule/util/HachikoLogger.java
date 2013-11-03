@@ -1,6 +1,8 @@
 package com.appspot.hachiko_schedule.util;
 
 import android.util.Log;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.deploygate.sdk.DeployGate;
 
@@ -73,6 +75,33 @@ public class HachikoLogger {
         msg = calcFileNameAndLineNumberUsingException() + msg;
         DeployGate.logDebug(msg);
         return Log.d(DEFAULT_TAG, msg);
+    }
+
+    static public int dumpRequest(Request request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("url: ").append(request.getUrl()).append("\n")
+                .append("method: ").append(request.getMethod()).append("\n");
+        try {
+            builder.append("headers: ").append(request.getHeaders()).append("\n");
+            builder.append("body: ")
+                    .append(request.getBody() == null ? "" : new String(request.getBody()))
+                    .append("\n(").append(request.getBodyContentType()).append(")");
+        } catch (Exception e) {
+            builder.append("encountered error while getting header or body " + e);
+        }
+        return HachikoLogger.debug(builder.toString());
+    }
+
+    static public int dumpResponse(NetworkResponse response) {
+        if (response == null) {
+            return HachikoLogger.debug("null response, server may be dead.");
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append("status: ").append(response.statusCode).append("\n")
+                .append("headers: ").append(response.headers).append("\n")
+                .append("body: ").append(response.data == null ? "" : new String(response.data))
+                .append("\n").append("notModified?: ").append(response.notModified);
+        return HachikoLogger.debug(builder.toString());
     }
 
     static public int debug(Object... objects) {

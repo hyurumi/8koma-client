@@ -64,6 +64,7 @@ public class HachiRequestQueue extends RequestQueue {
 
     @Override
     public Request add(Request request) {
+        HachikoLogger.dumpRequest(request);
         // TODO: remove
         // TechCrunch審査のため，アドホックにタイムアウトを長く設定
         request.setRetryPolicy(new DefaultRetryPolicy(

@@ -4,6 +4,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.appspot.hachiko_schedule.util.JSONUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +45,7 @@ public class RegisterRequest extends JsonObjectRequest {
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         hachikoCookieManager.saveSessionCookie(response);
+        HachikoLogger.dumpResponse(response);
         return super.parseNetworkResponse(response);
     }
 }
