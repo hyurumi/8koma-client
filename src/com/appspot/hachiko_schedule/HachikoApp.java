@@ -22,7 +22,6 @@ public class HachikoApp extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
-        fakeRequestQueue = new FakeRequestQueue(appContext);
         requestQueue = new HachiRequestQueue(appContext);
         requestQueue.start();
 
@@ -34,6 +33,9 @@ public class HachikoApp extends Application {
                 appContext,
                 HachikoPreferences.KEY_USE_FAKE_REQUEST_QUEUE,
                 HachikoPreferences.USE_FAKE_REQUEST_QUEUE_DEFAULT)) {
+            if (fakeRequestQueue == null) {
+                fakeRequestQueue = new FakeRequestQueue(appContext);
+            }
             return fakeRequestQueue;
         }
         return requestQueue;
