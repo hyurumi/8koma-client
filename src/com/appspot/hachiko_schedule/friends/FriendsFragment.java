@@ -11,12 +11,16 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
 import com.appspot.hachiko_schedule.data.FriendItem;
+import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * FriendIdentifier list where user can choose friends to invite.
@@ -59,14 +63,16 @@ public class FriendsFragment extends Fragment {
         });
         // 2つのアダプタで選択された友達を共有するためのSet, もっと良い感じにリファクタしたい…
         Set<String> selectedItems = new HashSet<String>();
+        List<FriendOrGroup> items = new ArrayList<FriendOrGroup>();
+        items.addAll(getListOfFriends());
         friendListAdapter = new FriendsAdapter(
-                getActivity(), R.layout.list_item_friend, getListOfFriends(), selectedItems);
+                getActivity(), R.layout.list_item_friend, items, selectedItems);
         listView.setAdapter(friendListAdapter);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
         searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
         searchFriendView.setAdapter(new FriendsAdapter(
-                getActivity(), R.layout.auto_complete_item_friend, getListOfFriends(), selectedItems));
+                getActivity(), R.layout.auto_complete_item_friend, items, selectedItems));
         searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
         searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;

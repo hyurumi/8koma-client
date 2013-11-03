@@ -9,24 +9,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.FriendGroup;
 import com.appspot.hachiko_schedule.data.FriendItem;
+import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FriendsAdapter extends ArrayAdapter<FriendItem> {
+public class FriendsAdapter extends ArrayAdapter<FriendOrGroup> {
     private LayoutInflater inflater;
     private Set<String> filteredItem;
     private int layoutResourceId;
-    private List<FriendItem> entries;
+    private List<FriendOrGroup> entries;
     private UserTableHelper userTableHelper;
 
-    public FriendsAdapter(
-            Context context, int resource, List<FriendItem> entries, Set<String> filteredItem) {
+    public FriendsAdapter(Context context, int resource, List<FriendOrGroup> entries, Set<String> filteredItem) {
         super(context, resource, entries);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         userTableHelper = new UserTableHelper(context);
@@ -43,7 +45,7 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
                     getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
             ((TextView) convertView.findViewById(R.id.icon_check)).setTypeface(fontForAnswer);
         }
-        FriendItem item = getItem(position);
+        FriendOrGroup item = getItem(position);
         ((TextView) convertView.findViewById(R.id.friend_name)).setText(item.getDisplayName());
         ImageView pictureView = (ImageView) convertView.findViewById(R.id.friend_picture);
         if (item.getPhotoUri() == null) {
@@ -52,7 +54,16 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         } else {
             pictureView.setImageURI(item.getPhotoUri());
         }
+        if (item instanceof FriendItem) {
+            setFriendToView((FriendItem) item, convertView);
+        } else {
+            setGroupToView((FriendGroup) item, convertView);
+        }
+        applyFilter(filteredItem.contains(item.getDisplayName()), convertView);
+        return convertView;
+    }
 
+    private void setFriendToView(FriendItem item, View convertView) {
         String emailOrHachikoUser;
         if (userTableHelper.isHachikoUser(item.getLocalContactId())) {
             emailOrHachikoUser = getContext().getResources().getString(R.string.hachiko_user);
@@ -60,8 +71,9 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
             emailOrHachikoUser = userTableHelper.queryPrimaryEmail(item.getLocalContactId());
         }
         ((TextView) convertView.findViewById(R.id.friend_email)).setText(emailOrHachikoUser);
-        applyFilter(filteredItem.contains(item.getDisplayName()), convertView);
-        return convertView;
+    }
+
+    private void setGroupToView(FriendGroup item, View convertView) {
     }
 
     public CharSequence getNameTextFromItem(View v) {
@@ -103,12 +115,25 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         }
     }
 
+    /**
+     * @return 選択されている友達を返す. グループが選択されているときは，そのグループのメンバに対応する友達を展開
+     * して返す．
+     */
     public Collection<FriendItem> getSelectedEntries() {
-        return Collections2.filter(entries, new Predicate<FriendItem>() {
+        Set<FriendItem> friends = new HashSet<FriendItem>();
+        Collection<FriendOrGroup> selected = Collections2.filter(entries, new Predicate<FriendOrGroup>() {
             @Override
-            public boolean apply(FriendItem entry) {
+            public boolean apply(FriendOrGroup entry) {
                 return filteredItem.contains(entry.getDisplayName());
             }
         });
+        for (FriendOrGroup item: selected) {
+            if (item instanceof FriendItem) {
+                friends.add((FriendItem) item);
+            } else {
+                friends.addAll(((FriendGroup) item).getMembers());
+            }
+        }
+        return friends;
     }
 }
