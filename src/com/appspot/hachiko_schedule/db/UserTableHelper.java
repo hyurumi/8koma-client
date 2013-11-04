@@ -28,6 +28,7 @@ public class UserTableHelper {
     private static final String NON_FRIEND_NAME_TABLE_NAME = "non_friend_names";
 
     private static final String GROUP_TABLE_NAME = "groups";
+    private static final String GROUP_ID = "group_id";
     private static final String GROUP_NAME = "group_name";
     private static final String FRIEND_IDS_COMMA_SEPARATED = "friend_ids";
     private static final String GROUP_ICON_URI = "group_icon_uri";
@@ -48,6 +49,7 @@ public class UserTableHelper {
                 .addColumn(DISPLAY_NAME, SQLiteType.TEXT)
                 .toString();
         String createGroupTable = new SQLiteCreateTableBuilder(GROUP_TABLE_NAME)
+                .addColumn(GROUP_ID, SQLiteType.INTEGER, SQLiteConstraint.PRIMARY_KEY)
                 .addColumn(GROUP_NAME, SQLiteType.TEXT)
                 .addColumn(FRIEND_IDS_COMMA_SEPARATED, SQLiteType.TEXT)
                 .addColumn(GROUP_ICON_URI, SQLiteType.TEXT)
@@ -237,6 +239,7 @@ public class UserTableHelper {
         List entries = new ArrayList<FriendGroup>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(GROUP_TABLE_NAME, null, null, null, null, null, null);
+        int idIndex = cursor.getColumnIndex(GROUP_ID);
         int nameIndex = cursor.getColumnIndex(GROUP_NAME);
         int thumbnailIndex = cursor.getColumnIndex(GROUP_ICON_URI);
         int friendIdsIndex = cursor.getColumnIndex(FRIEND_IDS_COMMA_SEPARATED);
@@ -244,7 +247,6 @@ public class UserTableHelper {
             return Collections.EMPTY_LIST;
         }
         do {
-            String displayName = cursor.getString(nameIndex);
             String uriString = cursor.getString(thumbnailIndex);
             String[] friendIds = cursor.getString(friendIdsIndex).split(",");
             Set<FriendItem> friends = new HashSet<FriendItem>();
@@ -255,12 +257,18 @@ public class UserTableHelper {
                 }
             }
             entries.add(new FriendGroup(
-                    displayName,
+                    cursor.getInt(idIndex),
+                    cursor.getString(nameIndex),
                     uriString == null ? null : Uri.parse(uriString),
                     friends));
         } while(cursor.moveToNext());
         cursor.close();
         return entries;
+    }
+
+    public int deleteGroup(int groupId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        return db.delete(GROUP_TABLE_NAME, GROUP_ID + "==" + groupId, null);
     }
 
     /**

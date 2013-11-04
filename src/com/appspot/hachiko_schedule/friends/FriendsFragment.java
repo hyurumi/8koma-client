@@ -4,9 +4,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -83,6 +81,7 @@ public class FriendsFragment extends Fragment {
         friendListAdapter = new FriendsAdapter(
                 getActivity(), R.layout.list_item_friend, items, selectedItems);
         listView.setAdapter(friendListAdapter);
+        registerForContextMenu(listView);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
         searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
@@ -92,6 +91,36 @@ public class FriendsFragment extends Fragment {
         searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
         searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.contact_list) {
+            AdapterView.AdapterContextMenuInfo info
+                    = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            FriendOrGroup item = friendListAdapter.getItem(info.position);
+            if (item instanceof FriendGroup) {
+                menu.setHeaderTitle("グループ: " + ((FriendGroup) item).getGroupName());
+                menu.add(Menu.NONE, 0, 0, "削除");
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem menuItem) {
+        AdapterView.AdapterContextMenuInfo info
+                = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
+        switch(menuItem.getItemId()) {
+            case 0: // delete
+                FriendGroup item = (FriendGroup) friendListAdapter.getItem(info.position);
+                UserTableHelper tableHelper = new UserTableHelper(getActivity());
+                friendListAdapter.remove(item);
+                suggestionAdapter.remove(item);
+                tableHelper.deleteGroup(item.getId());
+            default:
+                return super.onContextItemSelected(menuItem);
+        }
     }
 
     private List<FriendItem> getListOfFriends() {
@@ -131,7 +160,7 @@ public class FriendsFragment extends Fragment {
                     public boolean onPositiveButtonClicked(DialogInterface dialog, String text) {
                         tableHelper.createGroup(text, friendIdsToBeGroup, null);
                         FriendGroup group = new FriendGroup(
-                                text, null, new HashSet<FriendItem>(friends));
+                                0, text, null, new HashSet<FriendItem>(friends));
                         friendListAdapter.insert(group, 0);
                         suggestionAdapter.insert(group, 0);
                         clearSelectedFriends();
