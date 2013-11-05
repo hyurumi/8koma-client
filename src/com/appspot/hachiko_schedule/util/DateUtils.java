@@ -53,8 +53,13 @@ public class DateUtils {
         }
     }
 
-    public static Date parseRFC1123(String str)  {
-        String pattern[] = {  org.apache.http.impl.cookie.DateUtils.PATTERN_RFC1123 };
+    // TODO: #131 ここにゴリゴリ書くの車輪の再発明感ある
+    public static Date parseFullDate(String str)  {
+        String pattern[] = {
+                org.apache.http.impl.cookie.DateUtils.PATTERN_RFC1123,
+                org.apache.http.impl.cookie.DateUtils.PATTERN_RFC1036,
+                org.apache.http.impl.cookie.DateUtils.PATTERN_ASCTIME
+        };
         Date date = null;
         try {
             date =  org.apache.http.impl.cookie.DateUtils.parseDate(str, pattern);

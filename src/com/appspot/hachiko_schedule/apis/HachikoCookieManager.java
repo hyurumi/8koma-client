@@ -41,7 +41,7 @@ public class HachikoCookieManager {
             if (cookie.contains("expires=")) {
                 String expires = cookie.split("expires=")[1].split(";", 2)[0];
                 prefEditor.putLong(HachikoPreferences.KEY_SESSION_EXPIRES_MILLIS,
-                        DateUtils.parseRFC1123(expires).getTime());
+                        DateUtils.parseFullDate(expires).getTime());
                 HachikoLogger.debug(expires);
             }
             prefEditor.commit();
