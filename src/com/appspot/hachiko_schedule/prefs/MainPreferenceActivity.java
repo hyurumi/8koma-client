@@ -123,14 +123,15 @@ public class MainPreferenceActivity extends PreferenceActivity {
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                String gcmInfo = "Gcm Info: "
+                        + HachikoPreferences.getDefault(MainPreferenceActivity.this)
+                        .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found") + "\n";
                 String info = "HachikoID: " + HachikoPreferences
                         .getDefault(MainPreferenceActivity.this)
                         .getLong(HachikoPreferences.KEY_MY_HACHIKO_ID, -1) + "\n"
                         + "Build Date: " + getBuildTimeString() + "\n"
                         + "Latest commit: " + getCommitInfo() + "\n"
-                        + "Gcm Info: "
-                        + HachikoPreferences.getDefault(MainPreferenceActivity.this)
-                        .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found") + "\n"
+                        + (Constants.IS_DEVELOPER ? gcmInfo : "")
                         + "Google Auth: "
                         + new GoogleAuthPreferences(MainPreferenceActivity.this).getAccountName();
                 new AlertDialog.Builder(MainPreferenceActivity.this)

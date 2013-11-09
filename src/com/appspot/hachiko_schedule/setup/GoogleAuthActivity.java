@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
+import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
@@ -151,7 +152,9 @@ public class GoogleAuthActivity extends Activity {
 
             @Override
             protected void onPostExecute(String authCode) {
-                HachikoLogger.debug("AuthCode obtained: ", authCode);
+                if (Constants.IS_DEVELOPER) {
+                    HachikoLogger.debug("AuthCode obtained: ", authCode);
+                }
             }
         };
         task.execute();

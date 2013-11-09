@@ -10,6 +10,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
+import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.apis.ssl.HachikoSSL;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -53,9 +54,21 @@ public class HachiRequestQueue extends RequestQueue {
         }
     }
 
+    private boolean shouldDumpRequest(String url) {
+        if (Constants.IS_DEVELOPER) {
+            return true;
+        }
+        return Constants.IS_ALPHA_USER
+                && (url.equals(UserAPI.REGISTER.getUrl())
+                    || url.equals(UserAPI.IMPLICIT_LOGIN.getUrl())
+                    || url.equals(UserAPI.REGISTER_GCM_ID.getUrl()));
+    }
+
     @Override
     public Request add(Request request) {
-        HachikoLogger.dumpRequest(request);
+        if (shouldDumpRequest(request.getUrl())) {
+            HachikoLogger.dumpRequest(request);
+        }
         // TODO: remove
         // TechCrunch審査のため，アドホックにタイムアウトを長く設定
         request.setRetryPolicy(new DefaultRetryPolicy(
