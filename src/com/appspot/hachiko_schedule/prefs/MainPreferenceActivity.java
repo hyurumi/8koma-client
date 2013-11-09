@@ -4,6 +4,7 @@ import android.app.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
             screen.addPreference(reauthPreference());
         }
         screen.addPreference(confirmVersionPreference());
+        screen.addPreference(sendFeedbackPreference());
 
         // TODO: カレンダーまわりの設定を復活させる #115関係
         setupDebugPrefs();
@@ -155,6 +157,33 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
         return confirmVersion;
+    }
+
+    private Preference sendFeedbackPreference() {
+        Preference sendFeedback = new Preference(this);
+        sendFeedback.setTitle("フィードバックを送信");
+        sendFeedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@8koma.tk"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Hachiko フィードバック");
+                intent.putExtra(Intent.EXTRA_TEXT, "\n\n\n"
+                        + "-----------------------\n"
+                        + "Build ID: " + getCommitInfo() + "\n"
+                        + "端末情報: " + Build.PRODUCT + "(" + Build.VERSION.RELEASE + ")\n"
+                        + "UserID: "
+                        + HachikoPreferences.getMyHachikoId(MainPreferenceActivity.this) + "\n");
+                HachikoLogger.debug("Feedback request from "
+                        + HachikoPreferences.getMyHachikoId(MainPreferenceActivity.this)
+                        + "\nBuild ID: " + getCommitInfo() + "\n");
+                startActivity(intent);
+                return true;
+            }
+        });
+        return sendFeedback;
     }
 
     private String getBuildTimeString() {
