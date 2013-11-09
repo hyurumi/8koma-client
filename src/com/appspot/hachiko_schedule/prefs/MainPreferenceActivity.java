@@ -151,7 +151,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
             ZipFile zf = new ZipFile(ai.sourceDir);
             ZipEntry ze = zf.getEntry("classes.dex");
             long time = ze.getTime();
-            return new SimpleDateFormat("yyyy mm/dd HH:mm").format(new java.util.Date(time));
+            return new SimpleDateFormat("yyyy MM/dd HH:mm").format(new java.util.Date(time));
         }catch(Exception e){
             return "unknown";
         }
