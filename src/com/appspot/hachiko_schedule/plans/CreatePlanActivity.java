@@ -3,6 +3,7 @@ package com.appspot.hachiko_schedule.plans;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -31,6 +33,7 @@ import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +58,9 @@ public class CreatePlanActivity extends Activity {
     private Hours afternoon = new Hours(11, 16);
     private Hours evening = new Hours(16, 19);
     private Hours night = new Hours(18, 21);
+    private List<String> durationOptions;
+    private ArrayAdapter durationAdapter;
+    private int durationMin = 30;
     private Spinner startDateSpinner;
     private Spinner endDateSpinner;
     private Spinner durationSpinner;
@@ -93,9 +99,25 @@ public class CreatePlanActivity extends Activity {
         loadingCandidateView = (ProgressBar) findViewById(R.id.progress_loading_candidate);
         confirmButton = (Button) findViewById(R.id.invite_button);
 
+        durationOptions = Lists.newArrayList(getResources().getStringArray(R.array.duration));
+        durationOptions.add("それ以上");
+        durationAdapter = new ArrayAdapter(
+                this, android.R.layout.simple_spinner_dropdown_item, durationOptions);
+        durationSpinner.setAdapter(durationAdapter);
+        durationSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                synchronized (durationAdapter) {
+                    durationOptions.remove(durationOptions.size() - 1);
+                    durationOptions.add("それ以上");
+                    durationAdapter.notifyDataSetChanged();
+                }
+                return false;
+            }
+        });
         setFriends();
         initDateRange();
-        durationSpinner.setOnItemSelectedListener(new DefaultSpinnerItemSelectedListener());
+        durationSpinner.setOnItemSelectedListener(new OnDurationSelectedListener());
         confirmButton.setOnClickListener(new ConfirmButtonListener());
         startDateSpinner.setOnItemSelectedListener(new OnStartDateSelectedListener());
         endDateSpinner.setOnItemSelectedListener(new OnEndDateSelectedListener());
@@ -327,7 +349,6 @@ public class CreatePlanActivity extends Activity {
         List<Hours> preferredTimeRange = getPreferredTimeRange();
         Calendar startDay = (Calendar) startDateSpinner.getSelectedItem();
         Calendar endDay = (Calendar) endDateSpinner.getSelectedItem();
-        final int durationMin = TEXT_TO_MIN.get(durationSpinner.getSelectedItem());
         if (preferredTimeRange.size() == 0 || endDay.before(startDay)) {
             HachikoLogger.debug("ignore invalid date or time input");
             return;
@@ -459,6 +480,47 @@ public class CreatePlanActivity extends Activity {
             if (startDateSpinner.getSelectedItemPosition()
                     > endDateSpinner.getSelectedItemPosition()) {
                 startDateSpinner.setSelection(endDateSpinner.getSelectedItemPosition() - 1);
+            }
+            super.onItemSelected(parent, view, position, id);
+        }
+    }
+
+    private class OnDurationSelectedListener extends DefaultSpinnerItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (position == durationOptions.size() - 1) {
+                durationMin = 3 * 60;
+                TimePickerDialog durationPicker = new TimePickerDialog(
+                        CreatePlanActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        durationMin = hourOfDay * 60 + minute;
+                    }
+                }, 3, 0, true) {
+                    @Override
+                    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                        super.onTimeChanged(view, hourOfDay, minute);
+                        durationMin = hourOfDay * 60 + minute;
+                        setTitle("予定の長さ");
+                    }
+                };
+                durationPicker.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        synchronized (durationAdapter) {
+                            durationOptions.remove(durationOptions.size() - 1);
+                            durationOptions.add(
+                                    (durationMin < 60 ? "" : ((durationMin / 60) + "時間"))
+                                            + (durationMin % 60) + "分");
+                            durationAdapter.notifyDataSetChanged();
+                        }
+                        suggestNewCandidates();
+                    }
+                });
+                durationPicker.setTitle("予定の長さ");
+                durationPicker.show();
+            } else {
+                durationMin = TEXT_TO_MIN.get(durationSpinner.getSelectedItem());
             }
             super.onItemSelected(parent, view, position, id);
         }
