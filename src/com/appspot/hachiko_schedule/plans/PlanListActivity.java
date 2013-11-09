@@ -15,7 +15,7 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
-import com.appspot.hachiko_schedule.apis.JSONStringRequest;
+import com.appspot.hachiko_schedule.apis.base_requests.JSONStringRequest;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;

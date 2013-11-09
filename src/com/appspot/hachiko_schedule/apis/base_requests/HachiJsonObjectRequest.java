@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.apis;
+package com.appspot.hachiko_schedule.apis.base_requests;
 
 import android.content.Context;
 import com.android.volley.AuthFailureError;
@@ -7,6 +7,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.appspot.hachiko_schedule.apis.HachikoCookieManager;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONException;
 import org.json.JSONObject;

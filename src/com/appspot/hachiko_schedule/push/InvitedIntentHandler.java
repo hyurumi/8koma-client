@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
+import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonObjectRequest;
 import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;

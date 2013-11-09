@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.HachikoApp;
-import com.appspot.hachiko_schedule.apis.HachiJsonArrayRequest;
+import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonArrayRequest;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;

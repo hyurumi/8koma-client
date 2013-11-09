@@ -1,4 +1,4 @@
-package com.appspot.hachiko_schedule.apis;
+package com.appspot.hachiko_schedule.apis.base_requests;
 
 import android.content.Context;
 import com.android.volley.AuthFailureError;
@@ -6,6 +6,8 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
+import com.appspot.hachiko_schedule.apis.HachikoCookieManager;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
