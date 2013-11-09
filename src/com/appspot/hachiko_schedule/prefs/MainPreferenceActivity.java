@@ -42,13 +42,18 @@ public class MainPreferenceActivity extends PreferenceActivity {
         preferenceManager.setSharedPreferencesName(HachikoPreferences.getPreferencesName());
         screen = preferenceManager.createPreferenceScreen(this);
 
+        if (Constants.IS_ALPHA_USER) {
+            screen.addPreference(reauthPreference());
+        }
+        screen.addPreference(confirmVersionPreference());
+
         // TODO: カレンダーまわりの設定を復活させる #115関係
         setupDebugPrefs();
         setPreferenceScreen(screen);
     }
 
     private void setupDebugPrefs() {
-        if (!Constants.IS_ALPHA_USER) {
+        if (!Constants.IS_DEVELOPER) {
             return;
         }
 
@@ -69,6 +74,27 @@ public class MainPreferenceActivity extends PreferenceActivity {
             }
         });
 
+        Preference deletePlans = new Preference(this);
+        deletePlans.setTitle("予定一覧画面の予定を削除");
+        deletePlans.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                PlansTableHelper plansTableHelper = new PlansTableHelper(MainPreferenceActivity.this);
+                plansTableHelper.debugDeletePlansAndCandidateDates();
+                Toast.makeText(MainPreferenceActivity.this, "データが削除されました", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        Preference superLongTimeout = new CheckBoxPreference(this);
+        superLongTimeout.setKey(HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST);
+        superLongTimeout.setTitle("通信タイムアウト時間を長く");
+
+        newPreferenceCategory(
+                "デバッグ", useFakeHttpStack, showDb, deletePlans, superLongTimeout);
+    }
+
+    private Preference reauthPreference() {
         Preference reauth = new Preference(this);
         reauth.setTitle("再認証");
         reauth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -101,23 +127,10 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
+        return reauth;
+    }
 
-        Preference deletePlans = new Preference(this);
-        deletePlans.setTitle("予定一覧画面の予定を削除");
-        deletePlans.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                PlansTableHelper plansTableHelper = new PlansTableHelper(MainPreferenceActivity.this);
-                plansTableHelper.debugDeletePlansAndCandidateDates();
-                Toast.makeText(MainPreferenceActivity.this, "データが削除されました", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        Preference superLongTimeout = new CheckBoxPreference(this);
-        superLongTimeout.setKey(HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST);
-        superLongTimeout.setTitle("通信タイムアウト時間を長く");
-
+    private Preference confirmVersionPreference() {
         Preference confirmVersion = new Preference(this);
         confirmVersion.setTitle("ビルド情報を確認");
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -141,9 +154,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
-
-        newPreferenceCategory(
-                "デバッグ", useFakeHttpStack, showDb, reauth, deletePlans, superLongTimeout, confirmVersion);
+        return confirmVersion;
     }
 
     private String getBuildTimeString() {
