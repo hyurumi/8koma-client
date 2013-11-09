@@ -59,9 +59,9 @@ public class HachiRequestQueue extends RequestQueue {
             return true;
         }
         return Constants.IS_ALPHA_USER
-                && (url.equals(UserAPI.REGISTER.getUrl())
-                    || url.equals(UserAPI.IMPLICIT_LOGIN.getUrl())
-                    || url.equals(UserAPI.REGISTER_GCM_ID.getUrl()));
+                && (url.equals(HachikoAPI.User.REGISTER.getUrl())
+                    || url.equals(HachikoAPI.User.IMPLICIT_LOGIN.getUrl())
+                    || url.equals(HachikoAPI.User.REGISTER_GCM_ID.getUrl()));
     }
 
     @Override
@@ -129,6 +129,6 @@ public class HachiRequestQueue extends RequestQueue {
     }
 
     private boolean isAuthUrl(String url) {
-        return UserAPI.REGISTER.getUrl().equals(url) || UserAPI.IMPLICIT_LOGIN.getUrl().equals(url);
+        return HachikoAPI.User.REGISTER.getUrl().equals(url) || HachikoAPI.User.IMPLICIT_LOGIN.getUrl().equals(url);
     }
 }

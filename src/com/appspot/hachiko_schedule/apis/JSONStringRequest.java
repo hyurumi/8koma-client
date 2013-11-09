@@ -36,7 +36,7 @@ public class JSONStringRequest extends JsonRequest<String> {
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        if (UserAPI.REGISTER.getUrl().equals(getUrl())) {
+        if (HachikoAPI.User.REGISTER.getUrl().equals(getUrl())) {
             return super.getHeaders();
         }
         return cookieManager.addSessionCookie(super.getHeaders());

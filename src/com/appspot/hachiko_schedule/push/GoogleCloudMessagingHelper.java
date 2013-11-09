@@ -8,8 +8,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
-import com.appspot.hachiko_schedule.apis.UserAPI;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -114,8 +114,8 @@ public class GoogleCloudMessagingHelper {
         }
         Request request = new JSONStringRequest(
                 activity,
-                UserAPI.REGISTER_GCM_ID.getMethod(),
-                UserAPI.REGISTER_GCM_ID.getUrl(),
+                HachikoAPI.User.REGISTER_GCM_ID.getMethod(),
+                HachikoAPI.User.REGISTER_GCM_ID.getUrl(),
                 params,
                 new Response.Listener<String>() {
                     @Override

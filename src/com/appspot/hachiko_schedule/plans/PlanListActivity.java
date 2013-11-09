@@ -16,10 +16,8 @@ import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
-import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FixedPlan;
-import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
@@ -66,7 +64,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
 
     @Override
     protected void onResume() {
-        List<Plan> plans = plansTableHelper.queryPlans();
+        List<com.appspot.hachiko_schedule.data.Plan> plans = plansTableHelper.queryPlans();
         planAdapter = new PlanAdapter(this, plans, this);
         eventList.setAdapter(planAdapter);
         findViewById(R.id.view_for_no_event).setVisibility(
@@ -81,10 +79,10 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
-        HachikoLogger.debug("confirm: " + PlanAPI.CONFIRM.getUrl() + answerId);
+        HachikoLogger.debug("confirm: " + HachikoAPI.Plan.CONFIRM.getUrl() + answerId);
         Request request = new JSONStringRequest(PlanListActivity.this,
-                PlanAPI.CONFIRM.getMethod(),
-                PlanAPI.CONFIRM.getUrl() + answerId,
+                HachikoAPI.Plan.CONFIRM.getMethod(),
+                HachikoAPI.Plan.CONFIRM.getUrl() + answerId,
                 null,
                 new Response.Listener<String>() {
                     @Override

@@ -9,7 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.apis.HachiJsonObjectRequest;
 import com.appspot.hachiko_schedule.apis.HachiRequestQueue;
-import com.appspot.hachiko_schedule.apis.UserAPI;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
@@ -110,7 +110,7 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
                 unknownIds.add(id);
             }
         }
-        String url = UserAPI.GET_NAMES.getUrl() + "?userIds=" + Joiner.on(",").join(unknownIds);
+        String url = HachikoAPI.User.GET_NAMES.getUrl() + "?userIds=" + Joiner.on(",").join(unknownIds);
         HachikoLogger.debug("unknown friend ids:", unknownIds, "asking server..");
         HachikoLogger.debug(url);
         RequestQueue queue = new HachiRequestQueue(getContext());

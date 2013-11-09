@@ -1,6 +1,7 @@
 package com.appspot.hachiko_schedule.apis;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 
 /**
@@ -33,5 +34,21 @@ public class HachikoAPI {
 
     public static String getUrl(String path) {
         return BASE + path;
+    }
+
+    public static class Friend {
+        public static final HachikoAPI ADD_FRIENDS = new HachikoAPI(Request.Method.POST, "friends");
+    }
+
+    public static class Plan {
+        public static final HachikoAPI CONFIRM = new HachikoAPI(Request.Method.POST, "confirm/");
+        public static final HachikoAPI RESPOND = new HachikoAPI(Request.Method.POST, "respond");
+    }
+
+    public static class User {
+        public static final HachikoAPI REGISTER = new HachikoAPI(Request.Method.POST, "user");
+        public static final HachikoAPI IMPLICIT_LOGIN = new HachikoAPI(Request.Method.POST, "user");
+        public static final HachikoAPI REGISTER_GCM_ID = new HachikoAPI(Request.Method.POST, "gcminfo");
+        public static final HachikoAPI GET_NAMES = new HachikoAPI(Request.Method.GET, "users");
     }
 }

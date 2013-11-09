@@ -19,7 +19,7 @@ public class ImplicitLoginRequest extends JsonObjectRequest {
     public ImplicitLoginRequest(Context context,
                            Response.Listener<JSONObject> listener,
                            Response.ErrorListener errorListener) {
-        super(UserAPI.IMPLICIT_LOGIN.getMethod(), UserAPI.IMPLICIT_LOGIN.getUrl(),
+        super(HachikoAPI.User.IMPLICIT_LOGIN.getMethod(), HachikoAPI.User.IMPLICIT_LOGIN.getUrl(),
                 constructParam(context),
                 listener, errorListener);
         hachikoCookieManager = new HachikoCookieManager(context);

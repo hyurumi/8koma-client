@@ -7,8 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.HachikoApp;
-import com.appspot.hachiko_schedule.apis.FriendAPI;
 import com.appspot.hachiko_schedule.apis.HachiJsonArrayRequest;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.friends.ContactManager;
@@ -71,7 +71,7 @@ public class SetupUserTableTask {
 
     private void requestFriendsHachikoIds(JSONArray requestParams) {
         Request request = new HachiJsonArrayRequest(
-                context, FriendAPI.ADD_FRIENDS.getMethod(), FriendAPI.ADD_FRIENDS.getUrl(),
+                context, HachikoAPI.Friend.ADD_FRIENDS.getMethod(), HachikoAPI.Friend.ADD_FRIENDS.getUrl(),
                 requestParams,
                 new Response.Listener<JSONArray>() {
                     @Override

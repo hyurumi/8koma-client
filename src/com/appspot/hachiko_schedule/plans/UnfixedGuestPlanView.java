@@ -18,7 +18,6 @@ import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.JSONStringRequest;
-import com.appspot.hachiko_schedule.apis.PlanAPI;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
@@ -218,8 +217,8 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             HachikoLogger.debug("respond", param);
             Request request = new JSONStringRequest(
                     getContext(),
-                    PlanAPI.RESPOND.getMethod(),
-                    PlanAPI.RESPOND.getUrl(),
+                    HachikoAPI.Plan.RESPOND.getMethod(),
+                    HachikoAPI.Plan.RESPOND.getUrl(),
                     param,
                     new Response.Listener<String>() {
                         @Override

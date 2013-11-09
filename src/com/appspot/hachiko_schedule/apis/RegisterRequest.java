@@ -21,7 +21,7 @@ public class RegisterRequest extends JsonObjectRequest {
     public RegisterRequest(Context context, String authCode,
                            ResponseListener listener,
                            Response.ErrorListener errorListener) {
-        super(UserAPI.REGISTER.getMethod(), UserAPI.REGISTER.getUrl(),
+        super(HachikoAPI.User.REGISTER.getMethod(), HachikoAPI.User.REGISTER.getUrl(),
                 JSONUtils.jsonObject("auth", authCode),
                 wrapResponseListener(listener), errorListener);
         hachikoCookieManager = new HachikoCookieManager(context);
