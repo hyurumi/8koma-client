@@ -41,7 +41,7 @@ public class HachikoDialogs {
     }
 
     public static void showErrorDialogIfDeveloper(Activity activity, Exception e, String where) {
-        if (!Constants.IS_DEVELOPER) {
+        if (!Constants.IS_ALPHA_USER) {
             return;
         }
         StringWriter stringWriter = new StringWriter();

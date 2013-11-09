@@ -9,7 +9,7 @@ import com.deploygate.sdk.DeployGate;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
+import static com.appspot.hachiko_schedule.Constants.IS_ALPHA_USER;
 
 /**
  * Wrapper class of {@link Log}
@@ -69,7 +69,7 @@ public class HachikoLogger {
     }
 
     static public int debug(String msg) {
-        if (!IS_DEVELOPER) {
+        if (!IS_ALPHA_USER) {
             return 0;
         }
         msg = calcFileNameAndLineNumberUsingException() + msg;
@@ -105,7 +105,7 @@ public class HachikoLogger {
     }
 
     static public int debug(Object... objects) {
-        if (!IS_DEVELOPER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
+        if (!IS_ALPHA_USER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
             return 0;
         }
         return debug(appendAsString(objects));
@@ -120,7 +120,7 @@ public class HachikoLogger {
     }
 
     static public int debugWithSeparator(CharSequence separator, Object... objects) {
-        if (!IS_DEVELOPER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
+        if (!IS_ALPHA_USER) { // 冗長な検査だけど，これがないとデバッグモードじゃない時も文字列結合してしまう
             return 0;
         }
         StringBuilder builder = new StringBuilder();

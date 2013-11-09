@@ -48,7 +48,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
     }
 
     private void setupDebugPrefs() {
-        if (!Constants.IS_DEVELOPER) {
+        if (!Constants.IS_ALPHA_USER) {
             return;
         }
 

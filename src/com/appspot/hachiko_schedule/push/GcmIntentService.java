@@ -60,7 +60,7 @@ public class GcmIntentService extends IntentService {
     private void reportUnknownTypeNotification(
             HachikoNotificationManager notificationManager, Intent intent, String tag) {
         HachikoLogger.error("Unknown Intent type" + intent + tag);
-        if (Constants.IS_DEVELOPER) {
+        if (Constants.IS_ALPHA_USER) {
             notificationManager.putNotification(
                     "Unknown intent type", intent.getExtras().toString(), null);
         }
