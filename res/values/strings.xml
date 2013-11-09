@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Hachiko</string>
+  <string name="setup_intro_message">Googleカレンダーと連携してあなたと誰かの予定調整をお手伝い</string>
+  <string name="setup_start_auth">Googleアカウントで認証</string>
   <string name="setup_calendar_text">お使いのカレンダーを登録することで，あなたの開いている時間に予定を設定するお手伝いをします</string>
   <string name="setup_calendar_confirm">次へ進む</string>
   <string name="prefs_set_calendars">利用するカレンダーの設定</string>

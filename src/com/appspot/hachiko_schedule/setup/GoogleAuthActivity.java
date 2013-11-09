@@ -7,10 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.RegisterRequest;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
@@ -48,8 +51,26 @@ public class GoogleAuthActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_google_auth);
         authPreferences  = new GoogleAuthPreferences(this);
         progressDialog = new ProgressDialog(this);
+        if (authPreferences.isAuthSetuped()
+                && HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
+            transitToNextActivity();
+        }
+        String str="<html><body><ul><li>お互いに都合の良い日程を自動提案</li><li>数タップで予定調整完了"
+                + "</li><li>予定はカレンダーに自動反映</li><li>Emailとも連携</li></ul></body></html>";
+        ((WebView) findViewById(R.id.setup_intro_detail)).loadDataWithBaseURL(
+                null, str, "text/html", "utf-8", null);
+        findViewById(R.id.start_auth_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAuth();
+            }
+        });
+    }
+
+    private void startAuth() {
         if (authPreferences.isAuthSetuped()) {
             if (!HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
                 sendRegisterRequest(authPreferences.getAuthCode());
@@ -57,8 +78,6 @@ public class GoogleAuthActivity extends Activity {
                 transitToNextActivity();
             }
         } else {
-            HachikoLogger.debug("choose account");
-
             chooseAccount();
         }
     }

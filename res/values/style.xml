@@ -7,6 +7,9 @@
         <item name="android:textColor">@color/font_color_normal</item>
         <item name="android:actionMenuTextColor">@color/font_color_white</item>
     </style>
+    <style name="hachiko_theme.no_title_bar" parent="hachiko_theme">
+      <item name="android:windowNoTitle">true</item>
+    </style>
     <style name="hachiko_actionbar_style" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/background</item>
         <item name="android:titleTextStyle">@style/hachiko_actionbar_titletextstyle</item>
