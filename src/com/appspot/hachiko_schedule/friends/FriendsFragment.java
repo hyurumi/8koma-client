@@ -16,9 +16,7 @@ import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
-import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.EditTextDialog;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.*;
 
@@ -59,10 +57,6 @@ public class FriendsFragment extends Fragment {
                 UserTableHelper tableHelper = new UserTableHelper(getActivity());
                 for (FriendItem entry: friendListAdapter.getSelectedEntries()) {
                     long hachikoId = tableHelper.getHachikoId(entry.getLocalContactId());
-                    if (hachikoId == 0) {
-                        //TODO: たぶんサーバからHachikoID（まだ）取得できてないので，ちゃんと対応する必要
-                        HachikoLogger.error("Invlaid hachiko ID!!");
-                    }
                     friendsToInvite.add(new FriendIdentifier(hachikoId, entry.getEmailAddress(),
                                     entry.getDisplayName()));
                 }
@@ -77,7 +71,7 @@ public class FriendsFragment extends Fragment {
         List<FriendOrGroup> items = new ArrayList<FriendOrGroup>();
         UserTableHelper userTableHelper = new UserTableHelper(getActivity());
         items.addAll(userTableHelper.getListOfGroups());
-        items.addAll(getListOfFriends());
+        items.addAll(userTableHelper.getListOfContactEntries());
         friendListAdapter = new FriendsAdapter(
                 getActivity(), R.layout.list_item_friend, items, selectedItems);
         listView.setAdapter(friendListAdapter);
@@ -123,18 +117,6 @@ public class FriendsFragment extends Fragment {
         }
     }
 
-    private List<FriendItem> getListOfFriends() {
-        if (HachikoPreferences.getDefault(getActivity()).getBoolean(
-                HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP,
-                HachikoPreferences.IS_LOCAL_USER_TABLE_SETUP_DEFAULT
-        )) {
-            UserTableHelper userTableHelper = new UserTableHelper(getActivity());
-            return userTableHelper.getListOfContactEntries();
-        }
-        // ローカルデータベースがまだセットアップされてないので，標準のContactを利用
-        ContactManager manager = ContactManager.getInstance(getActivity());
-        return manager.getListOfContactEntries();
-    }
     @Override
     public void onPause() {
         super.onPause();

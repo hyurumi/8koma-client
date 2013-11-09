@@ -3,7 +3,6 @@ package com.appspot.hachiko_schedule.setup;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,19 +22,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
+public class SetupUserTableTask {
 
     private final Context context;
     public SetupUserTableTask(Context context) {
         this.context = context;
     }
 
-    @Override
-    protected String doInBackground(Void... params) {
+    protected String execute() {
         List<FriendItem> friends = ContactManager.getInstance(context).getListOfContactEntries();
         setupLocalTable(friends);
-        HachikoPreferences.getDefaultEditor(context).putBoolean(
-                HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, true).commit();
         JSONArray requestParams = constructApiParams(friends);
         requestFriendsHachikoIds(requestParams);
         return null;
@@ -81,6 +77,8 @@ public class SetupUserTableTask extends AsyncTask<Void, Void, String> {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
                         updateHachikoIdWithResponse(jsonArray);
+                        HachikoPreferences.getDefaultEditor(context).putBoolean(
+                                HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, true).commit();
                     }
                 },
                 new Response.ErrorListener() {

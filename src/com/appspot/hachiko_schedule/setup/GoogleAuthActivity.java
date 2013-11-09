@@ -21,11 +21,9 @@ import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
-import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -167,7 +165,6 @@ public class GoogleAuthActivity extends Activity {
     }
 
     private void sendRegisterRequest(String authCode) {
-        JSONObject params = JSONUtils.jsonObject("authCode", authCode);
         HachikoLogger.debug("register request");
         runOnUiThread(new Runnable() {
             @Override
@@ -182,13 +179,13 @@ public class GoogleAuthActivity extends Activity {
                     @Override
                     public void onResponse(long id, String pass) {
                         HachikoLogger.debug("Registration completed: ", id);
-                        new SetupUserTableTask(getApplicationContext()).execute();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
                                 .putLong(HachikoPreferences.KEY_MY_HACHIKO_ID, id)
                                 .commit();
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
                                 .putString(HachikoPreferences.KEY_HACHIKO_INTERNAL_PASSWORD, pass)
                                 .commit();
+                        new SetupUserTableTask(getApplicationContext()).execute();
                         transitToNextActivity();
                     }
                 },
