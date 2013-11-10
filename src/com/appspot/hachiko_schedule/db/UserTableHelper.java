@@ -225,14 +225,18 @@ public class UserTableHelper {
         return entries;
     }
 
-    public void createGroup(String groupName, Collection<Long> userIds, String groupIconUri) {
+    /**
+     * @return 作成されたrowのID
+     */
+    public long createGroup(String groupName, Collection<Long> userIds, String groupIconUri) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(GROUP_NAME, groupName);
         values.put(FRIEND_IDS_COMMA_SEPARATED, Joiner.on(",").join(userIds));
         values.put(GROUP_ICON_URI, groupIconUri);
-        db.insert(GROUP_TABLE_NAME, null, values);
+        long id = db.insert(GROUP_TABLE_NAME, null, values);
         db.close();
+        return id;
     }
 
     public List<FriendGroup> getListOfGroups() {

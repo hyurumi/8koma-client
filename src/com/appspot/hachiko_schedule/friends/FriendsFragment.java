@@ -140,9 +140,9 @@ public class FriendsFragment extends Fragment {
                 new EditTextDialog.PositiveButtonListener() {
                     @Override
                     public boolean onPositiveButtonClicked(DialogInterface dialog, String text) {
-                        tableHelper.createGroup(text, friendIdsToBeGroup, null);
+                        long id = tableHelper.createGroup(text, friendIdsToBeGroup, null);
                         FriendGroup group = new FriendGroup(
-                                0, text, null, new HashSet<FriendItem>(friends));
+                                (int) id, text, null, new HashSet<FriendItem>(friends));
                         friendListAdapter.insert(group, 0);
                         suggestionAdapter.insert(group, 0);
                         clearSelectedFriends();
