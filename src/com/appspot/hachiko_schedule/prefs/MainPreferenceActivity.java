@@ -168,7 +168,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@8koma.tk"});
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"app8koma+support@gmail.com"});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Hachiko フィードバック");
                 intent.putExtra(Intent.EXTRA_TEXT, "\n\n\n"
                         + "-----------------------\n"
