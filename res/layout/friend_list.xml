@@ -76,5 +76,6 @@
       android:layout_above="@id/new_plan_button_wrapper"
       android:layout_below="@id/search_friend_wrapper"
       android:listSelector="@drawable/friend_list_selector"
+      android:choiceMode="multipleChoice"
       android:drawSelectorOnTop="true"/>
 </RelativeLayout>

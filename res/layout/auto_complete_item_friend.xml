@@ -29,7 +29,15 @@
         android:lines="1"
         android:id="@+id/friend_email"/>
   </LinearLayout>
-  <TextView android:layout_height="fill_parent" android:layout_width="40dp" android:text="@string/icon_check"
-            android:gravity="center" android:textColor="@color/main_accent_color" android:id="@+id/icon_check"
-            android:paddingRight="10dp" android:background="@color/background_white" android:textSize="20dp"/>
+  <TextView
+      android:layout_height="fill_parent"
+      android:layout_width="40dp"
+      android:text="@string/icon_check"
+      android:gravity="center"
+      android:textColor="@color/main_accent_color"
+      android:id="@+id/icon_check"
+      android:paddingRight="10dp"
+      android:background="@color/background_white"
+      android:textSize="20dp"
+      android:visibility="gone"/>
 </LinearLayout>
