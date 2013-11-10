@@ -59,7 +59,7 @@ public class HachiRequestQueue extends RequestQueue {
             return true;
         }
         return Constants.IS_ALPHA_USER
-                && (url.equals(HachikoAPI.User.REGISTER.getUrl())
+                && !(url.equals(HachikoAPI.User.REGISTER.getUrl())
                     || url.equals(HachikoAPI.User.IMPLICIT_LOGIN.getUrl())
                     || url.equals(HachikoAPI.User.REGISTER_GCM_ID.getUrl()));
     }
