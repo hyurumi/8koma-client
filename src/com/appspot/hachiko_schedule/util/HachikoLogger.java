@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static com.appspot.hachiko_schedule.Constants.IS_ALPHA_USER;
+import static com.appspot.hachiko_schedule.Constants.IS_DEVELOPER;
 
 /**
  * Wrapper class of {@link Log}
@@ -82,7 +83,9 @@ public class HachikoLogger {
         builder.append("url: ").append(request.getUrl()).append("\n")
                 .append("method: ").append(request.getMethod()).append("\n");
         try {
-            builder.append("headers: ").append(request.getHeaders()).append("\n");
+            if (IS_DEVELOPER) {
+                builder.append("headers: ").append(request.getHeaders()).append("\n");
+            }
             builder.append("body: ")
                     .append(request.getBody() == null ? "" : new String(request.getBody()))
                     .append("\n(").append(request.getBodyContentType()).append(")");
@@ -109,6 +112,13 @@ public class HachikoLogger {
             return 0;
         }
         return debug(appendAsString(objects));
+    }
+
+    static public int debugDeloperOnly(Object... objects) {
+        if (!IS_DEVELOPER) {
+            return 0;
+        }
+        return debug(objects);
     }
 
     static private String appendAsString(Object... objects) {

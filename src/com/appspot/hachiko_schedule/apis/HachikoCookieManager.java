@@ -26,22 +26,23 @@ public class HachikoCookieManager {
      */
     public boolean saveSessionCookie(NetworkResponse networkResponse) {
         Map<String, String> headers = networkResponse.headers;
-        HachikoLogger.debug(headers);
+        HachikoLogger.debugDeloperOnly(headers);
         if (headers.containsKey(SET_COOKIE_KEY)
                 && headers.get(SET_COOKIE_KEY).startsWith(SESSION_KEY)) {
             String cookie = headers.get(SET_COOKIE_KEY);
-            HachikoLogger.debug(cookie);
+            HachikoLogger.debugDeloperOnly(cookie);
             String[] splitCookie = cookie.split(";");
             String[] splitSessionId = splitCookie[0].split("=");
             SharedPreferences.Editor prefEditor
                     = HachikoPreferences.getDefaultEditor(context);
             prefEditor.putString(
                     HachikoPreferences.KEY_SESSION_KEY, splitSessionId[1]);
-            HachikoLogger.debug(splitSessionId[1]);
+            HachikoLogger.debugDeloperOnly(splitSessionId[1]);
             if (cookie.contains("expires=")) {
                 String expires = cookie.split("expires=")[1].split(";", 2)[0];
                 prefEditor.putLong(HachikoPreferences.KEY_SESSION_EXPIRES_MILLIS,
                         DateUtils.parseFullDate(expires).getTime());
+                HachikoLogger.debug("cookie stored");
                 HachikoLogger.debug(expires);
             }
             prefEditor.commit();

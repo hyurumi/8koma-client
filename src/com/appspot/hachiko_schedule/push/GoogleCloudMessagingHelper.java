@@ -98,14 +98,15 @@ public class GoogleCloudMessagingHelper {
 
             @Override
             protected void onPostExecute(String s) {
-                HachikoLogger.debug(s);
+                HachikoLogger.debugDeloperOnly(s);
                 super.onPostExecute(s);
             }
         }.execute(null, null, null);
     }
 
     private void sendRegistrationIdToServer(String gcmRegistrationId) {
-        HachikoLogger.debug(gcmRegistrationId);
+        HachikoLogger.debug("sendRegistrationIdToServer");
+        HachikoLogger.debugDeloperOnly(gcmRegistrationId);
         JSONObject params = new JSONObject();
         try {
             params.put("registration_id", gcmRegistrationId);
