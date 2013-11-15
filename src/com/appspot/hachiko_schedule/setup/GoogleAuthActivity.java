@@ -1,8 +1,6 @@
 package com.appspot.hachiko_schedule.setup;
 
 import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,7 +15,6 @@ import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.RegisterRequest;
-import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
@@ -28,7 +25,7 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import java.io.IOException;
 
-public class GoogleAuthActivity extends Activity {
+public class GoogleAuthActivity extends SetupBaseActivity {
     private static final int CHOOSE_ACCOUNT_RESULT_CODE = 1001;
     private static final int REQUEST_AUTH_RESULT_CODE = 1002;
     private static final String HACHIKO_APP_ID
@@ -44,7 +41,6 @@ public class GoogleAuthActivity extends Activity {
 
     private static final String COM_GOOGLE = "com.google";
 
-    private ProgressDialog progressDialog;
     private GoogleAuthPreferences authPreferences;
 
     @Override
@@ -52,7 +48,6 @@ public class GoogleAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_auth);
         authPreferences  = new GoogleAuthPreferences(this);
-        progressDialog = new ProgressDialog(this);
         if (authPreferences.isAuthSetuped()
                 && HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
             transitToNextActivity();
@@ -79,15 +74,6 @@ public class GoogleAuthActivity extends Activity {
         } else {
             chooseAccount();
         }
-    }
-
-    private void transitToNextActivity() {
-        Intent intent = new SetupManager(this).intentForRequiredSetupIfAny();
-        if (intent == null) {
-            intent = new Intent(this, ChooseGuestActivity.class);
-        }
-        startActivity(intent);
-        finish();
     }
 
     private void chooseAccount() {
@@ -160,13 +146,6 @@ public class GoogleAuthActivity extends Activity {
         task.execute();
     }
 
-    private void showProgressDialog(String msg) {
-        progressDialog.setMessage(msg);
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
-    }
-
     private void sendRegisterRequest(String authCode) {
         HachikoLogger.debug("register request");
         runOnUiThread(new Runnable() {
@@ -188,14 +167,13 @@ public class GoogleAuthActivity extends Activity {
                         HachikoPreferences.getDefaultEditor(getApplicationContext())
                                 .putString(HachikoPreferences.KEY_HACHIKO_INTERNAL_PASSWORD, pass)
                                 .commit();
-                        new SetupUserTableTask(getApplicationContext()).execute();
                         transitToNextActivity();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        progressDialog.hide();
+                        hideProgressDialog();
                         HachikoDialogs
                                 .networkErrorDialogBuilder(GoogleAuthActivity.this, volleyError)
                                 .setCancelable(false)

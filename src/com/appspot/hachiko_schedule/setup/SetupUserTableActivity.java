@@ -1,14 +1,13 @@
 package com.appspot.hachiko_schedule.setup;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.HachikoApp;
-import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonArrayRequest;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
+import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonArrayRequest;
 import com.appspot.hachiko_schedule.data.FriendItem;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.friends.ContactManager;
@@ -22,15 +21,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SetupUserTableTask {
+public class SetupUserTableActivity extends SetupBaseActivity {
 
-    private final Context context;
-    public SetupUserTableTask(Context context) {
-        this.context = context;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (HachikoPreferences.getDefault(this)
+                .getBoolean(HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, false)) {
+            transitToNextActivity();
+        } else {
+            uploadFriends();
+        }
     }
 
-    protected String execute() {
-        List<FriendItem> friends = ContactManager.getInstance(context).getListOfContactEntries();
+    protected String uploadFriends() {
+        List<FriendItem> friends = ContactManager.getInstance(this).getListOfContactEntries();
         setupLocalTable(friends);
         JSONArray requestParams = constructApiParams(friends);
         requestFriendsHachikoIds(requestParams);
@@ -38,7 +43,7 @@ public class SetupUserTableTask {
     }
 
     private void setupLocalTable(List<FriendItem> friends) {
-        UserTableHelper userTableHelper = new UserTableHelper(context);
+        UserTableHelper userTableHelper = new UserTableHelper(this);
         SQLiteDatabase db = userTableHelper.getWritableUserDB();
         for (FriendItem friend: friends) {
             Uri photoUri = friend.getPhotoUri();
@@ -71,14 +76,15 @@ public class SetupUserTableTask {
 
     private void requestFriendsHachikoIds(JSONArray requestParams) {
         Request request = new HachiJsonArrayRequest(
-                context, HachikoAPI.Friend.ADD_FRIENDS.getMethod(), HachikoAPI.Friend.ADD_FRIENDS.getUrl(),
+                this, HachikoAPI.Friend.ADD_FRIENDS.getMethod(), HachikoAPI.Friend.ADD_FRIENDS.getUrl(),
                 requestParams,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
                         updateHachikoIdWithResponse(jsonArray);
-                        HachikoPreferences.getDefaultEditor(context).putBoolean(
+                        HachikoPreferences.getDefaultEditor(SetupUserTableActivity.this).putBoolean(
                                 HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, true).commit();
+                        transitToNextActivity();
                     }
                 },
                 new Response.ErrorListener() {
@@ -92,7 +98,7 @@ public class SetupUserTableTask {
     }
 
     private void updateHachikoIdWithResponse(JSONArray responseJson) {
-        UserTableHelper userTableHelper = new UserTableHelper(context);
+        UserTableHelper userTableHelper = new UserTableHelper(this);
         SQLiteDatabase db = userTableHelper.getWritableUserDB();
         for (int i = 0; i < responseJson.length(); i++) {
             try {

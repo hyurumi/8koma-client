@@ -44,6 +44,11 @@
         android:theme="@style/hachiko_theme.no_title_bar">
     </activity>
     <activity
+        android:name=".setup.SetupUserTableActivity"
+        android:label="@string/app_name"
+        android:theme="@style/hachiko_theme">
+    </activity>
+    <activity
         android:name=".setup.SetupCalendarActivity"
         android:label="@string/app_name"
         android:theme="@style/hachiko_theme">

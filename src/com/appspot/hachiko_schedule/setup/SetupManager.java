@@ -22,8 +22,11 @@ public class SetupManager {
     public Intent intentForRequiredSetupIfAny() {
         SharedPreferences prefs = HachikoPreferences.getDefault(context);
         GoogleAuthPreferences googleAuthPreferences = new GoogleAuthPreferences(context);
+        Intent intent = null;
         if (!googleAuthPreferences.isAuthSetuped() || !HachikoPreferences.hasHachikoId(context)) {
-            return new Intent(context, GoogleAuthActivity.class);
+            intent = new Intent(context, GoogleAuthActivity.class);
+        } else if (!prefs.getBoolean(HachikoPreferences.KEY_IS_LOCAL_USER_TABLE_SETUP, false)) {
+            intent = new Intent(context, SetupUserTableActivity.class);
         }
 
 // TODO: uncomment out this: #115
@@ -33,6 +36,9 @@ public class SetupManager {
 //            return new Intent(context, SetupCalendarActivity.class);
 //        }
 
-        return null;
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+        return intent;
     }
 }
