@@ -3,12 +3,15 @@ package com.appspot.hachiko_schedule.apis;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
+import com.appspot.hachiko_schedule.Constants;
 
 /**
  * Class that represents information about certain API.
  */
 public class HachikoAPI {
-    public static final String BASE = "https://hachiko.yutopio.net/api/";
+    public static final String BASE = "https://"
+            + (Constants.IS_DEVELOPER ? "8koma.yutopio.net": "8koma.cloudapp.net")
+            + "/api/";
     public static final RetryPolicy RETRY_POLICY_LONG
             = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
