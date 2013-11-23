@@ -13,6 +13,7 @@ import org.json.JSONObject;
  */
 public class GcmIntentService extends IntentService {
     private static final String TAG_INVITE = "invited";
+    private static final String TAG_JOIN = "join";
     private static final String TAG_ALL_RESPONDED = "allResponded";
     private static final String TAG_CONFIRMED = "confirmed";
     private static final String TAG_RESPONDED = "responded";
@@ -40,6 +41,8 @@ public class GcmIntentService extends IntentService {
         try {
             if (tag.equals(TAG_INVITE)) {
                 new InvitedIntentHandler(this).handle(new JSONObject(body));
+            } else if (tag.equals(TAG_JOIN)) {
+                new JoinIntentHandler(this).handle(body);
             } else if (tag.equals(TAG_ALL_RESPONDED)) {
                 new AllRespondedIntentHelper(this).handle(new JSONObject(body));
             } else if (tag.equals(TAG_CONFIRMED)) {

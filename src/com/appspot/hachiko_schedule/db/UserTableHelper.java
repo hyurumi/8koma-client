@@ -182,6 +182,13 @@ public class UserTableHelper {
         }
     }
 
+    public boolean registerFriendAsHachikoUser(long hachikoId) {
+        SQLiteDatabase db = getWritableUserDB();
+        ContentValues values = new ContentValues();
+        values.put(IS_HACHIKO_USER, true);
+        return db.update(USER_TABLE_NAME, values, HACHIKO_ID + "==" + hachikoId, null) > 0;
+    }
+
     /**
      * 直接の友達ではない相手の表示名(サーバから取得した)を保持する
      * @param names HachikoIdと表示名の組

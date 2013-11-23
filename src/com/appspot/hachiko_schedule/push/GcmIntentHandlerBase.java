@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * GCMから送られてくるpushに対応する基底クラス
+ * GCMから送られてくるpushに対応する基底クラス，いくつかのUtilityメソッドを提供する．
  */
 abstract class GcmIntentHandlerBase<T> {
     private final Context context;
