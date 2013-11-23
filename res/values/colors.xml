@@ -8,6 +8,7 @@
 
   <color name="font_color_normal">#555555</color>
   <color name="font_color_white">#FFFFFF</color>
+  <color name="font_shadow_black">#000000</color>
   <color name="background">#00AAAA</color>
   <color name="background_white">#FFFFFF</color>
   <color name="background_holo_like">#fff3f3f3</color>

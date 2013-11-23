@@ -1,67 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<ImageView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scaleType = "centerCrop"
+    android:src="@drawable/walkthrough_bg"></ImageView>
+<RelativeLayout
               android:orientation="vertical"
-              android:background="@color/background_color_gray"
+              android:scaleType = "centerCrop"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:layout_margin="10dp"
-      android:layout_marginTop="15dp"
-      android:background="@color/background_white">
+      android:padding="5dp" android:paddingTop="100dp">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp">
-      <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical" android:layout_marginTop="100dp">
+      <ImageView
+          android:layout_width="128dp"
+          android:layout_height="128dp"
+          android:src="@drawable/logo_white"
+          android:layout_gravity="center"
+          android:shadowDx="1.5"
+          android:shadowDy="1.5"
+          android:shadowRadius="1.5"
+          android:shadowColor="@color/font_shadow_black"
+          />
+      <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal">
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_launcher"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="48dp"
-            android:textColor="@color/main_accent_color"
-            android:layout_gravity="center_vertical"/>
-      </LinearLayout>
-      <include layout="@layout/horizontal_line_gray"/>
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/setup_intro_message"
-          android:paddingTop="10dp"
-          android:paddingLeft="20dp"
-          android:paddingRight="20dp"
-          android:textColor="@color/font_color_normal"/>
-      <WebView
-          android:id="@+id/setup_intro_detail"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="10dp"
-          android:paddingLeft="20dp"
-          android:paddingRight="20dp"
-          android:textColor="@color/font_color_normal"/>
+          android:text="@string/app_name"
+          android:textSize="48dp"
+          android:textColor="@color/font_color_white"
+          android:shadowColor="@color/font_shadow_black"
+          android:shadowDx="1.5"
+          android:shadowDy="1.5"
+          android:shadowRadius="1.5"
+          android:layout_gravity="center_vertical"/>
     </LinearLayout>
-    <Button
+    <include layout="@layout/horizontal_line_gray"/>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/start_auth_button"
-        android:text="@string/setup_start_auth"
-        android:textSize="22sp"
-        android:background="@drawable/btn_color_stateful"
+        android:text="@string/setup_intro_message"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
         android:textColor="@color/font_color_white"
-        android:clickable="true"
-        android:layout_marginTop="15dp"/>
+        android:shadowColor="@color/font_shadow_black"/>
+    <WebView
+        android:id="@+id/setup_intro_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:textColor="@color/font_color_white"
+        android:shadowColor="@color/font_shadow_black"/>
   </LinearLayout>
-</LinearLayout>
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/start_auth_button"
+      android:text="@string/setup_start_auth"
+      android:textSize="22sp"
+      android:background="@drawable/btn_color_stateful"
+      android:textColor="@color/font_color_white"
+      android:clickable="true"
+      android:layout_marginTop="15dp" android:layout_alignParentBottom="true"/>
+</RelativeLayout>
+  </FrameLayout>
