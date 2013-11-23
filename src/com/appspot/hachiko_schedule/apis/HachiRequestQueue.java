@@ -5,12 +5,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import com.android.volley.*;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
 import com.appspot.hachiko_schedule.Constants;
+import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.apis.ssl.HachikoSSL;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
@@ -26,6 +29,7 @@ import java.util.Queue;
  */
 public class HachiRequestQueue extends RequestQueue {
     private static final String DEFAULT_CACHE_DIR = "volley";
+    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
     private boolean isReauthorizing;
     private Queue<Request> pendingRequestBeforeAuth = new LinkedList<Request>();
     private final Context context;
@@ -33,7 +37,21 @@ public class HachiRequestQueue extends RequestQueue {
     public HachiRequestQueue(final Context context) {
         super(
                 new DiskBasedCache(new File(context.getCacheDir(), DEFAULT_CACHE_DIR)),
-                createNetwork(context));
+                createNetwork(context),
+                DEFAULT_NETWORK_THREAD_POOL_SIZE,
+                new ExecutorDelivery(new Handler(Looper.getMainLooper())) {
+                    @Override
+                    public void postError(final Request<?> request, VolleyError error) {
+                        if (isAuthFailure(error)
+                                && !HachikoAPI.User.REGISTER.getUrl().equals(request.getUrl())
+                                && !HachikoAPI.User.IMPLICIT_LOGIN.getUrl().equals(request.getUrl())) {
+                            HachikoLogger.warn("auth error, try to login...");
+                            loginAndRetry(context, request, error);
+                        } else {
+                            super.postError(request, error);
+                        }
+                    }
+                });
         this.context = context;
     }
 
@@ -52,6 +70,34 @@ public class HachiRequestQueue extends RequestQueue {
             // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
             return new BasicNetwork(new HttpClientStack(AndroidHttpClient.newInstance(userAgent)));
         }
+    }
+
+    private static boolean isAuthFailure(VolleyError error) {
+        if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+            return true;
+        }
+        return error instanceof NetworkError;
+    }
+
+    private static void loginAndRetry(Context context, final Request originalRequest,
+                                      final VolleyError originalError) {
+        Request loginRequest = new ImplicitLoginRequest(context,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject object) {
+                        // つらみ極まるがやむなし… #150 参照のこと
+                        originalRequest.deliverError(originalError);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoLogger.error("failed to reauth");
+                        originalRequest.deliverError(volleyError);
+                    }
+                }
+        );
+        HachikoApp.defaultRequestQueue().add(loginRequest);
     }
 
     private boolean shouldDumpRequest(String url) {
