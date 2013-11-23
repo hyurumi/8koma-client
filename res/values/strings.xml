@@ -2,6 +2,7 @@
 <resources>
   <string name="app_name">はちこま</string>
   <string name="setup_intro_message">Googleカレンダーと連携してあなたと誰かの予定調整をお手伝い</string>
+  <string name="setup_intro_detail">お互いに都合の良い日程を自動提案,数タップで予定調整完了, 予定はカレンダーに自動反映 , Emailとも連携</string>
   <string name="setup_start_auth">Googleアカウントで認証</string>
   <string name="setup_calendar_text">お使いのカレンダーを登録することで，あなたの開いている時間に予定を設定するお手伝いをします</string>
   <string name="setup_calendar_confirm">次へ進む</string>

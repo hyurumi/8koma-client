@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.webkit.WebView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
@@ -19,6 +22,7 @@ import com.appspot.hachiko_schedule.prefs.GoogleAuthPreferences;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.ui.ViewIndicator;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -45,17 +49,27 @@ public class GoogleAuthActivity extends SetupBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ViewPager viewPager;
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_auth);
+
+        viewPager = (ViewPager) findViewById(R.id.walkthrough_viewpager);
+        viewPager.setAdapter(
+                new MyFragmentStatePagerAdapter(
+                        getSupportFragmentManager()));
+        ViewIndicator indicator = (ViewIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(viewPager);
+        indicator.setPosition(0);
+
         authPreferences  = new GoogleAuthPreferences(this);
         if (authPreferences.isAuthSetuped()
                 && HachikoPreferences.hasHachikoId(GoogleAuthActivity.this)) {
             transitToNextActivity();
         }
-        String str="<html><body><ul><li>お互いに都合の良い日程を自動提案</li><li>数タップで予定調整完了"
-                + "</li><li>予定はカレンダーに自動反映</li><li>Emailとも連携</li></ul></body></html>";
-        ((WebView) findViewById(R.id.setup_intro_detail)).loadDataWithBaseURL(
-                null, str, "text/html", "utf-8", null);
+
         findViewById(R.id.start_auth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +165,7 @@ public class GoogleAuthActivity extends SetupBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showProgressDialog("Hachikoサーバと通信中...");
+                showProgressDialog("ハチコマサーバと通信中...");
             }
         });
         JsonRequest request = new RegisterRequest(
@@ -197,5 +211,32 @@ public class GoogleAuthActivity extends SetupBaseActivity {
         AccountManager accountManager = AccountManager.get(this);
         accountManager.invalidateAuthToken(COM_GOOGLE, authPreferences.getAccountName());
         authPreferences.setAuthCode(null);
+    }
+
+    public class MyFragmentStatePagerAdapter
+            extends FragmentStatePagerAdapter {
+
+        public MyFragmentStatePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+
+            switch(i){
+                case 0:
+                    return new WalkthroughFragment0();
+                default:
+                    return new WalkthroughFragment1();
+            }
+
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+
     }
 }

@@ -1,12 +1,13 @@
 package com.appspot.hachiko_schedule.setup;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 
-public class SetupBaseActivity extends Activity {
+public class SetupBaseActivity extends FragmentActivity {
     private ProgressDialog progressDialog;
 
     @Override
