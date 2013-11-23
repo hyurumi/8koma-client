@@ -9,3 +9,4 @@ build.log
 *.iml
 assets/commit.properties
 res/raw/hachiko.cer
+debug.keystore
