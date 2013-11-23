@@ -15,6 +15,7 @@ public class GcmIntentService extends IntentService {
     private static final String TAG_INVITE = "invited";
     private static final String TAG_JOIN = "join";
     private static final String TAG_ALL_RESPONDED = "allResponded";
+    private static final String TAG_FRIEND_RESPONDED = "friendResponded";
     private static final String TAG_CONFIRMED = "confirmed";
     private static final String TAG_RESPONDED = "responded";
     private static final String TAG_UPDATE_AFTER_ALL_RESPONSE = "updateAfterAllResponse";
@@ -45,6 +46,8 @@ public class GcmIntentService extends IntentService {
                 new JoinIntentHandler(this).handle(body);
             } else if (tag.equals(TAG_ALL_RESPONDED)) {
                 new AllRespondedIntentHelper(this).handle(new JSONObject(body));
+            } else if (tag.equals(TAG_FRIEND_RESPONDED)) {
+                new FriendRespondedIntentHandler(this).handle(new JSONObject(body));
             } else if (tag.equals(TAG_CONFIRMED)) {
                 new ConfirmedIntentHelper(this).handle(new JSONObject(body));
             } else if (tag.equals(TAG_RESPONDED)) {
