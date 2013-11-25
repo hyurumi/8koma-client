@@ -3,12 +3,14 @@ package com.appspot.hachiko_schedule.plans;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
@@ -71,6 +73,15 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
             dateView.setCandidate(plan, candidateDate);
             candidateDateContainer.addView(dateView);
         }
+        Typeface fontForArrow= Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
+        ((TextView)findViewById(R.id.icon_remind)).setTypeface(fontForArrow);
+        findViewById(R.id.remind).setVisibility(VISIBLE);
+        findViewById(R.id.remind).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmReminderDialog();
+            }
+        });
         return this;
     }
 
@@ -134,5 +145,17 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
                         }
                     }).show();
         }
+
+    }
+
+    private void confirmReminderDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage("未回答者にリマインダーを流しますか？")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "未実装", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
     }
 }
