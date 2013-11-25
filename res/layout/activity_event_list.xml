@@ -10,22 +10,55 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:id="@+id/event_list"/>
-  <LinearLayout
+  <FrameLayout
       android:layout_height="fill_parent"
       android:layout_width="fill_parent"
-      android:orientation="vertical"
       android:id="@+id/view_for_no_event"
-      android:gravity="center_vertical"
-      android:visibility="gone">
-    <TextView
-        android:layout_height="wrap_content"
+      android:visibility="gone"
+      >
+    <LinearLayout
+        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:text="@string/no_event_text"
-        android:gravity="center_horizontal"/>
-    <Button
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="top">
+      <TextView
+          android:layout_height="wrap_content"
+          android:layout_width="fill_parent"
+          android:id="@+id/angle_double_up"
+          android:text="@string/icon_angle_double_up"
+          android:gravity="right"
+          android:textColor="@color/font_color_gray"
+          android:textSize="32dp" android:paddingRight="68dp"/>
+      <TextView
+          android:layout_height="wrap_content"
+          android:layout_width="fill_parent"
+          android:id="@+id/no_event_then_create_new"
+          android:text="@string/no_event_then_create_new"
+          android:gravity="center_horizontal"
+          android:textColor="@color/font_color_gray"
+          android:textSize="24dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:id="@+id/no_event_create_new"
-        android:text="@string/no_event_then_create_new"/>
-  </LinearLayout>
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        >
+      <ImageView
+          android:id="@+id/no_event_image"
+          android:layout_height="@dimen/no_event_image_length_rounded"
+          android:layout_width="@dimen/no_event_image_length_rounded"
+          android:src="@drawable/logo"
+          android:background="@drawable/image_view_border"
+          android:layout_gravity="center_horizontal"></ImageView>
+      <TextView
+          android:layout_height="wrap_content"
+          android:layout_width="fill_parent"
+          android:text="@string/no_event_text"
+          android:gravity="center_horizontal"
+          android:textColor="@color/font_color_gray"
+          android:textSize="40dp" android:layout_marginTop="10dp"/>
+    </LinearLayout>
+  </FrameLayout>
 </LinearLayout>

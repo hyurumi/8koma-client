@@ -3,11 +3,19 @@ package com.appspot.hachiko_schedule.plans;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.*;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -54,13 +62,17 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         plansTableHelper = new PlansTableHelper(this);
 
         eventList = ((ListView) findViewById(R.id.event_list));
-        findViewById(R.id.no_event_create_new).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startCreatingEvent();
-            }
-        });
+        Typeface fontForArrow= Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
+        ((TextView)findViewById(R.id.angle_double_up)).setTypeface(fontForArrow);
+
+        AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        animation.setDuration(2000);
+        (findViewById(R.id.angle_double_up)).startAnimation(animation);
+        (findViewById(R.id.no_event_then_create_new)).startAnimation(animation);
     }
+
 
     @Override
     protected void onResume() {
