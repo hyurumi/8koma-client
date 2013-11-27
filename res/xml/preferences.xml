@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    >
   <PreferenceCategory
     android:key="category_8koma"
-    android:title="ハチコマの振る舞いの設定">
+    android:title="ハチコマの振る舞いの設定"
+      android:enabled="false"
+      >
     <EditTextPreference
         android:key="number_of_candidate_datetime"
         android:title="ハチコマが提案する候補日時数"
-        android:summary="ハチコマが提案する候補日時を設定できます（最大値は８です）"
+        android:summary="初期値は５、最大値は８です"
         android:dialogTitle="ハチコマが提案する候補日時数"
-        android:defaultValue="@integer/number_of_candidate_date"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         />
-
     </PreferenceCategory>
   <PreferenceCategory
       android:key="category_others"

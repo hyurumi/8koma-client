@@ -32,91 +32,84 @@ import java.util.zip.ZipFile;
 /**
  * メイン画面から飛べる設定
  */
-public class MainPreferenceActivity extends PreferenceActivity {
-    private SharedPreferences prefs;
-    //private PreferenceScreen screen;
+public class MainPreferenceActivity extends Activity {
+    private static SettingsFragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
 
-        if (Constants.IS_ALPHA_USER) {
-            ((PreferenceCategory)findPreference("category_others")).addPreference(reauthPreference());
-        }
+        fragment = new SettingsFragment();
 
-        if (Constants.IS_DEVELOPER) {
-            setupDebugPrefs(getPreferenceScreen());
-        }
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .commit();
 
-        sendFeedbackPreference();
-        confirmVersionPreference();
         // TODO: カレンダーまわりの設定を復活させる #115関係
-        //setupDebugPrefs();
     }
 
-    private void setupDebugPrefs(PreferenceScreen screen) {
+    private static void setDebugPrefs() {
 
-        PreferenceCategory category = new PreferenceCategory(this);
+        PreferenceCategory category = new PreferenceCategory(fragment.getActivity());
         category.setTitle("でバッグ");
-        screen.addPreference(category);
+        fragment.getPreferenceScreen().addPreference(category);
 
-        CheckBoxPreference useFakeHttpStack = new CheckBoxPreference(this);
+        CheckBoxPreference useFakeHttpStack = new CheckBoxPreference(fragment.getActivity());
         useFakeHttpStack.setTitle("ダミーの通信を利用");
         useFakeHttpStack.setSummary("FakeHttpRequestクラスを利用して偽の通信結果を返す");
         useFakeHttpStack.setDefaultValue(HachikoPreferences.USE_FAKE_REQUEST_QUEUE_DEFAULT);
         useFakeHttpStack.setKey(HachikoPreferences.KEY_USE_FAKE_REQUEST_QUEUE);
         category.addPreference(useFakeHttpStack);
 
-        Preference showDb = new Preference(this);
+        Preference showDb = new Preference(fragment.getActivity());
         showDb.setTitle("データベースの中身を確認");
         showDb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(MainPreferenceActivity.this, SQLDumpActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(fragment.getActivity(), SQLDumpActivity.class);
+                fragment.getActivity().startActivity(intent);
                 return true;
             }
         });
         category.addPreference(showDb);
 
-        Preference deletePlans = new Preference(this);
+        Preference deletePlans = new Preference(fragment.getActivity());
         deletePlans.setTitle("予定一覧画面の予定を削除");
         deletePlans.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                PlansTableHelper plansTableHelper = new PlansTableHelper(MainPreferenceActivity.this);
+                PlansTableHelper plansTableHelper = new PlansTableHelper(fragment.getActivity());
                 plansTableHelper.debugDeletePlansAndCandidateDates();
-                Toast.makeText(MainPreferenceActivity.this, "データが削除されました", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getActivity(), "データが削除されました", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
         category.addPreference(deletePlans);
 
-        Preference superLongTimeout = new CheckBoxPreference(this);
+        Preference superLongTimeout = new CheckBoxPreference(fragment.getActivity());
         superLongTimeout.setKey(HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST);
         superLongTimeout.setTitle("通信タイムアウト時間を長く");
         category.addPreference(superLongTimeout);
-
     }
 
-    private Preference reauthPreference() {
-        Preference reauth = new Preference(this);
+    private static Preference reauthPreference() {
+        Preference reauth = new Preference(fragment.getActivity());
         reauth.setTitle("再認証");
         reauth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                final ProgressDialog progressDialog = new ProgressDialog(MainPreferenceActivity.this);
+                final ProgressDialog progressDialog = new ProgressDialog(fragment.getActivity());
                 progressDialog.setMessage("リクエスト中");
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
                 progressDialog.show();
-                Request request = new ImplicitLoginRequest(MainPreferenceActivity.this,
+                Request request = new ImplicitLoginRequest(fragment.getActivity(),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject object) {
                                 progressDialog.hide();
-                                Toast.makeText(MainPreferenceActivity.this, "Success: " + object,
+                                Toast.makeText(fragment.getActivity(), "Success: " + object,
                                         Toast.LENGTH_LONG);
                                 HachikoLogger.debug(object);
                             }
@@ -124,7 +117,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                HachikoDialogs.showNetworkErrorDialog(MainPreferenceActivity.this,
+                                HachikoDialogs.showNetworkErrorDialog(fragment.getActivity(),
                                         volleyError, "login");
                                 HachikoLogger.error("failed to login", volleyError);
                             }
@@ -136,23 +129,23 @@ public class MainPreferenceActivity extends PreferenceActivity {
         return reauth;
     }
 
-    private void confirmVersionPreference() {
-        Preference confirmVersion = findPreference("confirm_version");
+    private static void confirmVersionPreference() {
+        Preference confirmVersion = fragment.findPreference("confirm_version");
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 String gcmInfo = "Gcm Info: "
-                        + HachikoPreferences.getDefault(MainPreferenceActivity.this)
+                        + HachikoPreferences.getDefault(fragment.getActivity())
                         .getString(HachikoPreferences.KEY_GCM_REGISTRATION_ID, "Not found") + "\n";
                 String info = "HachikoID: " + HachikoPreferences
-                        .getDefault(MainPreferenceActivity.this)
+                        .getDefault(fragment.getActivity())
                         .getLong(HachikoPreferences.KEY_MY_HACHIKO_ID, -1) + "\n"
                         + "Build Date: " + getBuildTimeString() + "\n"
                         + "Latest commit: " + getCommitInfo() + "\n"
                         + (Constants.IS_DEVELOPER ? gcmInfo : "")
                         + "Google Auth: "
-                        + new GoogleAuthPreferences(MainPreferenceActivity.this).getAccountName();
-                new AlertDialog.Builder(MainPreferenceActivity.this)
+                        + new GoogleAuthPreferences(fragment.getActivity()).getAccountName();
+                new AlertDialog.Builder(fragment.getActivity())
                         .setMessage(info)
                         .show();
                 HachikoLogger.debug(info);
@@ -161,8 +154,8 @@ public class MainPreferenceActivity extends PreferenceActivity {
         });
     }
 
-    private void sendFeedbackPreference() {
-        Preference sendFeedback = findPreference("send_feedback");
+    private static void sendFeedbackPreference() {
+        Preference sendFeedback = fragment.getPreferenceScreen().findPreference("send_feedback");
         sendFeedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -176,19 +169,19 @@ public class MainPreferenceActivity extends PreferenceActivity {
                         + "Build ID: " + getCommitInfo() + "\n"
                         + "端末情報: " + Build.PRODUCT + "(" + Build.VERSION.RELEASE + ")\n"
                         + "UserID: "
-                        + HachikoPreferences.getMyHachikoId(MainPreferenceActivity.this) + "\n");
+                        + HachikoPreferences.getMyHachikoId(fragment.getActivity()) + "\n");
                 HachikoLogger.debug("Feedback request from "
-                        + HachikoPreferences.getMyHachikoId(MainPreferenceActivity.this)
+                        + HachikoPreferences.getMyHachikoId(fragment.getActivity())
                         + "\nBuild ID: " + getCommitInfo() + "\n");
-                startActivity(intent);
+                fragment.getActivity().startActivity(intent);
                 return true;
             }
         });
     }
 
-    private String getBuildTimeString() {
+    private static String getBuildTimeString() {
         try{
-            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
+            ApplicationInfo ai = fragment.getActivity().getPackageManager().getApplicationInfo(fragment.getActivity().getPackageName(), 0);
             ZipFile zf = new ZipFile(ai.sourceDir);
             ZipEntry ze = zf.getEntry("classes.dex");
             long time = ze.getTime();
@@ -198,11 +191,11 @@ public class MainPreferenceActivity extends PreferenceActivity {
         }
     }
 
-    private String getCommitInfo() {
+    private static String getCommitInfo() {
         Properties prop = new Properties();
         String fileName = "commit.properties";
         try {
-            InputStream fileStream = getAssets().open(fileName);
+            InputStream fileStream = fragment.getActivity().getApplicationContext().getAssets().open(fileName);
             prop.load(fileStream);
             fileStream.close();
         } catch (FileNotFoundException e) {
@@ -227,5 +220,28 @@ public class MainPreferenceActivity extends PreferenceActivity {
 
         DialogFragment dialog = new ChooseCalendarDialog();
         dialog.show(transaction, "dialog");
+    }
+
+    public static class SettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+
+            PreferenceScreen screen = this.getPreferenceScreen();
+
+            // Load the preferences from an XML resource
+            if (Constants.IS_ALPHA_USER) {
+                ((PreferenceCategory)(screen.findPreference("category_others"))).addPreference(reauthPreference());
+            }
+
+
+            if (Constants.IS_DEVELOPER) {
+                setDebugPrefs();
+            }
+
+            sendFeedbackPreference();
+            confirmVersionPreference();
+        }
     }
 }
