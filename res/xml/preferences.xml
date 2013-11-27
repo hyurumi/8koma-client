@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     >
   <PreferenceCategory
     android:key="category_8koma"
     android:title="ハチコマの振る舞いの設定"
-      android:enabled="false"
+      android:enabled="true"
       >
     <EditTextPreference
         android:key="number_of_candidate_datetime"
@@ -15,6 +14,12 @@
         android:dialogTitle="ハチコマが提案する候補日時数"
         android:inputType="numberDecimal"
         />
+    <CheckBoxPreference
+      android:key="all_day_plan_is_real"
+      android:title="終日の予定は予定とみなす"
+      android:summary="未選択の場合、カレンダーに従う"
+        android:defaultValue="true"
+        ></CheckBoxPreference>
     </PreferenceCategory>
   <PreferenceCategory
       android:key="category_others"
