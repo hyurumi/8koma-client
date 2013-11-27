@@ -4,14 +4,14 @@
     >
   <PreferenceCategory
     android:key="category_8koma"
-    android:title="ハチコマの振る舞いの設定"
+    android:title="はちこまの振る舞いの設定"
       android:enabled="true"
       >
     <EditTextPreference
         android:key="number_of_candidate_datetime"
-        android:title="ハチコマが提案する候補日時数"
+        android:title="はちこまが提案する候補日時数"
         android:summary="初期値は５、最大値は８です"
-        android:dialogTitle="ハチコマが提案する候補日時数"
+        android:dialogTitle="はちこまが提案する候補日時数"
         android:inputType="numberDecimal"
         />
     <CheckBoxPreference
