@@ -112,6 +112,7 @@ public class SwipeToDismissTouchListener extends HorizontalSwipeListener {
             remove = false;
         }
         long duration = (int) ((1 - fractionCovered) * SWIPE_DURATION_MSEC);
+        duration = duration > 0 ? duration : 1L;
         Animator animator = ObjectAnimator.ofPropertyValuesHolder(view,
                 PropertyValuesHolder.ofFloat("alpha", remove ? 0f : 1f),
                 PropertyValuesHolder.ofFloat("translationX", endX));
