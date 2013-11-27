@@ -97,7 +97,7 @@ public class HachiRequestQueue extends RequestQueue {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HachikoLogger.error("failed to reauth");
+                        HachikoLogger.error("failed to reauth", volleyError);
                         originalRequest.deliverError(volleyError);
                     }
                 }

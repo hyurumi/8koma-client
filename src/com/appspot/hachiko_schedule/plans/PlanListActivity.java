@@ -10,11 +10,7 @@ import android.provider.CalendarContract;
 import android.view.*;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -22,10 +18,12 @@ import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.apis.FetchPlansRequest;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.base_requests.JSONStringRequest;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FixedPlan;
+import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
@@ -76,14 +74,17 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
 
     @Override
     protected void onResume() {
-        List<com.appspot.hachiko_schedule.data.Plan> plans = plansTableHelper.queryPlans();
+        queryAndUpdatePlans();
+        super.onResume();
+    }
+
+    private void queryAndUpdatePlans() {
+        List<Plan> plans = plansTableHelper.queryPlans();
         planAdapter = new PlanAdapter(this, plans, this);
         eventList.setAdapter(planAdapter);
         findViewById(R.id.view_for_no_event).setVisibility(
                 plans.size() == 0 ? View.VISIBLE : View.GONE);
-        super.onResume();
     }
-
     @Override
     public void onConfirm(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
         int answerId = candidateDate.getAnswerId();
@@ -144,6 +145,9 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_reload_events:
+                reloadPlans();
+                return true;
             case R.id.action_create_event:
                 startCreatingEvent();
                 return true;
@@ -187,5 +191,28 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void reloadPlans() {
+        progressDialog.setMessage("サーバと通信中");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        Request request =  new FetchPlansRequest(this,
+                new FetchPlansRequest.PlansUpdateListener() {
+                    @Override
+                    public void onPlansUpdated() {
+                        queryAndUpdatePlans();
+                        progressDialog.hide();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        progressDialog.hide();
+                        HachikoDialogs.showNetworkErrorDialog(PlanListActivity.this, volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(request);
     }
 }

@@ -14,6 +14,7 @@
   <string name="unsettled_schedules">調整中</string>
   <string name="hachiko_user">はちこまユーザ</string>
   <string name="action_launch_calendar_app">外部カレンダーアプリ</string>
+  <string name="action_reload_events">予定のリロード</string>
   <string name="action_create_event">新しい予定</string>
   <string name="action_config">設定</string>
   <string name="hint_on_search_friends">誘いたい人の名前</string>
