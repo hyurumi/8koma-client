@@ -3,15 +3,6 @@ package com.appspot.hachiko_schedule.push;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import com.appspot.hachiko_schedule.data.CandidateDate;
-import com.appspot.hachiko_schedule.db.PlansTableHelper;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * GCMから送られてくるpushに対応する基底クラス，いくつかのUtilityメソッドを提供する．
@@ -43,35 +34,4 @@ abstract class GcmIntentHandlerBase<T> {
      * {@link GcmIntentService}の責務
      */
     public abstract void handle(T body);
-
-    protected void updateAttendanceInfo(long planId, long myHachikoId, JSONArray attendance)
-            throws JSONException {
-        PlansTableHelper tableHelper = new PlansTableHelper(context);
-        Set<Long> positiveFriendIds = new HashSet<Long>();
-        Set<Long> negativeFriendIds = new HashSet<Long>();
-        for (int i = 0; i < attendance.length(); i++) {
-            positiveFriendIds.clear();
-            negativeFriendIds.clear();
-            JSONObject attendanceJson = attendance.getJSONObject(i);
-            long candidateId = attendanceJson.getLong("candId");
-            JSONObject answers = attendanceJson.getJSONObject("attendance");
-            Iterator<String> guestIds = answers.keys();
-            while (guestIds.hasNext()) {
-                String guestId = guestIds.next();
-                CandidateDate.AnswerState answer
-                        = CandidateDate.AnswerState.fromString(answers.getString(guestId));
-                if (Long.parseLong(guestId) == myHachikoId) {
-                    tableHelper.updateOwnAnswer(planId, candidateId, answer);
-                    continue;
-                }
-
-                if (answer == CandidateDate.AnswerState.OK) {
-                    positiveFriendIds.add(Long.parseLong(guestId));
-                } else if (answer == CandidateDate.AnswerState.NG) {
-                    negativeFriendIds.add(Long.parseLong(guestId));
-                }
-            }
-            tableHelper.updateAnswers(planId, candidateId, positiveFriendIds, negativeFriendIds);
-        }
-    }
 }

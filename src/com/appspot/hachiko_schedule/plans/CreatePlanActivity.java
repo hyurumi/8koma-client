@@ -230,18 +230,8 @@ public class CreatePlanActivity extends Activity {
                         try {
                             planId = json.getLong("planId");
                             HachikoLogger.debug("plan successfully created", planId, json);
-                            candidateDates = new ArrayList<CandidateDate>();
-                            JSONArray candidatesJson = json.getJSONArray("candidates");
-                            for (int i = 0; i < candidatesJson.length(); i++) {
-                                JSONObject candidateJson = candidatesJson.getJSONObject(i);
-                                JSONObject timeRange = candidateJson.getJSONObject("time");
-                                candidateDates.add(new CandidateDate(
-                                        candidateJson.getInt("id"),
-                                        DateUtils.parseISO8601(timeRange.getString("start")),
-                                        DateUtils.parseISO8601(timeRange.getString("end")),
-                                        CandidateDate.AnswerState.OK
-                                ));
-                            }
+                            candidateDates = PlanResponseParser.parseCandidateDates(
+                                    json, CandidateDate.AnswerState.OK);
                         } catch (JSONException e) {
                             HachikoLogger.error("JSON parse error/Never happen", e);
                             return;

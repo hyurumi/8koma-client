@@ -66,6 +66,15 @@ public class PlansTableHelper {
         userTableHelper = new UserTableHelper(context);
     }
 
+    public long insertNewPlan(Plan plan, long myId, List<Long> friendIds, List<CandidateDate> dates) {
+        return insertNewPlan(plan.getPlanId(),
+                plan.getTitle(),
+                plan.getOwnerId(),
+                plan.getOwnerId() == myId,
+                friendIds,
+                dates);
+    }
+
     /**
      * (Unfixedな)予定を追加する
      */

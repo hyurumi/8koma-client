@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import com.appspot.hachiko_schedule.plans.PlanListActivity;
+import com.appspot.hachiko_schedule.plans.PlanUpdateHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONException;
@@ -23,7 +24,8 @@ public class AllRespondedIntentHelper extends GcmIntentHandlerBase<JSONObject> {
             String title = body.getString("title");
             Long planId = body.getLong("planId");
             long myHachikoId = HachikoPreferences.getMyHachikoId(getContext());
-            updateAttendanceInfo(planId, myHachikoId, body.getJSONArray("attendance"));
+            PlanUpdateHelper.updateAttendanceInfo(
+                    getContext(), planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent
                     = getActivityIntent(new Intent(getContext(), PlanListActivity.class));
             putNotification("参加者から返答が届きました", title, pendingIntent);
