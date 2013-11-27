@@ -15,6 +15,7 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
+import com.google.common.base.Joiner;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,6 +75,8 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
             dateView.setCandidate(plan, candidateDate);
             candidateDateContainer.addView(dateView);
         }
+        ((TextView) findViewById(R.id.event_potential_participants)).setText(
+                Joiner.on(", ").join(plan.getpotentialParticipants()));
         Typeface fontForArrow= Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
         ((TextView)findViewById(R.id.icon_remind)).setTypeface(fontForArrow);
         findViewById(R.id.remind).setVisibility(VISIBLE);

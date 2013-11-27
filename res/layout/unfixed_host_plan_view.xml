@@ -13,6 +13,15 @@
       android:paddingTop="5dp"
       android:paddingBottom="5dp">
     <include layout="@layout/plan_view_title_text"/>
+    <include layout="@layout/horizontal_line_gray"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Candidate participants"
+        android:id="@+id/event_potential_participants"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:singleLine="true"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
