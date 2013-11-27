@@ -249,6 +249,27 @@ public class PlansTableHelper {
         return ret;
     }
 
+    public boolean planExists(long planId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{PLAN_ID}, PLAN_ID + "==" + planId,
+                null, null, null, null, "1");
+        boolean ret = c.moveToFirst();
+        db.close();
+        return ret;
+    }
+
+    public boolean isFixed(long planId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{IS_FIXED}, PLAN_ID + "==" + planId,
+                null, null, null, null, "1");
+        boolean ret = false;
+        if (!c.moveToFirst()) {
+            ret = c.getInt(c.getColumnIndex(IS_FIXED)) != 0;
+        }
+        db.close();
+        return ret;
+    }
+
     /**
      * デバッグ要
      */

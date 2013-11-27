@@ -45,6 +45,7 @@ public class HachikoAPI {
 
     public static class Plan {
         public static final HachikoAPI CONFIRM = new HachikoAPI(Request.Method.POST, "confirm/");
+        public static final HachikoAPI GET_PLANS = new HachikoAPI(Request.Method.GET, "plans");
         public static final HachikoAPI RESPOND = new HachikoAPI(Request.Method.POST, "respond");
     }
 

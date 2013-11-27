@@ -42,6 +42,12 @@ public class HachiJsonArrayRequest extends JsonRequest<JSONArray> {
         HachikoLogger.debug(params == null ? null : params.toString());
     }
 
+    public HachiJsonArrayRequest(
+            Context context, int method, String url,
+            Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+        this(context, method, url, (String) null, listener, errorListener);
+    }
+
     @Override
     protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
         try {
