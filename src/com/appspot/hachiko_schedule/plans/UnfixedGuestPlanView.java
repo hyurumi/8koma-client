@@ -85,7 +85,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
         for (int i = 0; i < candidateDates.size(); i++) {
             CandidateDate candidateDate = candidateDates.get(i);
             CandidateDateAnswerView answerView = new CandidateDateAnswerView(getContext());
-            answerView.setCandidate(plan.getPlanId(), candidateDate, i);
+            answerView.setCandidate(plan.getPlanId(), plan.getOwnerId(), candidateDate, i);
             candidateDateContainer.addView(answerView);
         }
         View v = new View(getContext());
@@ -189,16 +189,16 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(24);
                 }
             });
-
         }
 
-        private void setCandidate(long planId, CandidateDate candidateDate, int index) {
+        private void setCandidate(long planId, long ownerId, CandidateDate candidateDate, int index) {
             this.planId = planId;
             this.candidateDate = candidateDate;
             this.index = index;
             candidateText.setText(candidateDate.getDateText());
-            numOfPositiveFriends.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
-            positiveFriendNamesView.setText(candidateDate.getPositiveFriendNames(getContext()));
+            numOfPositiveFriends.setText(Integer.toString(candidateDate.getPositiveFriendsNum(ownerId)));
+            positiveFriendNamesView.setText(
+                    candidateDate.getPositiveFriendNames(getContext(), ownerId));
             lastPersistedState = candidateDate.getMyAnswerState();
             answerRadioGroup.check(BUTTON_TO_ANSWER.inverse().get(lastPersistedState));
         }

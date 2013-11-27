@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
+import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -120,11 +121,10 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
 
         private void setCandidate(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
             dateTextView.setText(candidateDate.getDateText());
-            numOfPositiveFriendsView.setText(Integer.toString(candidateDate.getPositiveFriendsNum()));
-            //numOfNegativeFriendsView.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
-            //numOfNeutralFriendsView.setText(Integer.toString(numOfPotentialParticipants
-            //        - candidateDate.getPositiveFriendsNum() - candidateDate.getNegativeFriendsNum()));
-            positiveFriendNames.setText(candidateDate.getPositiveFriendNames(getContext()));
+            long myId = HachikoPreferences.getMyHachikoId(getContext());
+            numOfPositiveFriendsView.setText(Integer.toString(candidateDate.getPositiveFriendsNum(myId)));
+            positiveFriendNames.setText(candidateDate.getPositiveFriendNames(
+                    getContext(), myId));
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

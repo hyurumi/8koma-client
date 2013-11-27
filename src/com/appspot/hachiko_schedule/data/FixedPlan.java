@@ -15,6 +15,6 @@ public class FixedPlan extends Plan {
     }
 
     public String getPositiveFriendNames(Context context) {
-        return date.getPositiveFriendNames(context);
+        return date.getPositiveFriendNames(context, getOwnerId());
     }
 }

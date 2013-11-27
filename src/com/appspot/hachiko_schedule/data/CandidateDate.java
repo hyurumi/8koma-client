@@ -6,10 +6,7 @@ import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.google.common.base.Joiner;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 予定調整中の候補日に対応するデータクラス
@@ -40,13 +37,18 @@ public class CandidateDate {
         return DateUtils.timeslotString(startDate, endDate);
     }
 
-    public String getPositiveFriendNames(Context context) {
+    public String getPositiveFriendNames(Context context, long exceptId) {
         UserTableHelper userTableHelper = new UserTableHelper(context);
-        Collection<String> hachikoIds = userTableHelper.getFriendsNameForHachikoIds(positiveFriendIds);
+        List<Long> friendIds = positiveFriendIds;
+        if (exceptId > 0 && positiveFriendIds.contains(exceptId)) {
+            friendIds = new ArrayList<Long>(positiveFriendIds);
+            friendIds.remove(exceptId);
+        }
+        Collection<String> hachikoIds = userTableHelper.getFriendsNameForHachikoIds(friendIds);
         return Joiner.on(", ").join(hachikoIds);
     }
-    public int getPositiveFriendsNum() {
-        return positiveFriendIds.size();
+    public int getPositiveFriendsNum(long ownerId) {
+        return positiveFriendIds.size() - (positiveFriendIds.contains(ownerId) ? 1 : 0);
     }
 
     public int getNegativeFriendsNum() {
