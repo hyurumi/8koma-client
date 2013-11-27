@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory
+    android:key="category_8koma"
+    android:title="ハチコマの振る舞いの設定">
+    <EditTextPreference
+        android:key="number_of_candidate_datetime"
+        android:title="ハチコマが提案する候補日時数"
+        android:summary="ハチコマが提案する候補日時を設定できます（最大値は８です）"
+        android:dialogTitle="ハチコマが提案する候補日時数"
+        android:defaultValue="@integer/number_of_candidate_date"
+        android:inputType="number"
+        />
+
+    </PreferenceCategory>
+  <PreferenceCategory
+      android:key="category_others"
+      android:title="その他の設定">
+    <Preference
+        android:key="confirm_version"
+        android:title="ビルド情報を確認"/>
+    <Preference
+        android:key="send_feedback"
+        android:title="フィードバックを送信"/>
+  </PreferenceCategory>
+</PreferenceScreen>

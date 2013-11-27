@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
+import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.ImplicitLoginRequest;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.dev.SQLDumpActivity;
@@ -33,37 +34,39 @@ import java.util.zip.ZipFile;
  */
 public class MainPreferenceActivity extends PreferenceActivity {
     private SharedPreferences prefs;
-    private PreferenceScreen screen;
+    //private PreferenceScreen screen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = HachikoPreferences.getDefault(MainPreferenceActivity.this);
-        PreferenceManager preferenceManager = getPreferenceManager();
-        preferenceManager.setSharedPreferencesName(HachikoPreferences.getPreferencesName());
-        screen = preferenceManager.createPreferenceScreen(this);
+        addPreferencesFromResource(R.xml.preferences);
 
         if (Constants.IS_ALPHA_USER) {
-            screen.addPreference(reauthPreference());
+            ((PreferenceCategory)findPreference("category_others")).addPreference(reauthPreference());
         }
-        screen.addPreference(confirmVersionPreference());
-        screen.addPreference(sendFeedbackPreference());
 
+        if (Constants.IS_DEVELOPER) {
+            setupDebugPrefs(getPreferenceScreen());
+        }
+
+        sendFeedbackPreference();
+        confirmVersionPreference();
         // TODO: カレンダーまわりの設定を復活させる #115関係
-        setupDebugPrefs();
-        setPreferenceScreen(screen);
+        //setupDebugPrefs();
     }
 
-    private void setupDebugPrefs() {
-        if (!Constants.IS_DEVELOPER) {
-            return;
-        }
+    private void setupDebugPrefs(PreferenceScreen screen) {
+
+        PreferenceCategory category = new PreferenceCategory(this);
+        category.setTitle("でバッグ");
+        screen.addPreference(category);
 
         CheckBoxPreference useFakeHttpStack = new CheckBoxPreference(this);
         useFakeHttpStack.setTitle("ダミーの通信を利用");
         useFakeHttpStack.setSummary("FakeHttpRequestクラスを利用して偽の通信結果を返す");
         useFakeHttpStack.setDefaultValue(HachikoPreferences.USE_FAKE_REQUEST_QUEUE_DEFAULT);
         useFakeHttpStack.setKey(HachikoPreferences.KEY_USE_FAKE_REQUEST_QUEUE);
+        category.addPreference(useFakeHttpStack);
 
         Preference showDb = new Preference(this);
         showDb.setTitle("データベースの中身を確認");
@@ -75,6 +78,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
+        category.addPreference(showDb);
 
         Preference deletePlans = new Preference(this);
         deletePlans.setTitle("予定一覧画面の予定を削除");
@@ -87,13 +91,13 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
+        category.addPreference(deletePlans);
 
         Preference superLongTimeout = new CheckBoxPreference(this);
         superLongTimeout.setKey(HachikoPreferences.KEY_USE_SUPER_LONG_LIFE_REQUEST);
         superLongTimeout.setTitle("通信タイムアウト時間を長く");
+        category.addPreference(superLongTimeout);
 
-        newPreferenceCategory(
-                "デバッグ", useFakeHttpStack, showDb, deletePlans, superLongTimeout);
     }
 
     private Preference reauthPreference() {
@@ -132,9 +136,8 @@ public class MainPreferenceActivity extends PreferenceActivity {
         return reauth;
     }
 
-    private Preference confirmVersionPreference() {
-        Preference confirmVersion = new Preference(this);
-        confirmVersion.setTitle("ビルド情報を確認");
+    private void confirmVersionPreference() {
+        Preference confirmVersion = findPreference("confirm_version");
         confirmVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -156,12 +159,10 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
-        return confirmVersion;
     }
 
-    private Preference sendFeedbackPreference() {
-        Preference sendFeedback = new Preference(this);
-        sendFeedback.setTitle("フィードバックを送信");
+    private void sendFeedbackPreference() {
+        Preference sendFeedback = findPreference("send_feedback");
         sendFeedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -169,7 +170,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"app8koma+support@gmail.com"});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Hachiko フィードバック");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "ハチコマフィードバック");
                 intent.putExtra(Intent.EXTRA_TEXT, "\n\n\n"
                         + "-----------------------\n"
                         + "Build ID: " + getCommitInfo() + "\n"
@@ -183,7 +184,6 @@ public class MainPreferenceActivity extends PreferenceActivity {
                 return true;
             }
         });
-        return sendFeedback;
     }
 
     private String getBuildTimeString() {
@@ -215,15 +215,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
         return prop.getProperty("commit");
     }
 
-    private PreferenceCategory newPreferenceCategory(String title, Preference... preferences) {
-        PreferenceCategory category = new PreferenceCategory(this);
-        screen.addPreference(category);
-        category.setTitle(title);
-        for (Preference preference: preferences) {
-            category.addPreference(preference);
-        }
-        return category;
-    }
+
 
     private void showCalendarChooseDialog() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
