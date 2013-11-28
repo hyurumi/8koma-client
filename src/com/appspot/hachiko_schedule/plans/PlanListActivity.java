@@ -1,7 +1,6 @@
 package com.appspot.hachiko_schedule.plans;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.*;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -30,6 +29,8 @@ import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
+import com.appspot.hachiko_schedule.setup.WalkthroughFragment0;
+import com.appspot.hachiko_schedule.setup.WalkthroughFragment1;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 
@@ -59,10 +60,33 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         progressDialog = new ProgressDialog(this);
         plansTableHelper = new PlansTableHelper(this);
 
+        final ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.addTab(actionBar
+                .newTab()
+                .setText("呼ばれた予定")
+                .setTabListener(new MainTabListener<UnfixedGuestPlansFragment>(
+                        this,
+                        "f1",
+                        UnfixedGuestPlansFragment.class
+                ))
+        );
+        actionBar.addTab(actionBar
+                .newTab()
+                .setText("呼んだ予定")
+                .setTabListener(new MainTabListener<UnfixedHostPlansFragment>(
+                        this,
+                        "f1",
+                        UnfixedHostPlansFragment.class
+                ))
+        );
+
+        //予定がないときの表示用フォントを読み込む
         eventList = ((ListView) findViewById(R.id.event_list));
         Typeface fontForArrow= Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
         ((TextView)findViewById(R.id.angle_double_up)).setTypeface(fontForArrow);
 
+        //予定がないときのアニメーション
         AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(100);
@@ -215,4 +239,40 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                 });
         HachikoApp.defaultRequestQueue().add(request);
     }
-}
+
+    private static class MainTabListener<T extends Fragment> implements ActionBar.TabListener{
+
+        private Fragment fragment;
+        private final Activity activity;
+        private final String tag;
+        private final Class<T> cls;
+
+        public MainTabListener(
+                Activity activity, String tag, Class<T> cls){
+            this.activity = activity;
+            this.tag = tag;
+            this.cls = cls;
+        }
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        }
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            if(fragment == null){
+                fragment = Fragment.instantiate(activity, cls.getName());
+                ft.add(android.R.id.content, fragment, tag);
+            }
+            else{
+                ft.attach(fragment);
+            }
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            if(fragment != null){
+                ft.detach(fragment);
+            }
+        }
+    }
+ }
