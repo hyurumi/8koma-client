@@ -60,11 +60,12 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         progressDialog = new ProgressDialog(this);
         plansTableHelper = new PlansTableHelper(this);
 
+        final Typeface fontForImage= Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
+
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar
                 .newTab()
-                .setText("呼ばれた予定")
                 .setTabListener(new MainTabListener<UnfixedGuestPlansFragment>(
                         this,
                         "f1",
@@ -73,18 +74,41 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
         );
         actionBar.addTab(actionBar
                 .newTab()
-                .setText("呼んだ予定")
                 .setTabListener(new MainTabListener<UnfixedHostPlansFragment>(
                         this,
-                        "f1",
+                        "f2",
                         UnfixedHostPlansFragment.class
                 ))
         );
 
+        actionBar.addTab(actionBar
+                .newTab()
+                .setTabListener(new MainTabListener<FixedPlansFragment>(
+                        this,
+                        "f3",
+                        FixedPlansFragment.class
+                ))
+        );
+
+        String[] tabNames = {getString(R.string.icon_unfixed_guest_plan),
+                getString(R.string.icon_unfixed_host_plan),
+                getString(R.string.icon_fixed_plan)};
+
+        for(int i = 0; i<actionBar.getTabCount(); i++){
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View customView = inflater.inflate(R.layout.tab_title, null);
+
+            TextView titleTV = (TextView) customView.findViewById(R.id.action_custom_title);
+            titleTV.setText(tabNames[i]);
+            titleTV.setTypeface(fontForImage);
+            //Here you can also add any other styling you want.
+
+            actionBar.getTabAt(i).setCustomView(customView);
+        }
+
         //予定がないときの表示用フォントを読み込む
         eventList = ((ListView) findViewById(R.id.event_list));
-        Typeface fontForArrow= Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
-        ((TextView)findViewById(R.id.angle_double_up)).setTypeface(fontForArrow);
+        ((TextView)findViewById(R.id.angle_double_up)).setTypeface(fontForImage);
 
         //予定がないときのアニメーション
         AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);

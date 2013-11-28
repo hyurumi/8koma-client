@@ -2,6 +2,7 @@
 <resources>
     <style name="hachiko_theme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/hachiko_actionbar_style</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
         <item name="android:actionOverflowButtonStyle">@style/hachiko_actionbar_overflow</item>
         <item name="android:actionButtonStyle">@style/hachiko_actionbar_button</item>
         <item name="android:textColor">@color/font_color_normal</item>
