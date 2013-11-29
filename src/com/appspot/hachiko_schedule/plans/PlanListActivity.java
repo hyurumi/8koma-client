@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PlanListActivity extends Activity implements UnfixedHostPlanView.OnConfirmListener {
+public class PlanListActivity extends Activity{
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
     private PlanAdapter planAdapter;
@@ -120,6 +120,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     }
 
 
+    /*
     @Override
     protected void onResume() {
         queryAndUpdatePlans();
@@ -127,50 +128,13 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
     }
 
     private void queryAndUpdatePlans() {
-        List<Plan> plans = plansTableHelper.queryPlans();
+        List<Plan> plans = plansTableHelper.queryUnfixedGuestPlans();
         planAdapter = new PlanAdapter(this, plans, this);
         eventList.setAdapter(planAdapter);
         findViewById(R.id.view_for_no_event).setVisibility(
                 plans.size() == 0 ? View.VISIBLE : View.GONE);
     }
-    @Override
-    public void onConfirm(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
-        int answerId = candidateDate.getAnswerId();
-        progressDialog.setMessage("予定を確定中");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
-        HachikoLogger.debug("confirm: " + HachikoAPI.Plan.CONFIRM.getUrl() + answerId);
-        Request request = new JSONStringRequest(PlanListActivity.this,
-                HachikoAPI.Plan.CONFIRM.getMethod(),
-                HachikoAPI.Plan.CONFIRM.getUrl() + answerId,
-                null,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        HachikoLogger.debug("Confirmed");
-                        FixedPlan fixedPlan = new FixedPlan(
-                                unfixedPlan.getPlanId(), unfixedPlan.getTitle(),
-                                HachikoPreferences.getMyHachikoId(PlanListActivity.this),
-                                candidateDate);
-                        plansTableHelper.confirmCandidateDate(
-                                unfixedPlan.getPlanId(), candidateDate.getAnswerId());
-                        planAdapter.updatePlan(unfixedPlan, fixedPlan);
-                        progressDialog.hide();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        progressDialog.hide();
-                        HachikoDialogs.showNetworkErrorDialog(
-                                PlanListActivity.this, volleyError);
-                        HachikoLogger.error("confirm fail", volleyError);
-                    }
-                });
-        request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
-        HachikoApp.defaultRequestQueue().add(request);
-    }
+    */
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -250,7 +214,7 @@ public class PlanListActivity extends Activity implements UnfixedHostPlanView.On
                 new FetchPlansRequest.PlansUpdateListener() {
                     @Override
                     public void onPlansUpdated() {
-                        queryAndUpdatePlans();
+                        //queryAndUpdatePlans();
                         progressDialog.hide();
                     }
                 },

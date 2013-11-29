@@ -43,7 +43,8 @@ class PlanAdapter extends ArrayAdapter<Plan> {
     }
 
     public void updatePlan(UnfixedPlan unfixedPlan, FixedPlan fixedplan) {
-        plans.set(getPosition(unfixedPlan), fixedplan);
+        plans.remove(getPosition(unfixedPlan));
+        //plans.set(getPosition(unfixedPlan), fixedplan);
         notifyDataSetChanged();
     }
 

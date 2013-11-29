@@ -111,32 +111,50 @@ public class PlansTableHelper {
         HachikoLogger.debug("insert date:", values);
     }
 
+    enum PlansType{UnFixed_Guest_Plans, UnFixed_Host_Plans, Fixed_Plans};
+
     /**
      * @return すべての未確定な予定を取得
      */
     // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
-    public List<Plan> queryUnfixedPlans() {
-        return queryPlans(true);
+    public List<Plan> queryUnfixedHostPlans() {
+        return queryPlans(PlansType.UnFixed_Host_Plans);
     }
+
+    public List<Plan> queryUnfixedGuestPlans(){
+        return queryPlans(PlansType.UnFixed_Guest_Plans);
+    }
+
+    public List<Plan> queryFixedPlans() {
+        return queryPlans(PlansType.Fixed_Plans);
+    }
+
+
+
 
     /**
      * @return すべての予定を取得
      */
     // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
-    public List<Plan> queryPlans() {
-        return queryPlans(false);
-    }
-
-    /**
-     * @return すべての予定を取得
-     */
-    // TODO: 全部クエリするのではなくselectFromとかnumDataみたいな引数を指定できるように
-    public List<Plan> queryPlans(boolean onlyUnfixed) {
+    public List<Plan> queryPlans(PlansType pt) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + PLAN_TABLE_NAME +
-                (onlyUnfixed ? (" WHERE " + IS_FIXED + " == 0") : "")
-                + " ORDER BY "
-                + CREATED_AT + " DESC;", null);
+
+        StringBuffer sqlBuffer = new StringBuffer();
+        sqlBuffer.append("select * from " + PLAN_TABLE_NAME);
+        switch (pt){
+            case Fixed_Plans:
+                sqlBuffer.append(" WHERE " + IS_FIXED + " == 1");
+                break;
+            case UnFixed_Host_Plans:
+                sqlBuffer.append(" WHERE " + IS_FIXED + " == 0 AND " + IS_HOST + " == 1");
+                break;
+            case UnFixed_Guest_Plans:
+                sqlBuffer.append(" WHERE " + IS_FIXED + " == 0 AND " + IS_HOST + " == 0");
+                break;
+        }
+        sqlBuffer.append(" ORDER BY "+ CREATED_AT + " DESC;");
+
+        Cursor c = db.rawQuery(sqlBuffer.toString(), null);
         if (!c.moveToFirst()) {
             c.close();
             return Collections.emptyList();
