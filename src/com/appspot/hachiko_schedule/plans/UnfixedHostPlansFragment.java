@@ -91,9 +91,8 @@ public class UnfixedHostPlansFragment extends Fragment  implements UnfixedHostPl
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         progressDialog.hide();
-                        //TODO: 第１引数が甘く設定できない。
-                        //HachikoDialogs.showNetworkErrorDialog(
-                                //PlanListActivity.this.get, volleyError);
+                        HachikoDialogs.showNetworkErrorDialog(
+                                getActivity(), volleyError);
                         HachikoLogger.error("confirm fail", volleyError);
                     }
                 });

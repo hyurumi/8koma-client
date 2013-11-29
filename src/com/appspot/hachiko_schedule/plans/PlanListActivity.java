@@ -120,21 +120,6 @@ public class PlanListActivity extends Activity{
     }
 
 
-    /*
-    @Override
-    protected void onResume() {
-        queryAndUpdatePlans();
-        super.onResume();
-    }
-
-    private void queryAndUpdatePlans() {
-        List<Plan> plans = plansTableHelper.queryUnfixedGuestPlans();
-        planAdapter = new PlanAdapter(this, plans, this);
-        eventList.setAdapter(planAdapter);
-        findViewById(R.id.view_for_no_event).setVisibility(
-                plans.size() == 0 ? View.VISIBLE : View.GONE);
-    }
-    */
 
     @Override
     protected void onNewIntent(Intent intent) {
