@@ -5,12 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.*;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendGroup;
@@ -20,6 +16,7 @@ import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 import com.appspot.hachiko_schedule.ui.EditTextDialog;
+import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.*;
 
@@ -28,11 +25,10 @@ import java.util.*;
  */
 public class FriendsFragment extends Fragment {
     private FriendListAdapter friendListAdapter;
-    private FriendListAdapter suggestionAdapter;
 
     private ListView listView;
     private View createPlanButtonWrapper;
-    private ChipsAutoCompleteTextView searchFriendView;
+    private ChipsFriendNameEditText searchFriendView;
     private Button createGroupButton;
     private Button createPlanButton;
 
@@ -77,11 +73,8 @@ public class FriendsFragment extends Fragment {
         registerForContextMenu(listView);
         listView.setOnItemClickListener(new OnFriendItemClickListener());
 
-        searchFriendView = (ChipsAutoCompleteTextView) view.findViewById(R.id.search_friend);
-        suggestionAdapter = new FriendMultipleSuggestAdapter(
-                getActivity(), R.layout.auto_complete_item_friend, items);
-        searchFriendView.setAdapter(suggestionAdapter);
-        searchFriendView.addOnItemClickListener(new OnFriendAutoCompleteClickListener());
+        searchFriendView = (ChipsFriendNameEditText) view.findViewById(R.id.search_friend);
+        searchFriendView.registerListViewAndAdapter(listView, friendListAdapter);
         searchFriendView.setOnNameDeletedListener(new OnFriendNameDeletedListener());
         return view;
     }
@@ -107,36 +100,13 @@ public class FriendsFragment extends Fragment {
         switch(menuItem.getItemId()) {
             case 0: // delete
                 FriendGroup item = (FriendGroup) friendListAdapter.getItem(info.position);
-                Set<Integer> checkedIndices = copyCheckedItemPositions();
-                if (checkedIndices.contains(info.position)) {
-                    searchFriendView.removeName(item.getDisplayName());
-                }
+                searchFriendView.removeItem(item);
                 friendListAdapter.remove(item);
-                listView.clearChoices();
-                for (Integer i: checkedIndices) {
-                    if (i < info.position) {
-                        listView.setItemChecked(i, true);
-                    } else if (i > info.position) {
-                        listView.setItemChecked(i - 1, true);
-                    }
-                }
-                suggestionAdapter.remove(item);
                 UserTableHelper tableHelper = new UserTableHelper(getActivity());
                 tableHelper.deleteGroup(item.getId());
             default:
                 return super.onContextItemSelected(menuItem);
         }
-    }
-
-    private Set<Integer> copyCheckedItemPositions() {
-        SparseBooleanArray selection = listView.getCheckedItemPositions();
-        Set<Integer> checkedIndices = new HashSet<Integer>();
-        for (int i = 0; i < selection.size(); i++) {
-            if (selection.get(selection.keyAt(i))) {
-                checkedIndices.add(selection.keyAt(i));
-            }
-        }
-        return checkedIndices;
     }
 
     @Override
@@ -149,12 +119,7 @@ public class FriendsFragment extends Fragment {
      */
     private Set<FriendItem> getSelectedEntries() {
         Set<FriendItem> friends = new HashSet<FriendItem>();
-        SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-        for (int i = 0; i < checkedItemPositions.size(); i++) {
-            if (!checkedItemPositions.get(checkedItemPositions.keyAt(i))) {
-                continue;
-            }
-            FriendOrGroup item = friendListAdapter.getItem(checkedItemPositions.keyAt(i));
+        for (FriendOrGroup item: searchFriendView.getSelectedItems()) {
             if (item instanceof FriendItem) {
                 friends.add((FriendItem) item);
             } else {
@@ -164,13 +129,9 @@ public class FriendsFragment extends Fragment {
         return friends;
     }
 
-    private boolean isItemChecked(FriendOrGroup item) {
-        SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-        return checkedItemPositions.get(friendListAdapter.getPosition(item));
-    }
 
     private void setConfirmButtonState() {
-        boolean shouldEnable = listView.getCheckedItemCount() > 0;
+        boolean shouldEnable = searchFriendView.getSelectedItems().size() > 0;
         createPlanButtonWrapper.setVisibility(shouldEnable ? View.VISIBLE : View.GONE);
         createPlanButton.setEnabled(shouldEnable);
     }
@@ -191,7 +152,6 @@ public class FriendsFragment extends Fragment {
                         FriendGroup group = new FriendGroup(
                                 (int) id, text, null, new HashSet<FriendItem>(friends));
                         friendListAdapter.insert(group, 0);
-                        suggestionAdapter.insert(group, 0);
                         clearSelectedFriends();
                         listView.setSelectionAfterHeaderView();
                         return true;
@@ -205,7 +165,7 @@ public class FriendsFragment extends Fragment {
         setConfirmButtonState();
     }
 
-    private class FriendListAdapter extends ArrayAdapter<FriendOrGroup> {
+    protected class FriendListAdapter extends ArrayAdapter<FriendOrGroup> {
         private int layoutResourceId;
 
         public FriendListAdapter(Context context, int resource, List<FriendOrGroup> entries) {
@@ -220,20 +180,13 @@ public class FriendsFragment extends Fragment {
             }
             FriendOrGroup item = getItem(position);
             ((FriendItemView) convertView).setItem(item);
+            HachikoLogger.debug(item + " " + searchFriendView.getSelectedItems().contains(item)
+                    + " " + searchFriendView.getSelectedItems().toString());
+            ((FriendItemView) convertView).setChecked(
+                    searchFriendView.getSelectedItems().contains(item));
+            HachikoLogger.debug(item + " " + searchFriendView.getSelectedItems().contains(item)
+                    + " " + searchFriendView.getSelectedItems().toString());
             return convertView;
-        }
-    }
-
-    private class FriendMultipleSuggestAdapter extends FriendListAdapter {
-        private FriendMultipleSuggestAdapter(Context context, int resource, List<FriendOrGroup> entries) {
-            super(context, resource, entries);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = super.getView(position, convertView, parent);
-            ((FriendItemView) v).setChecked(isItemChecked(getItem(position)));
-            return v;
         }
     }
 
@@ -241,65 +194,18 @@ public class FriendsFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CharSequence name = ((FriendItemView) view).getName();
-            if (((FriendItemView) view).isChecked()) {
-                String textInSearchField = searchFriendView.getText().toString();
-                String trimmed = trimEndOfTextToComma(textInSearchField);
-                searchFriendView.setText(trimmed.trim() + (trimmed.length() > 0 ? ", " : "") + name + ", ");
-                searchFriendView.setupChips();
-            } else {
-                searchFriendView.removeName(name.toString());
-            }
-            setConfirmButtonState();
-        }
-
-        private String trimEndOfTextToComma(String str) {
-            if (str.length() == 0) {
-                return str;
-            }
-            int last = str.length() - 1;
-            while (last > 0 && str.charAt(last) != ',') {
-                last--;
-            }
-            return str.substring(0, last);
-        }
-    }
-
-    private class OnFriendAutoCompleteClickListener implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            boolean shouldBeChecked = !((FriendItemView) view).isChecked();
-            listView.setItemChecked(
-                    friendListAdapter.getPosition(suggestionAdapter.getItem(position)),
-                    shouldBeChecked);
-            if (!shouldBeChecked) {
-                searchFriendView.removeName(((FriendItemView) view).getName());
-            }
+            FriendOrGroup item = friendListAdapter.getItem(position);
+            searchFriendView.toggleSelection(item);
             setConfirmButtonState();
         }
     }
 
     private class OnFriendNameDeletedListener
-            implements ChipsAutoCompleteTextView.OnNameDeletedListener {
+            implements ChipsFriendNameEditText.OnNameDeletedListener {
         @Override
-        public void onNameDeleted(String name) {
-            unselectByName(name);
+        public void onNameDeleted(FriendOrGroup item) {
+            listView.setItemChecked(friendListAdapter.getPosition(item), false);
             setConfirmButtonState();
-        }
-
-        private void unselectByName(String name) {
-            SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-            for (int i = 0; i < checkedItemPositions.size(); i++) {
-                int position = checkedItemPositions.keyAt(i);
-                if (!checkedItemPositions.get(position)) {
-                    continue;
-                }
-                FriendOrGroup item = friendListAdapter.getItem(position);
-                if (name.equals(item.getDisplayName())) {
-                    listView.setItemChecked(position, false);
-                }
-            }
         }
     }
 }
