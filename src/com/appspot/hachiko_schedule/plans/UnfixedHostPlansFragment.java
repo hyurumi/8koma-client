@@ -1,7 +1,9 @@
 package com.appspot.hachiko_schedule.plans;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,17 +59,27 @@ public class UnfixedHostPlansFragment extends Fragment  implements UnfixedHostPl
     }
     private void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryUnfixedHostPlans();
-        planAdapter = new PlanAdapter(this.getActivity(), plans, this);
+        planAdapter = new PlanAdapter(this.getActivity(), plans, this,
+                new UnfixedHostPlanView.OnRemindButtonClickListener() {
+                    @Override
+                    public void onRemindButtonClicked(final long planId) {
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage("未回答者にリマインダーを流しますか？")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        showProgressDialog("通信中", false);
+                                        sendReminder(planId);
+                                    }
+                                }).show();
+                    }});
         eventList.setAdapter(planAdapter);
     }
 
     @Override
     public void onConfirm(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
         int answerId = candidateDate.getAnswerId();
-        progressDialog.setMessage("予定を確定中");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
+        showProgressDialog("予定を確定中", false);
         HachikoLogger.debug("confirm: " + HachikoAPI.Plan.CONFIRM.getUrl() + answerId);
         Request request = new JSONStringRequest(UnfixedHostPlansFragment.this.getActivity(),
                 HachikoAPI.Plan.CONFIRM.getMethod(),
@@ -100,5 +112,33 @@ public class UnfixedHostPlansFragment extends Fragment  implements UnfixedHostPl
         HachikoApp.defaultRequestQueue().add(request);
     }
 
+    private void showProgressDialog(String message, boolean cancelable) {
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(cancelable);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+    }
 
+    private void sendReminder(long planId) {
+        Request request = new JSONStringRequest(
+                getActivity(),
+                HachikoAPI.Plan.REMIND.getMethod(),
+                HachikoAPI.Plan.REMIND.getUrl() + planId,
+                null,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        HachikoLogger.debug("reminder successfully sent");
+                        progressDialog.hide();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        HachikoDialogs.showNetworkErrorDialog(getActivity(), volleyError, "リマインダ送信");
+                        HachikoLogger.error("redpond fail", volleyError);
+                    }
+                });
+        HachikoApp.defaultRequestQueue().add(request);
+    }
 }

@@ -1,7 +1,6 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,7 @@ public class FixedPlansFragment extends Fragment{
     }
     private void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryFixedPlans();
-        planAdapter = new PlanAdapter(this.getActivity(), plans, null);
+        planAdapter = new PlanAdapter(this.getActivity(), plans);
         eventList.setAdapter(planAdapter);
     }
 }

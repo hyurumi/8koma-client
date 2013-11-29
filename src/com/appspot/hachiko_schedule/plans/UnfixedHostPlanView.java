@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
@@ -33,9 +32,15 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         public void onConfirm(UnfixedPlan unfixedPlan, CandidateDate candidateDate);
     }
 
+    public static interface OnRemindButtonClickListener {
+        public void onRemindButtonClicked(long planId);
+    }
+
+    private long planId;
     private TextView titleView;
     private ViewGroup candidateDateContainer;
     private OnConfirmListener onConfirmListener;
+    private OnRemindButtonClickListener onRemindButtonClickListener;
 
     public UnfixedHostPlanView(Context context) {
         super(context);
@@ -60,6 +65,7 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
 
     @Override
     public UnfixedHostPlanView setPlan(UnfixedPlan plan) {
+        planId = plan.getPlanId();
         titleView.setText(plan.getTitle());
         candidateDateContainer.removeAllViews();
         List<CandidateDate> candidateDates = plan.getCandidateDates();
@@ -83,7 +89,9 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         findViewById(R.id.remind).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmReminderDialog();
+                if (onRemindButtonClickListener != null) {
+                    onRemindButtonClickListener.onRemindButtonClicked(planId);
+                }
             }
         });
         return this;
@@ -91,6 +99,10 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
 
     public void setOnConfirmListener(OnConfirmListener confirmListener) {
         this.onConfirmListener = confirmListener;
+    }
+
+    public void setOnReminderButtonClickListener(OnRemindButtonClickListener onRemindButtonClickListener) {
+        this.onRemindButtonClickListener = onRemindButtonClickListener;
     }
 
     private class CandidateDateView extends LinearLayout {
@@ -149,16 +161,5 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
                     }).show();
         }
 
-    }
-
-    private void confirmReminderDialog() {
-        new AlertDialog.Builder(getContext())
-                .setMessage("未回答者にリマインダーを流しますか？")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(), "未実装", Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
     }
 }

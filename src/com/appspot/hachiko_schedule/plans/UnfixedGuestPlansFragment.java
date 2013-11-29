@@ -42,7 +42,7 @@ public class UnfixedGuestPlansFragment extends Fragment{
     }
     private void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryUnfixedGuestPlans();
-        planAdapter = new PlanAdapter(this.getActivity(), plans, null);
+        planAdapter = new PlanAdapter(this.getActivity(), plans);
         eventList.setAdapter(planAdapter);
     }
 }

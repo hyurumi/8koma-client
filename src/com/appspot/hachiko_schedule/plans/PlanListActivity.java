@@ -18,25 +18,14 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.FetchPlansRequest;
-import com.appspot.hachiko_schedule.apis.HachikoAPI;
-import com.appspot.hachiko_schedule.apis.base_requests.JSONStringRequest;
-import com.appspot.hachiko_schedule.data.CandidateDate;
-import com.appspot.hachiko_schedule.data.FixedPlan;
-import com.appspot.hachiko_schedule.data.Plan;
-import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
-import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
-import com.appspot.hachiko_schedule.setup.WalkthroughFragment0;
-import com.appspot.hachiko_schedule.setup.WalkthroughFragment1;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class PlanListActivity extends Activity{
     private boolean shouldBackToChooseGuestActivity;

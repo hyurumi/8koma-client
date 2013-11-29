@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendGroup;
@@ -16,7 +19,6 @@ import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.plans.CreatePlanActivity;
 import com.appspot.hachiko_schedule.ui.EditTextDialog;
-import com.appspot.hachiko_schedule.util.HachikoLogger;
 
 import java.util.*;
 
@@ -180,12 +182,8 @@ public class FriendsFragment extends Fragment {
             }
             FriendOrGroup item = getItem(position);
             ((FriendItemView) convertView).setItem(item);
-            HachikoLogger.debug(item + " " + searchFriendView.getSelectedItems().contains(item)
-                    + " " + searchFriendView.getSelectedItems().toString());
             ((FriendItemView) convertView).setChecked(
                     searchFriendView.getSelectedItems().contains(item));
-            HachikoLogger.debug(item + " " + searchFriendView.getSelectedItems().contains(item)
-                    + " " + searchFriendView.getSelectedItems().toString());
             return convertView;
         }
     }

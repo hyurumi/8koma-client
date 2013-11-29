@@ -17,12 +17,22 @@ import java.util.List;
 class PlanAdapter extends ArrayAdapter<Plan> {
     private final List<Plan> plans;
     private final UnfixedHostPlanView.OnConfirmListener onConfirmListener;
+    private final UnfixedHostPlanView.OnRemindButtonClickListener onRemindButtonClickListener;
+
+
+    public PlanAdapter(Context context, List<Plan> plans) {
+        this(context, plans, null, null);
+    }
 
     public PlanAdapter(
-            Context context, List<Plan> plans, UnfixedHostPlanView.OnConfirmListener onConfirmListener) {
+            Context context,
+            List<Plan> plans,
+            UnfixedHostPlanView.OnConfirmListener onConfirmListener,
+            UnfixedHostPlanView.OnRemindButtonClickListener onRemindButtonClickListener) {
         super(context, R.layout.unfixed_guest_plan_view, plans);
         this.plans = plans;
         this.onConfirmListener = onConfirmListener;
+        this.onRemindButtonClickListener = onRemindButtonClickListener;
     }
 
     @Override
@@ -34,6 +44,8 @@ class PlanAdapter extends ArrayAdapter<Plan> {
                 && (convertView == null || !(convertView instanceof UnfixedHostPlanView))) {
             convertView = new UnfixedHostPlanView(getContext());
             ((UnfixedHostPlanView) convertView).setOnConfirmListener(onConfirmListener);
+            ((UnfixedHostPlanView) convertView)
+                    .setOnReminderButtonClickListener(onRemindButtonClickListener);
         } else if (!plan.isFixed() && !plan.isHost(getContext())
             && (convertView == null || !(convertView instanceof UnfixedGuestPlanView))) {
             convertView = new UnfixedGuestPlanView(getContext());
