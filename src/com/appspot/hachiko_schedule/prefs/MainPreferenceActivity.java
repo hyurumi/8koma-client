@@ -2,7 +2,6 @@ package com.appspot.hachiko_schedule.prefs;
 
 import android.app.*;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ public class MainPreferenceActivity extends Activity {
     private static void setDebugPrefs() {
 
         PreferenceCategory category = new PreferenceCategory(fragment.getActivity());
-        category.setTitle("でバッグ");
+        category.setTitle("デバッグ");
         fragment.getPreferenceScreen().addPreference(category);
 
         CheckBoxPreference useFakeHttpStack = new CheckBoxPreference(fragment.getActivity());
@@ -226,6 +225,7 @@ public class MainPreferenceActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            getPreferenceManager().setSharedPreferencesName(HachikoPreferences.getPreferencesName());
             addPreferencesFromResource(R.xml.preferences);
 
             PreferenceScreen screen = this.getPreferenceScreen();
