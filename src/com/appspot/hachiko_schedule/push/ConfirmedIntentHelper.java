@@ -28,7 +28,7 @@ public class ConfirmedIntentHelper extends GcmIntentHandlerBase<JSONObject> {
             long planId = body.getLong("planId");
             long answerId = body.getLong("id");
             PlansTableHelper plansTableHelper = new PlansTableHelper(getContext());
-            title = plansTableHelper.queryTitle(planId);
+            title = plansTableHelper.queryPlan(planId).getTitle();
             plansTableHelper.confirmCandidateDate(planId, answerId);
             startDate = DateUtils.parseISO8601(body.getJSONObject("time").getString("start"));
         } catch (JSONException e) {

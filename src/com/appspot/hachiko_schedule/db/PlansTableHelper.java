@@ -255,13 +255,18 @@ public class PlansTableHelper {
         db.close();
     }
 
-    public String queryTitle(long planId) {
+    public Plan queryPlan(long planId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{TITLE}, PLAN_ID + "==" + planId,
+        Cursor c = db.query(false, PLAN_TABLE_NAME, new String[]{TITLE, OWNER_ID, IS_FIXED},
+                PLAN_ID + "==" + planId,
                 null, null, null, null, "1");
-        String ret = null;
+        Plan ret = null;
         if (c.moveToFirst()) {
-            ret = c.getString(c.getColumnIndex(TITLE));
+            ret = new Plan(
+                    planId,
+                    c.getString(c.getColumnIndex(TITLE)),
+                    c.getLong(c.getColumnIndex(OWNER_ID)),
+                    c.getInt(c.getColumnIndex(IS_FIXED)) != 0);
         }
         db.close();
         return ret;
