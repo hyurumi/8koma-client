@@ -1,6 +1,7 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -21,11 +22,23 @@ import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 public class PlanListActivity extends Activity{
+    public static String INTENT_KEY_DEFAULT_TAB_NAME = "default_tab_name";
+    public static String TAB_NAME_UNFIXED_GUEST = "unfixed_guest_plan";
+    public static String TAB_NAME_UNFIXED_HOST = "unfixed_host_plan";
+    public static String TAB_NAME_FIXED = "fixed_plan";
+    private final Map<String, Integer> tabPositions = ImmutableMap.of(
+            TAB_NAME_UNFIXED_GUEST, 0,
+            TAB_NAME_UNFIXED_HOST, 1,
+            TAB_NAME_FIXED, 2
+    );
+
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
 
@@ -39,7 +52,6 @@ public class PlanListActivity extends Activity{
             return;
         }
 
-        handleIntent(getIntent());
         setContentView(R.layout.activity_event_list);
         progressDialog = new ProgressDialog(this);
 
@@ -51,7 +63,7 @@ public class PlanListActivity extends Activity{
                 .newTab()
                 .setTabListener(new MainTabListener<UnfixedGuestPlansFragment>(
                         this,
-                        "f1",
+                        TAB_NAME_UNFIXED_GUEST,
                         UnfixedGuestPlansFragment.class
                 ))
         );
@@ -59,7 +71,7 @@ public class PlanListActivity extends Activity{
                 .newTab()
                 .setTabListener(new MainTabListener<UnfixedHostPlansFragment>(
                         this,
-                        "f2",
+                        TAB_NAME_UNFIXED_HOST,
                         UnfixedHostPlansFragment.class
                 ))
         );
@@ -67,7 +79,7 @@ public class PlanListActivity extends Activity{
                 .newTab()
                 .setTabListener(new MainTabListener<FixedPlansFragment>(
                         this,
-                        "f3",
+                        TAB_NAME_FIXED,
                         FixedPlansFragment.class
                 ))
         );
@@ -97,6 +109,8 @@ public class PlanListActivity extends Activity{
         animation.setDuration(2000);
         (findViewById(R.id.angle_double_up)).startAnimation(animation);
         (findViewById(R.id.no_event_then_create_new)).startAnimation(animation);
+
+        handleIntent(getIntent());
     }
 
     @Override
@@ -106,8 +120,15 @@ public class PlanListActivity extends Activity{
     }
 
     private void handleIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
         shouldBackToChooseGuestActivity
-                = (intent != null && intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false));
+                = intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false);
+        String tabName = intent.getStringExtra(INTENT_KEY_DEFAULT_TAB_NAME);
+        if (tabName != null && tabPositions.containsKey(tabName)) {
+            getActionBar().setSelectedNavigationItem(tabPositions.get(tabName));
+        }
     }
 
     @Override
@@ -189,6 +210,16 @@ public class PlanListActivity extends Activity{
                     }
                 });
         HachikoApp.defaultRequestQueue().add(request);
+    }
+
+    public static Intent getIntentForUnfixedGuest(Context context) {
+        return new Intent(context, PlanListActivity.class).putExtra(
+                INTENT_KEY_DEFAULT_TAB_NAME, TAB_NAME_UNFIXED_GUEST);
+    }
+
+    public static Intent getIntentForUnfixedHost(Context context) {
+        return new Intent(context, PlanListActivity.class).putExtra(
+                INTENT_KEY_DEFAULT_TAB_NAME, TAB_NAME_UNFIXED_HOST);
     }
 
     private static class MainTabListener<T extends Fragment> implements ActionBar.TabListener{
