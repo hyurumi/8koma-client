@@ -196,7 +196,7 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
             this.candidateDate = candidateDate;
             this.index = index;
             candidateText.setText(candidateDate.getDateText());
-            numOfPositiveFriends.setText(Integer.toString(candidateDate.getPositiveFriendsNum(ownerId)));
+            numOfPositiveFriends.setText(Integer.toString(candidateDate.getPositiveFriendsNumWithSelf()));
             positiveFriendNamesView.setText(
                     candidateDate.getPositiveFriendNames(getContext(), ownerId));
             lastPersistedState = candidateDate.getMyAnswerState();

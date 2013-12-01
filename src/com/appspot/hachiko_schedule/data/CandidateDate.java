@@ -50,6 +50,9 @@ public class CandidateDate {
     public int getPositiveFriendsNum(long ownerId) {
         return positiveFriendIds.size() - (positiveFriendIds.contains(ownerId) ? 1 : 0);
     }
+    public int getPositiveFriendsNumWithSelf() {
+        return positiveFriendIds.size() + (myAnswerState == AnswerState.OK ? 1 : 0);
+    }
 
     public int getNegativeFriendsNum() {
         return negativeFriendIds.size();
