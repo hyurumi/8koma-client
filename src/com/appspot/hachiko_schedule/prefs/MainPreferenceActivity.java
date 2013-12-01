@@ -1,16 +1,12 @@
 package com.appspot.hachiko_schedule.prefs;
 
 import android.app.*;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -185,14 +181,14 @@ public class MainPreferenceActivity extends Activity {
 
     private static void timerangePreference(){
         prefs = HachikoPreferences.getDefault(fragment.getActivity());
-        fragment.getPreferenceScreen().findPreference("timerange_asa").setSummary(
-                prefs.getString("timerange_asa",HachikoPreferences.DEFAULT_TIMERANGE_ASA));
-        fragment.getPreferenceScreen().findPreference("timerange_hiru").setSummary(
-                prefs.getString("timerange_hiru",HachikoPreferences.DEFAULT_TIMERANGE_HIRU));
-        fragment.getPreferenceScreen().findPreference("timerange_yu").setSummary(
-                prefs.getString("timerange_yu",HachikoPreferences.DEFAULT_TIMERANGE_YU));
-        fragment.getPreferenceScreen().findPreference("timerange_yoru").setSummary(
-                prefs.getString("timerange_yoru",HachikoPreferences.DEFAULT_TIMERANGE_YORU));
+        fragment.getPreferenceScreen().findPreference(HachikoPreferences.KEY_TIMERANGE_ASA).setSummary(
+                prefs.getString(HachikoPreferences.KEY_TIMERANGE_ASA, HachikoPreferences.DEFAULT_TIMERANGE_ASA));
+        fragment.getPreferenceScreen().findPreference(HachikoPreferences.KEY_TIMERANGE_HIRU).setSummary(
+                prefs.getString(HachikoPreferences.KEY_TIMERANGE_HIRU,HachikoPreferences.DEFAULT_TIMERANGE_HIRU));
+        fragment.getPreferenceScreen().findPreference(HachikoPreferences.KEY_TIMERANGE_YU).setSummary(
+                prefs.getString(HachikoPreferences.KEY_TIMERANGE_YU,HachikoPreferences.DEFAULT_TIMERANGE_YU));
+        fragment.getPreferenceScreen().findPreference(HachikoPreferences.KEY_TIMERANGE_YORU).setSummary(
+                prefs.getString(HachikoPreferences.KEY_TIMERANGE_YORU,HachikoPreferences.DEFAULT_TIMERANGE_YORU));
     }
 
     private static String getBuildTimeString() {

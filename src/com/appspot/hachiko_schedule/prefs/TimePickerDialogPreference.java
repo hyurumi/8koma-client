@@ -5,9 +5,9 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import com.appspot.hachiko_schedule.R;
+import com.appspot.hachiko_schedule.data.TimeRange;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,27 +38,25 @@ public class TimePickerDialogPreference extends DialogPreference {
         timepicker_start.setIs24HourView(true);
         timepicker_end.setIs24HourView(true);
 
-        String[] timerange = getPersistedString("").split(":|-");
-        if (timerange.length != 4){
-            if (getKey().equals("timerange_asa")){
-                timerange = HachikoPreferences.DEFAULT_TIMERANGE_ASA.split(":|-");
-            }
-            else if(getKey().equals("timerange_hiru")){
-                timerange = HachikoPreferences.DEFAULT_TIMERANGE_HIRU.split(":|-");
-            }
-            else if (getKey().equals("timerange_yu")){
-                timerange = HachikoPreferences.DEFAULT_TIMERANGE_YU.split(":|-");
-            }
-            else{
-                timerange = HachikoPreferences.DEFAULT_TIMERANGE_YORU.split(":|-");
-            }
-        }
+        TimeRange timeRange = new TimeRange(getPersistedString(getDefaultTimeRangeString()));
 
-        timepicker_start.setCurrentHour(Integer.valueOf(timerange[0]));
-        timepicker_start.setCurrentMinute(Integer.valueOf(timerange[1]));
-        timepicker_end.setCurrentHour(Integer.valueOf(timerange[2]));
-        timepicker_end.setCurrentMinute(Integer.valueOf(timerange[3]));
+        timepicker_start.setCurrentHour(timeRange.getStartHour());
+        timepicker_start.setCurrentMinute(timeRange.getStartMinute());
+        timepicker_end.setCurrentHour(timeRange.getEndHour());
+        timepicker_end.setCurrentMinute(timeRange.getEndMinutes());
         return v;
+    }
+
+    private String getDefaultTimeRangeString() {
+        if (getKey().equals(HachikoPreferences.KEY_TIMERANGE_ASA)){
+            return HachikoPreferences.DEFAULT_TIMERANGE_ASA;
+        } else if(getKey().equals(HachikoPreferences.KEY_TIMERANGE_HIRU)){
+            return HachikoPreferences.DEFAULT_TIMERANGE_HIRU;
+        } else if (getKey().equals(HachikoPreferences.KEY_TIMERANGE_YU)){
+            return HachikoPreferences.DEFAULT_TIMERANGE_YU;
+        } else{
+            return HachikoPreferences.DEFAULT_TIMERANGE_YORU;
+        }
     }
 
     @Override
