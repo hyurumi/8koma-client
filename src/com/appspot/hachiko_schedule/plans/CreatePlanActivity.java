@@ -242,7 +242,8 @@ public class CreatePlanActivity extends Activity {
                                 HachikoPreferences.getMyHachikoId(CreatePlanActivity.this),
                                 /* you are host */ true, Arrays.<Long>asList(friendIds),
                                 candidateDates);
-                        Intent intent = new Intent(CreatePlanActivity.this, PlanListActivity.class);
+                        Intent intent =
+                                PlanListActivity.getIntentForUnfixedHost(CreatePlanActivity.this);
                         intent.addFlags(
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);

@@ -2,7 +2,6 @@ package com.appspot.hachiko_schedule.push;
 
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.db.UserTableHelper;
@@ -25,8 +24,8 @@ public class RemindIntentHandler extends GcmIntentHandlerBase<String> {
     @Override
     public void handle(String planId) {
         Plan plan = plansTableHelper.queryPlan(Long.parseLong(planId));
-        PendingIntent pendingIntent
-                = getActivityIntent(new Intent(getContext(), PlanListActivity.class));
+        PendingIntent pendingIntent = getActivityIntent(
+                PlanListActivity.getIntentForUnfixedGuest(getContext()));
         String ownerName
                 = userTableHelper.getIdToNameMap(ImmutableList.of(plan.getOwnerId())).get(plan.getOwnerId());
         putNotification(

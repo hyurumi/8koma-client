@@ -2,7 +2,6 @@ package com.appspot.hachiko_schedule.push;
 
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import com.appspot.hachiko_schedule.plans.PlanListActivity;
 import com.appspot.hachiko_schedule.plans.PlanUpdateHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -23,8 +22,8 @@ public class RespondedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
             long myHachikoId = HachikoPreferences.getMyHachikoId(getContext());
             PlanUpdateHelper.updateAttendanceInfo(
                     getContext(), planId, myHachikoId, body.getJSONArray("attendance"));
-            PendingIntent pendingIntent
-                    = getActivityIntent(new Intent(getContext(), PlanListActivity.class));
+            PendingIntent pendingIntent = getActivityIntent(
+                    PlanListActivity.getIntentForUnfixedHost(getContext()));
             putNotification(title + "に新しい回答が追加されました", "", pendingIntent);
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);

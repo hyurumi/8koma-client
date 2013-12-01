@@ -2,7 +2,6 @@ package com.appspot.hachiko_schedule.push;
 
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -63,8 +62,8 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
             }
             PlanUpdateHelper.updateAttendanceInfo(
                     getContext(), plan.getPlanId(), myHachikoId, body.getJSONArray("attendance"));
-            PendingIntent pendingIntent
-                    = getActivityIntent(new Intent(getContext(), PlanListActivity.class));
+            PendingIntent pendingIntent = getActivityIntent(
+                    PlanListActivity.getIntentForUnfixedGuest(getContext()));
             if (myHachikoId != plan.getOwnerId()) {
                 putNotification("イベントへの招待が届きました", plan.getTitle(), pendingIntent);
             }
