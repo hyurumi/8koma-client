@@ -64,6 +64,8 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
                     getContext(), plan.getPlanId(), myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent = getActivityIntent(
                     PlanListActivity.getIntentForUnfixedGuest(getContext()));
+            PlanListActivity.sendBroadcastForUpdatePlan(getContext(),
+                    PlanListActivity.TAB_NAME_UNFIXED_GUEST, plan.getTitle() + "への招待が届きました");
             if (myHachikoId != plan.getOwnerId()) {
                 putNotification("イベントへの招待が届きました", plan.getTitle(), pendingIntent);
             }

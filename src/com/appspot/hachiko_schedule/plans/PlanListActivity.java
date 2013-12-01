@@ -1,16 +1,20 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.*;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.*;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,16 +31,35 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PlanListActivity extends Activity{
-    public static String INTENT_KEY_DEFAULT_TAB_NAME = "default_tab_name";
-    public static String TAB_NAME_UNFIXED_GUEST = "unfixed_guest_plan";
-    public static String TAB_NAME_UNFIXED_HOST = "unfixed_host_plan";
-    public static String TAB_NAME_FIXED = "fixed_plan";
+    public static final String INTENT_KEY_TAB_NAME = "tab_name";
+    public static final String EXTRA_UPDATE_PLAN_MESSAGE = "update_plan_message";
+    public static final String TAB_NAME_UNFIXED_GUEST = "unfixed_guest_plan";
+    public static final String TAB_NAME_UNFIXED_HOST = "unfixed_host_plan";
+    public static final String TAB_NAME_FIXED = "fixed_plan";
     private final String[] tabNames = new String[] {
             TAB_NAME_UNFIXED_GUEST,
             TAB_NAME_UNFIXED_HOST,
             TAB_NAME_FIXED
     };
 
+    public static final String BROADCAST_UPDATE_PLAN = "update_plan";
+    private BroadcastReceiver planUpdateReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String tabName = intent.getStringExtra(INTENT_KEY_TAB_NAME);
+            int currentIndex = getActionBar().getSelectedNavigationIndex();
+            if (0 <= currentIndex && currentIndex < tabNames.length &&
+                    tabNames[currentIndex].equals(tabName)) {
+                ((PlanFragmentBase) getFragmentManager().findFragmentByTag(tabName))
+                        .queryAndUpdatePlans();
+                String msg = intent.getStringExtra(EXTRA_UPDATE_PLAN_MESSAGE);
+                if (msg != null) {
+                    Toast.makeText(PlanListActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
 
@@ -108,7 +131,19 @@ public class PlanListActivity extends Activity{
         (findViewById(R.id.angle_double_up)).startAnimation(animation);
         (findViewById(R.id.no_event_then_create_new)).startAnimation(animation);
 
-        handleIntent(getIntent());
+        handleIntent(getIntent());    }
+
+    @Override
+    protected void onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                planUpdateReceiver, new IntentFilter(BROADCAST_UPDATE_PLAN));
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(planUpdateReceiver);
     }
 
     @Override
@@ -123,7 +158,7 @@ public class PlanListActivity extends Activity{
         }
         shouldBackToChooseGuestActivity
                 = intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false);
-        String tabName = intent.getStringExtra(INTENT_KEY_DEFAULT_TAB_NAME);
+        String tabName = intent.getStringExtra(INTENT_KEY_TAB_NAME);
         for (int i = 0; i < tabNames.length; i++) {
             if (tabNames[i].equals(tabName)) {
                 getActionBar().setSelectedNavigationItem(i);
@@ -220,12 +255,28 @@ public class PlanListActivity extends Activity{
 
     public static Intent getIntentForUnfixedGuest(Context context) {
         return new Intent(context, PlanListActivity.class).putExtra(
-                INTENT_KEY_DEFAULT_TAB_NAME, TAB_NAME_UNFIXED_GUEST);
+                INTENT_KEY_TAB_NAME, TAB_NAME_UNFIXED_GUEST);
     }
 
     public static Intent getIntentForUnfixedHost(Context context) {
         return new Intent(context, PlanListActivity.class).putExtra(
-                INTENT_KEY_DEFAULT_TAB_NAME, TAB_NAME_UNFIXED_HOST);
+                INTENT_KEY_TAB_NAME, TAB_NAME_UNFIXED_HOST);
+    }
+
+    /**
+     * 予定一覧の再描画をリクエストするBroadcastを投げる．
+     * @param tabName 以下のいずれか
+     *                {@link PlanListActivity.TAB_NAME_FIXED}
+     *                {@link PlanListActivity.TAB_NAME_UNFIXED_GUEST}
+     *                {@link PlanListActivity.TAB_NAME_UNFIXED_HOST}
+     */
+    public static void sendBroadcastForUpdatePlan(Context context, String tabName, String msg) {
+        Intent broadcastIntent = new Intent(BROADCAST_UPDATE_PLAN);
+        broadcastIntent.putExtra(INTENT_KEY_TAB_NAME, tabName);
+        if (msg != null) {
+            broadcastIntent.putExtra(EXTRA_UPDATE_PLAN_MESSAGE, msg);
+        }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     private static class MainTabListener<T extends PlanFragmentBase> implements ActionBar.TabListener{

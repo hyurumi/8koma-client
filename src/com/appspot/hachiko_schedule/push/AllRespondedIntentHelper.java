@@ -27,6 +27,8 @@ public class AllRespondedIntentHelper extends GcmIntentHandlerBase<JSONObject> {
                     getContext(), planId, myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent = getActivityIntent(
                     PlanListActivity.getIntentForUnfixedHost(getContext()));
+            PlanListActivity.sendBroadcastForUpdatePlan(getContext(),
+                    PlanListActivity.TAB_NAME_UNFIXED_HOST, title + ": 参加者から返答が揃いました");
             putNotification("参加者から返答が届きました", title, pendingIntent);
         } catch (JSONException e) {
             HachikoLogger.error(body.toString(), e);
