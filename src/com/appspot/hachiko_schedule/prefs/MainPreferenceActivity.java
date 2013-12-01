@@ -1,11 +1,16 @@
 package com.appspot.hachiko_schedule.prefs;
 
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -33,17 +38,17 @@ import java.util.zip.ZipFile;
  */
 public class MainPreferenceActivity extends Activity {
     private static SettingsFragment fragment;
-
+    private static SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         fragment = new SettingsFragment();
-
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment)
                 .commit();
+
 
         // TODO: カレンダーまわりの設定を復活させる #115関係
     }
@@ -178,6 +183,18 @@ public class MainPreferenceActivity extends Activity {
         });
     }
 
+    private static void timerangePreference(){
+        prefs = HachikoPreferences.getDefault(fragment.getActivity());
+        fragment.getPreferenceScreen().findPreference("timerange_asa").setSummary(
+                prefs.getString("timerange_asa",HachikoPreferences.DEFAULT_TIMERANGE_ASA));
+        fragment.getPreferenceScreen().findPreference("timerange_hiru").setSummary(
+                prefs.getString("timerange_hiru",HachikoPreferences.DEFAULT_TIMERANGE_HIRU));
+        fragment.getPreferenceScreen().findPreference("timerange_yu").setSummary(
+                prefs.getString("timerange_yu",HachikoPreferences.DEFAULT_TIMERANGE_YU));
+        fragment.getPreferenceScreen().findPreference("timerange_yoru").setSummary(
+                prefs.getString("timerange_yoru",HachikoPreferences.DEFAULT_TIMERANGE_YORU));
+    }
+
     private static String getBuildTimeString() {
         try{
             ApplicationInfo ai = fragment.getActivity().getPackageManager().getApplicationInfo(fragment.getActivity().getPackageName(), 0);
@@ -221,7 +238,10 @@ public class MainPreferenceActivity extends Activity {
         dialog.show(transaction, "dialog");
     }
 
-    public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment{
+
+
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -242,6 +262,13 @@ public class MainPreferenceActivity extends Activity {
 
             sendFeedbackPreference();
             confirmVersionPreference();
+            timerangePreference();
+
+
+
         }
+
+
+
     }
 }

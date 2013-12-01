@@ -61,6 +61,11 @@ public class HachikoPreferences {
     public static final String KEY_MY_HACHIKO_ID = "my_hachiko_id";
     public static final String KEY_HACHIKO_INTERNAL_PASSWORD = "hachiko_internal_password";
 
+    public static final String DEFAULT_TIMERANGE_ASA="05:00-09:00";
+    public static final String DEFAULT_TIMERANGE_HIRU="11:00-15:00";
+    public static final String DEFAULT_TIMERANGE_YU="15:00-19:00";
+    public static final String DEFAULT_TIMERANGE_YORU="18:00-23:59";
+
     // Debugまわり
     public static final String KEY_USE_SUPER_LONG_LIFE_REQUEST = "use_super_long_life_request";
     public static final boolean USE_SUPER_LONG_LIFE_REQUEST = false;

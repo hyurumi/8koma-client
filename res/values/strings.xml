@@ -50,6 +50,7 @@
   <string-array name="time_words">
     <item>朝</item>
     <item>昼</item>
+    <item>夕</item>
     <item>夜</item>
   </string-array>
   <string-array name="duration">
