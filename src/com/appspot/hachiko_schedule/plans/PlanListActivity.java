@@ -9,7 +9,6 @@ import android.provider.CalendarContract;
 import android.view.*;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -18,7 +17,6 @@ import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.FetchPlansRequest;
-import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
@@ -30,9 +28,6 @@ import java.util.Date;
 public class PlanListActivity extends Activity{
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
-    private PlanAdapter planAdapter;
-    private PlansTableHelper plansTableHelper;
-    private ListView eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +42,6 @@ public class PlanListActivity extends Activity{
         handleIntent(getIntent());
         setContentView(R.layout.activity_event_list);
         progressDialog = new ProgressDialog(this);
-        plansTableHelper = new PlansTableHelper(this);
 
         final Typeface fontForImage= Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
 
@@ -69,7 +63,6 @@ public class PlanListActivity extends Activity{
                         UnfixedHostPlansFragment.class
                 ))
         );
-
         actionBar.addTab(actionBar
                 .newTab()
                 .setTabListener(new MainTabListener<FixedPlansFragment>(
@@ -87,16 +80,14 @@ public class PlanListActivity extends Activity{
             LayoutInflater inflater = LayoutInflater.from(this);
             View customView = inflater.inflate(R.layout.tab_title, null);
 
-            TextView titleTV = (TextView) customView.findViewById(R.id.action_custom_title);
-            titleTV.setText(tabNames[i]);
-            titleTV.setTypeface(fontForImage);
-            //Here you can also add any other styling you want.
+            TextView titleText = (TextView) customView.findViewById(R.id.action_custom_title);
+            titleText.setText(tabNames[i]);
+            titleText.setTypeface(fontForImage);
 
             actionBar.getTabAt(i).setCustomView(customView);
         }
 
         //予定がないときの表示用フォントを読み込む
-        eventList = ((ListView) findViewById(R.id.event_list));
         ((TextView)findViewById(R.id.angle_double_up)).setTypeface(fontForImage);
 
         //予定がないときのアニメーション
@@ -107,8 +98,6 @@ public class PlanListActivity extends Activity{
         (findViewById(R.id.angle_double_up)).startAnimation(animation);
         (findViewById(R.id.no_event_then_create_new)).startAnimation(animation);
     }
-
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -188,7 +177,7 @@ public class PlanListActivity extends Activity{
                 new FetchPlansRequest.PlansUpdateListener() {
                     @Override
                     public void onPlansUpdated() {
-                        //queryAndUpdatePlans();
+                        // TODO: update tab #168
                         progressDialog.hide();
                     }
                 },
