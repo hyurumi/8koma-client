@@ -17,7 +17,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:gravity="center_vertical"
-      android:id="@+id/remind"
+      android:id="@+id/right_top_button"
       android:layout_gravity="center|right"
       android:background="@color/background"
       android:padding="5dp" android:visibility="gone">
@@ -25,8 +25,8 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/icon_remind"
-        android:id="@+id/icon_remind"
+        android:text="@string/icon_demand"
+        android:id="@+id/icon_demand"
         android:background="@color/background"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
@@ -35,7 +35,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/remind"
+        android:text="@string/demand"
 
         android:background="@color/background"
         android:gravity="center_horizontal"

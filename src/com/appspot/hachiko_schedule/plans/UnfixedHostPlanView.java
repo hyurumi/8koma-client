@@ -32,15 +32,15 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         public void onConfirm(UnfixedPlan unfixedPlan, CandidateDate candidateDate);
     }
 
-    public static interface OnRemindButtonClickListener {
-        public void onRemindButtonClicked(long planId);
+    public static interface OnDemandButtonClickListener {
+        public void onDemandButtonClicked(long planId);
     }
 
     private long planId;
     private TextView titleView;
     private ViewGroup candidateDateContainer;
     private OnConfirmListener onConfirmListener;
-    private OnRemindButtonClickListener onRemindButtonClickListener;
+    private OnDemandButtonClickListener onDemandButtonClickListener;
 
     public UnfixedHostPlanView(Context context) {
         super(context);
@@ -84,13 +84,13 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         ((TextView) findViewById(R.id.event_potential_participants)).setText(
                 Joiner.on(", ").join(plan.getpotentialParticipants()));
         Typeface fontForArrow= Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
-        ((TextView)findViewById(R.id.icon_remind)).setTypeface(fontForArrow);
-        findViewById(R.id.remind).setVisibility(VISIBLE);
-        findViewById(R.id.remind).setOnClickListener(new OnClickListener() {
+        ((TextView)findViewById(R.id.icon_demand)).setTypeface(fontForArrow);
+        findViewById(R.id.right_top_button).setVisibility(VISIBLE);
+        findViewById(R.id.right_top_button).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onRemindButtonClickListener != null) {
-                    onRemindButtonClickListener.onRemindButtonClicked(planId);
+                if (onDemandButtonClickListener != null) {
+                    onDemandButtonClickListener.onDemandButtonClicked(planId);
                 }
             }
         });
@@ -101,8 +101,8 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         this.onConfirmListener = confirmListener;
     }
 
-    public void setOnReminderButtonClickListener(OnRemindButtonClickListener onRemindButtonClickListener) {
-        this.onRemindButtonClickListener = onRemindButtonClickListener;
+    public void setOnDemandButtonClickListener(OnDemandButtonClickListener onDemandButtonClickListener) {
+        this.onDemandButtonClickListener = onDemandButtonClickListener;
     }
 
     private class CandidateDateView extends LinearLayout {

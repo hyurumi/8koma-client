@@ -18,7 +18,7 @@ public class GcmIntentService extends IntentService {
     private static final String TAG_FRIEND_RESPONDED = "friendResponded";
     private static final String TAG_CONFIRMED = "confirmed";
     private static final String TAG_RESPONDED = "responded";
-    private static final String TAG_REMIND = "remind";
+    private static final String TAG_DEMAND = "demand";
     private static final String TAG_UPDATE_AFTER_ALL_RESPONSE = "updateAfterAllResponse";
 
     public GcmIntentService() {
@@ -53,8 +53,8 @@ public class GcmIntentService extends IntentService {
                 new ConfirmedIntentHelper(this).handle(new JSONObject(body));
             } else if (tag.equals(TAG_RESPONDED)) {
                 new RespondedIntentHandler(this).handle(new JSONObject(body));
-            } else if (tag.equals(TAG_REMIND)) {
-                new RemindIntentHandler(this).handle(body);
+            } else if (tag.equals(TAG_DEMAND)) {
+                new DemandIntentHandler(this).handle(body);
             } else if (tag.equals(TAG_UPDATE_AFTER_ALL_RESPONSE)) {
                 new RespondedIntentHandler(this).handle(new JSONObject(body));
             } else {

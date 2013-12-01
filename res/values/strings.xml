@@ -35,6 +35,7 @@
   <string name="icon_check">&#xf046;</string>
   <string name="icon_angle_double_up">&#xf102;</string>
   <string name="icon_remind">&#xf0f3;</string>
+  <string name="icon_demand">&#xf0a1;</string>
   <string name="icon_unfixed_guest_plan">&#xf0ed;</string>
   <string name="icon_unfixed_host_plan">&#xf0ee;</string>
   <string name="icon_fixed_plan">&#xf058;</string>
@@ -68,5 +69,6 @@
   <string name="no_event_text">まだ予定が\nありません・・</string>
   <string name="no_event_then_create_new">新しい予定を作成する</string>
   <string name="guests_choice_confirm">招待する</string>
+  <string name="demand">回答を催促する</string>
   <string name="remind">リマインドする</string>
 </resources>

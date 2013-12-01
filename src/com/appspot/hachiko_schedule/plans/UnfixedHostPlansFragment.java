@@ -57,16 +57,16 @@ public class UnfixedHostPlansFragment extends PlanFragmentBase
     protected void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryUnfixedHostPlans();
         planAdapter = new PlanAdapter(this.getActivity(), plans, this,
-                new UnfixedHostPlanView.OnRemindButtonClickListener() {
+                new UnfixedHostPlanView.OnDemandButtonClickListener() {
                     @Override
-                    public void onRemindButtonClicked(final long planId) {
+                    public void onDemandButtonClicked(final long planId) {
                         new AlertDialog.Builder(getActivity())
-                                .setMessage("未回答者にリマインダーを流しますか？")
+                                .setMessage("未回答者に催促しますか？")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         showProgressDialog("通信中", false);
-                                        sendReminder(planId);
+                                        sendDemand(planId);
                                     }
                                 }).show();
                     }});
@@ -116,24 +116,24 @@ public class UnfixedHostPlansFragment extends PlanFragmentBase
         progressDialog.show();
     }
 
-    private void sendReminder(long planId) {
+    private void sendDemand(long planId) {
         Request request = new JSONStringRequest(
                 getActivity(),
-                HachikoAPI.Plan.REMIND.getMethod(),
-                HachikoAPI.Plan.REMIND.getUrl() + planId,
+                HachikoAPI.Plan.DEMAND.getMethod(),
+                HachikoAPI.Plan.DEMAND.getUrl() + planId,
                 null,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        HachikoLogger.debug("reminder successfully sent");
+                        HachikoLogger.debug("demand successfully sent");
                         progressDialog.hide();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HachikoDialogs.showNetworkErrorDialog(getActivity(), volleyError, "リマインダ送信");
-                        HachikoLogger.error("redpond fail", volleyError);
+                        HachikoDialogs.showNetworkErrorDialog(getActivity(), volleyError, "催促送信");
+                        HachikoLogger.error("respond fail", volleyError);
                     }
                 });
         HachikoApp.defaultRequestQueue().add(request);

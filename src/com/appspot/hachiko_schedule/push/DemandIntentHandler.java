@@ -11,11 +11,11 @@ import com.google.common.collect.ImmutableList;
 /**
  * 回答しろ！とおこられた
  */
-public class RemindIntentHandler extends GcmIntentHandlerBase<String> {
+public class DemandIntentHandler extends GcmIntentHandlerBase<String> {
     private final PlansTableHelper plansTableHelper;
     private final UserTableHelper userTableHelper;
 
-    public RemindIntentHandler(Context context) {
+    public DemandIntentHandler(Context context) {
         super(context);
         plansTableHelper = new PlansTableHelper(context);
         userTableHelper = new UserTableHelper(context);
@@ -30,7 +30,7 @@ public class RemindIntentHandler extends GcmIntentHandlerBase<String> {
                 = userTableHelper.getIdToNameMap(ImmutableList.of(plan.getOwnerId())).get(plan.getOwnerId());
         putNotification(
                 "「" + plan.getTitle() + "」に回答",
-                ownerName + "さんが回答をリクエストしています",
+                ownerName + "さんが回答を催促しています",
                 pendingIntent);
     }
 }
