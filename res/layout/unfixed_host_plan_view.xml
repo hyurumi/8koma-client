@@ -14,14 +14,35 @@
       android:paddingBottom="5dp">
     <include layout="@layout/plan_view_title_text"/>
     <include layout="@layout/horizontal_line_gray"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Candidate participants"
         android:id="@+id/event_potential_participants"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
-        android:singleLine="true"/>
+        android:singleLine="true" android:layout_weight="1"/>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/unresponded_participants"
+          android:id="@+id/unresponded_participants"
+          android:paddingTop="3dp"
+          android:paddingBottom="3dp"
+          android:singleLine="true" android:paddingRight="3dp"/>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="1"
+          android:id="@+id/num_of_unresponded_participants"
+          android:paddingTop="3dp"
+          android:paddingBottom="3dp"
+          android:singleLine="true"/>
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

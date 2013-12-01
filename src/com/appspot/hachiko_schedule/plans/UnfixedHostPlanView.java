@@ -106,10 +106,12 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
     }
 
     private class CandidateDateView extends LinearLayout {
+
+        private Typeface fontForIcon;
         private TextView dateTextView;
         private TextView numOfPositiveFriendsView;
-        //private TextView numOfNeutralFriendsView;
-        //private TextView numOfNegativeFriendsView;
+        private TextView numOfNeutralFriendsView;
+        private TextView numOfNegativeFriendsView;
         private TextView positiveFriendNames;
 
         private CandidateDateView(Context context) {
@@ -131,15 +133,34 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
             View layout = LayoutInflater.from(context).inflate(R.layout.date_answer_state_view, this);
             dateTextView = (TextView) layout.findViewById(R.id.event_title);
             numOfPositiveFriendsView = (TextView) layout.findViewById(R.id.num_of_ok);
+            numOfNegativeFriendsView = (TextView) layout.findViewById(R.id.num_of_ng);
+            numOfNeutralFriendsView = (TextView) layout.findViewById(R.id.num_of_tentative);
             positiveFriendNames = (TextView) layout.findViewById(R.id.positive_friend_names);
+            fontForIcon= Typeface.createFromAsset( getContext().getAssets(), "fonts/fontawesome-webfont.ttf" );
+            ((TextView)layout.findViewById(R.id.icon_ok)).setTypeface(fontForIcon);
+            ((TextView)layout.findViewById(R.id.icon_ng)).setTypeface(fontForIcon);
+            ((TextView)layout.findViewById(R.id.icon_tentative)).setTypeface(fontForIcon);
         }
 
         private void setCandidate(final UnfixedPlan unfixedPlan, final CandidateDate candidateDate) {
             dateTextView.setText(candidateDate.getDateText());
             long myId = HachikoPreferences.getMyHachikoId(getContext());
+
+
+
             numOfPositiveFriendsView.setText(Integer.toString(candidateDate.getPositiveFriendsNum(myId)));
+            numOfNegativeFriendsView.setText(Integer.toString(candidateDate.getNegativeFriendsNum()));
+            numOfNeutralFriendsView.setText(
+                    Integer.toString(
+                            unfixedPlan.getpotentialParticipants().size()
+                            -candidateDate.getPositiveFriendsNum(myId)
+                            -candidateDate.getNegativeFriendsNum()
+                    )
+            );
+
             positiveFriendNames.setText(candidateDate.getPositiveFriendNames(
                     getContext(), myId));
+
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

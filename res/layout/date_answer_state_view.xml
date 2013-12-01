@@ -7,56 +7,88 @@
       layout="@layout/horizontal_line_gray"
       android:layout_width="fill_parent"/>
   <LinearLayout
-      android:orientation="horizontal"
+      android:orientation="vertical"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:paddingTop="5dp"
       android:paddingBottom="5dp">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="0dp"
-        android:layout_gravity="center"
-        android:background="@color/background">
-      <TextView
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:text="1"
-          android:id="@+id/num_of_ok"
-          android:background="@color/background"
-          android:gravity="center_horizontal"
-          android:layout_gravity="center"
-          android:textColor="@color/font_color_white"
-          android:textSize="28sp"/>
-    </LinearLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" android:layout_weight="1">
       <TextView
-          android:layout_width="match_parent"
+          android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:text="01/01 10:00 - 20:00"
           android:id="@+id/event_title"
           android:singleLine="true"
-          android:textSize="24sp"
+          android:textSize="20sp"
           android:focusableInTouchMode="false"
-          android:paddingLeft="5dp"/>
-      <HorizontalScrollView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_weight="1"/>
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="fill_parent"
+            android:text="@string/icon_smile"
+            android:id="@+id/icon_ok"
+            android:gravity="center|center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:textColor="@color/ok"/>
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Text Text Text Text Text Tex"
-            android:textColor="@color/font_color_gray"
-            android:id="@+id/positive_friend_names"
-            android:paddingLeft="5dp"/>
-      </HorizontalScrollView>
+            android:text="1"
+            android:id="@+id/num_of_ok"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:paddingLeft="2dp" android:textColor="@color/ok"/>
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="fill_parent"
+            android:text="@string/icon_question_sign"
+            android:id="@+id/icon_tentative"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:gravity="center" android:layout_marginLeft="4dp"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:id="@+id/num_of_tentative"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:paddingLeft="2dp"/>
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="fill_parent"
+            android:text="@string/icon_frown"
+            android:id="@+id/icon_ng"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:layout_marginLeft="4dp" android:textColor="@color/ng"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:id="@+id/num_of_ng"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="20sp" android:paddingLeft="2dp" android:textColor="@color/ng"/>
+      </LinearLayout>
     </LinearLayout>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Text Text Text Text Text Tex"
+          android:textColor="@color/font_color_gray"
+          android:id="@+id/positive_friend_names"
+          />
+    </HorizontalScrollView>
   </LinearLayout>
 </LinearLayout>
