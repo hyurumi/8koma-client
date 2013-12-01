@@ -1,7 +1,6 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -34,7 +33,8 @@ import java.util.List;
  * Time: 11:16 AM
  * To change this template use File | Settings | File Templates.
  */
-public class UnfixedHostPlansFragment extends Fragment  implements UnfixedHostPlanView.OnConfirmListener {
+public class UnfixedHostPlansFragment extends PlanFragmentBase
+        implements UnfixedHostPlanView.OnConfirmListener {
 
     private PlanAdapter planAdapter;
     private PlansTableHelper plansTableHelper;
@@ -52,12 +52,9 @@ public class UnfixedHostPlansFragment extends Fragment  implements UnfixedHostPl
         plansTableHelper = new PlansTableHelper(this.getActivity());
         return view;
     }
+
     @Override
-    public void onResume() {
-        queryAndUpdatePlans();
-        super.onResume();
-    }
-    private void queryAndUpdatePlans() {
+    protected void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryUnfixedHostPlans();
         planAdapter = new PlanAdapter(this.getActivity(), plans, this,
                 new UnfixedHostPlanView.OnRemindButtonClickListener() {

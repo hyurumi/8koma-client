@@ -1,6 +1,5 @@
 package com.appspot.hachiko_schedule.plans;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import java.util.List;
  * Time: 11:16 AM
  * To change this template use File | Settings | File Templates.
  */
-public class UnfixedGuestPlansFragment extends Fragment{
+public class UnfixedGuestPlansFragment extends PlanFragmentBase{
 
     private PlanAdapter planAdapter;
     private PlansTableHelper plansTableHelper;
@@ -36,11 +35,7 @@ public class UnfixedGuestPlansFragment extends Fragment{
         return view;
     }
     @Override
-    public void onResume() {
-        queryAndUpdatePlans();
-        super.onResume();
-    }
-    private void queryAndUpdatePlans() {
+    protected void queryAndUpdatePlans() {
         List<Plan> plans = plansTableHelper.queryUnfixedGuestPlans();
         planAdapter = new PlanAdapter(this.getActivity(), plans);
         eventList.setAdapter(planAdapter);

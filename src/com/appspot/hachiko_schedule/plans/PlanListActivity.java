@@ -22,22 +22,20 @@ import com.appspot.hachiko_schedule.friends.ChooseGuestActivity;
 import com.appspot.hachiko_schedule.prefs.MainPreferenceActivity;
 import com.appspot.hachiko_schedule.setup.SetupManager;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
-import com.google.common.collect.ImmutableMap;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 public class PlanListActivity extends Activity{
     public static String INTENT_KEY_DEFAULT_TAB_NAME = "default_tab_name";
     public static String TAB_NAME_UNFIXED_GUEST = "unfixed_guest_plan";
     public static String TAB_NAME_UNFIXED_HOST = "unfixed_host_plan";
     public static String TAB_NAME_FIXED = "fixed_plan";
-    private final Map<String, Integer> tabPositions = ImmutableMap.of(
-            TAB_NAME_UNFIXED_GUEST, 0,
-            TAB_NAME_UNFIXED_HOST, 1,
-            TAB_NAME_FIXED, 2
-    );
+    private final String[] tabNames = new String[] {
+            TAB_NAME_UNFIXED_GUEST,
+            TAB_NAME_UNFIXED_HOST,
+            TAB_NAME_FIXED
+    };
 
     private boolean shouldBackToChooseGuestActivity;
     private ProgressDialog progressDialog;
@@ -126,8 +124,11 @@ public class PlanListActivity extends Activity{
         shouldBackToChooseGuestActivity
                 = intent.getBooleanExtra(Constants.EXTRA_KEY_NEW_EVENT, false);
         String tabName = intent.getStringExtra(INTENT_KEY_DEFAULT_TAB_NAME);
-        if (tabName != null && tabPositions.containsKey(tabName)) {
-            getActionBar().setSelectedNavigationItem(tabPositions.get(tabName));
+        for (int i = 0; i < tabNames.length; i++) {
+            if (tabNames[i].equals(tabName)) {
+                getActionBar().setSelectedNavigationItem(i);
+                return;
+            }
         }
     }
 
@@ -198,7 +199,12 @@ public class PlanListActivity extends Activity{
                 new FetchPlansRequest.PlansUpdateListener() {
                     @Override
                     public void onPlansUpdated() {
-                        // TODO: update tab #168
+                        int selectedIndex = getActionBar().getSelectedNavigationIndex();
+                        if (0 <= selectedIndex && selectedIndex < tabNames.length) {
+                            String tabName = tabNames[selectedIndex];
+                            ((PlanFragmentBase) getFragmentManager().findFragmentByTag(tabName))
+                                    .queryAndUpdatePlans();
+                        }
                         progressDialog.hide();
                     }
                 },
@@ -222,9 +228,9 @@ public class PlanListActivity extends Activity{
                 INTENT_KEY_DEFAULT_TAB_NAME, TAB_NAME_UNFIXED_HOST);
     }
 
-    private static class MainTabListener<T extends Fragment> implements ActionBar.TabListener{
+    private static class MainTabListener<T extends PlanFragmentBase> implements ActionBar.TabListener{
 
-        private Fragment fragment;
+        private PlanFragmentBase fragment;
         private final Activity activity;
         private final String tag;
         private final Class<T> cls;
@@ -242,7 +248,7 @@ public class PlanListActivity extends Activity{
         @Override
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             if(fragment == null){
-                fragment = Fragment.instantiate(activity, cls.getName());
+                fragment = (PlanFragmentBase) Fragment.instantiate(activity, cls.getName());
                 ft.add(android.R.id.content, fragment, tag);
             }
             else{
