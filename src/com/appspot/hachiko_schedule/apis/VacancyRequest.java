@@ -3,6 +3,7 @@ package com.appspot.hachiko_schedule.apis;
 import android.content.Context;
 import com.android.volley.Response;
 import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonArrayRequest;
+import com.appspot.hachiko_schedule.data.TimeRange;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
 import org.json.JSONArray;
@@ -38,12 +39,20 @@ public class VacancyRequest extends HachiJsonArrayRequest {
             day.set(Calendar.SECOND, 0);
             day.set(Calendar.MINUTE, 0);
             while (day.before(parameter.endDay)) {
-                for (Hours range: parameter.preferredTimeRanges) {
+                for (TimeRange range: parameter.preferredTimeRanges) {
                     JSONObject window = new JSONObject();
-                    day.set(Calendar.HOUR_OF_DAY, range.start);
+                    day.set(Calendar.HOUR_OF_DAY, range.getStartHour());
+                    day.set(Calendar.MINUTE, range.getStartMinute());
                     window.put("start", DateUtils.formatAsISO8601(day));
-                    day.set(Calendar.HOUR_OF_DAY, range.end);
+                    if (range.acrossDay()) {
+                        day.add(Calendar.DAY_OF_YEAR, 1);
+                    }
+                    day.set(Calendar.HOUR_OF_DAY, range.getEndHour());
+                    day.set(Calendar.MINUTE, range.getEndMinutes());
                     window.put("end", DateUtils.formatAsISO8601(day));
+                    if (range.acrossDay()) {
+                        day.add(Calendar.DAY_OF_YEAR, -1);
+                    }
                     windows.put(window);
                 }
                 day.add(Calendar.DAY_OF_YEAR, 1);
@@ -59,13 +68,13 @@ public class VacancyRequest extends HachiJsonArrayRequest {
 
     public static class Param {
         private final List<Long> friendIds;
-        private final List<Hours> preferredTimeRanges;
+        private final List<TimeRange> preferredTimeRanges;
         private final Calendar startDay;
         private final Calendar endDay;
         private final boolean shouldAsap;
         private final int durationMin;
 
-        public Param(List<Long> friendIds, List<Hours> preferredTimeRanges, Calendar startDay,
+        public Param(List<Long> friendIds, List<TimeRange> preferredTimeRanges, Calendar startDay,
                      Calendar endDay, boolean shouldAsap, int durationMin) {
             this.friendIds = friendIds;
             this.preferredTimeRanges = preferredTimeRanges;
@@ -87,23 +96,6 @@ public class VacancyRequest extends HachiJsonArrayRequest {
                     && endDay.equals(opp.endDay)
                     && shouldAsap == opp.shouldAsap
                     && durationMin == opp.durationMin;
-        }
-    }
-
-    public static class Hours {
-        public int start, end;
-        public Hours(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof Hours)) {
-                return false;
-            }
-            Hours opp = (Hours) o;
-            return start == opp.start && end == opp.end;
         }
     }
 }

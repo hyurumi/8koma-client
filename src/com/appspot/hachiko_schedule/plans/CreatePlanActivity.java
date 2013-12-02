@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -21,9 +22,13 @@ import com.android.volley.VolleyError;
 import com.appspot.hachiko_schedule.Constants;
 import com.appspot.hachiko_schedule.HachikoApp;
 import com.appspot.hachiko_schedule.R;
-import com.appspot.hachiko_schedule.apis.*;
+import com.appspot.hachiko_schedule.apis.HachikoAPI;
+import com.appspot.hachiko_schedule.apis.NewPlanRequest;
+import com.appspot.hachiko_schedule.apis.PlanResponseParser;
+import com.appspot.hachiko_schedule.apis.VacancyRequest;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.FriendIdentifier;
+import com.appspot.hachiko_schedule.data.TimeRange;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -31,6 +36,7 @@ import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.ui.SwipeToDismissTouchListener;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -40,8 +46,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.appspot.hachiko_schedule.apis.VacancyRequest.Hours;
 
 /**
  * {@link Activity} for creating new plan.
@@ -53,11 +57,7 @@ public class CreatePlanActivity extends Activity {
             = new ImmutableMap.Builder<String, Integer>()
             .put("30分", 30).put("1時間", 60).put("1時間半", 90)
             .put("2時間", 120).put("2時間半", 150).put("３時間", 180).build();
-    // やがては設定可能になるべき，なのでメンバ変数
-    private Hours morning = new Hours(8, 11);
-    private Hours afternoon = new Hours(11, 16);
-    private Hours evening = new Hours(16, 19);
-    private Hours night = new Hours(18, 21);
+    private TimeRange asa, hiru, yugata, yoru;
     private List<String> durationOptions;
     private ArrayAdapter durationAdapter;
     private int durationMin = 30;
@@ -126,6 +126,24 @@ public class CreatePlanActivity extends Activity {
         eveningButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
         nightButton.setOnCheckedChangeListener(new OnTimeRangePreferenceSelectedListener());
      }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences pref = HachikoPreferences.getDefault(this);
+        asa = new TimeRange(pref.getString(
+                HachikoPreferences.KEY_TIMERANGE_ASA,
+                HachikoPreferences.DEFAULT_TIMERANGE_ASA));
+        hiru = new TimeRange(pref.getString(
+                HachikoPreferences.KEY_TIMERANGE_HIRU,
+                HachikoPreferences.DEFAULT_TIMERANGE_HIRU));
+        yugata = new TimeRange(pref.getString(
+                HachikoPreferences.KEY_TIMERANGE_YU,
+                HachikoPreferences.DEFAULT_TIMERANGE_YU));
+        yoru = new TimeRange(pref.getString(
+                HachikoPreferences.KEY_TIMERANGE_YORU,
+                HachikoPreferences.DEFAULT_TIMERANGE_YORU));
+    }
 
     private void setFriends() {
         friends = getIntent().getParcelableArrayExtra(Constants.EXTRA_KEY_FRIENDS);
@@ -317,27 +335,45 @@ public class CreatePlanActivity extends Activity {
         return scheduleView;
     }
 
-    private List<Hours> getPreferredTimeRange() {
-        List<Hours> result = new ArrayList<Hours>();
-        boolean[] checked = new boolean[] {morningButton.isChecked(), afternoonButton.isChecked(),
-                eveningButton.isChecked(), nightButton.isChecked(), false};
-        Hours[] hours = new Hours[] {morning, afternoon, evening, night};
-        boolean inTimeRange = false;
-        int start = 0;
+    private List<TimeRange> getPreferredTimeRange() {
+        return getPreferredTimeRange(
+                asa, morningButton.isChecked(), hiru, afternoonButton.isChecked(),
+                yugata, eveningButton.isChecked(), yoru, nightButton.isChecked());
+    }
+
+    /**
+     * @return ユーザの望む時間帯を，オーバーラップしない形にして返す.
+     * 例えば [10:00 - 13:00, 12:00 - 14:00, 15:00 - 16:00]
+     *    => [10:00 - 14:00, 15:00 - 16:00]みたいな処理
+     */
+    @VisibleForTesting
+    static protected List<TimeRange> getPreferredTimeRange(
+            TimeRange asa, boolean useAsa, TimeRange hiru, boolean useHiru,
+            TimeRange yugata, boolean useYugata, TimeRange yoru, boolean useYoru) {
+        List<TimeRange> result = new ArrayList<TimeRange>();
+        TimeRange range = null;
+        TimeRange[] ranges = new TimeRange[] {asa, hiru, yugata, yoru};
+        boolean[] use = new boolean[] {useAsa, useHiru, useYugata, useYoru, false};
         for (int i = 0; i < 5; i++) {
-            if (checked[i] && !inTimeRange) {
-                start = hours[i].start;
-                inTimeRange = true;
-            } else if (!checked[i] && inTimeRange) {
-                result.add(new Hours(start, hours[i - 1].end));
-                inTimeRange = false;
+            if (use[i]) {
+                if (range == null) {
+                    range = ranges[i];
+                } else if (range.endsAfterStartOf(ranges[i])) {
+                    range = range.merge(ranges[i]);
+                } else {
+                    result.add(range);
+                    range = ranges[i];
+                }
+            } else if (range != null) {
+                result.add(range);
+                range = null;
             }
         }
         return result;
     }
 
     private synchronized void suggestNewCandidates() {
-        List<Hours> preferredTimeRange = getPreferredTimeRange();
+        List<TimeRange> preferredTimeRange = getPreferredTimeRange();
         Calendar startDay = (Calendar) startDateSpinner.getSelectedItem();
         Calendar endDay = (Calendar) endDateSpinner.getSelectedItem();
         if (preferredTimeRange.size() == 0 || endDay.before(startDay)) {
