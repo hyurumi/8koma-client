@@ -1,7 +1,7 @@
 local.properties
 *~
 .idea/*
-gen/*
+gen
 bin/*
 out/*
 build-log.xml
