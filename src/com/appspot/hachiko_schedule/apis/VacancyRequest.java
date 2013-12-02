@@ -38,7 +38,11 @@ public class VacancyRequest extends HachiJsonArrayRequest {
             day.set(Calendar.MILLISECOND, 0);
             day.set(Calendar.SECOND, 0);
             day.set(Calendar.MINUTE, 0);
-            while (day.before(parameter.endDay)) {
+            Calendar endBorder = (Calendar) parameter.endDay.clone();
+            endBorder.set(Calendar.HOUR_OF_DAY, 23);
+            endBorder.set(Calendar.MINUTE, 59);
+            endBorder.set(Calendar.SECOND, 59);
+            while (day.before(endBorder)) {
                 for (TimeRange range: parameter.preferredTimeRanges) {
                     JSONObject window = new JSONObject();
                     day.set(Calendar.HOUR_OF_DAY, range.getStartHour());
