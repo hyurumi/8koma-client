@@ -6,6 +6,7 @@ import com.appspot.hachiko_schedule.apis.base_requests.HachiJsonArrayRequest;
 import com.appspot.hachiko_schedule.data.TimeRange;
 import com.appspot.hachiko_schedule.util.DateUtils;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.annotations.VisibleForTesting;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +29,8 @@ public class VacancyRequest extends HachiJsonArrayRequest {
                 errorListener);
     }
 
-    private static JSONObject constructParams(Param parameter) {
+    @VisibleForTesting
+    protected static JSONObject constructParams(Param parameter) {
         JSONObject param = new JSONObject();
         try {
             param.put("friends", new JSONArray(parameter.friendIds));
