@@ -37,9 +37,9 @@
   <string name="icon_angle_double_up">&#xf102;</string>
   <string name="icon_remind">&#xf0f3;</string>
   <string name="icon_demand">&#xf0a1;</string>
-  <string name="icon_unfixed_guest_plan">&#xf0ed;</string>
-  <string name="icon_unfixed_host_plan">&#xf0ee;</string>
-  <string name="icon_fixed_plan">&#xf058;</string>
+  <string name="icon_unfixed_guest_plan">&#xf01a;</string>
+  <string name="icon_unfixed_host_plan">&#xf01b;</string>
+  <string name="icon_fixed_plan">&#xf05d;</string>
 
   <string-array name="positive_num_list">
     <item>1</item>
