@@ -1,12 +1,14 @@
 package com.appspot.hachiko_schedule.plans;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
@@ -48,6 +50,18 @@ public class FixedPlanView extends LinearLayout implements PlanView<FixedPlan> {
                 + (plan.getOwnerId() != HachikoPreferences.getMyHachikoId(getContext()) ? "あなた, " : "")
                 + plan.getPositiveFriendNames(getContext());
         participantsView.setText(Html.fromHtml(source));
+        Typeface fontForIcon= Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
+        TextView iconView = (TextView)findViewById(R.id.icon_in_right_top_button);
+        iconView.setTypeface(fontForIcon);
+        iconView.setText(R.string.icon_remind);
+        findViewById(R.id.right_top_button).setVisibility(VISIBLE);
+        ((TextView)findViewById(R.id.text_in_right_top_button)).setText(R.string.remind);
+        findViewById(R.id.right_top_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "未実装", Toast.LENGTH_SHORT).show();
+            }
+        });
         dateView.setText(plan.getDateText());
         return null;
     }
