@@ -2,7 +2,12 @@
 <resources>
   <string name="app_name">はちこま</string>
   <string name="setup_intro_message">Googleカレンダーと連携して\nあなたと誰かの予定調整を\nお手伝い</string>
+
   <string name="setup_intro_detail">お互いに都合の良い日程を自動提案,数タップで予定調整完了, 予定はカレンダーに自動反映 , Emailとも連携</string>
+
+  <string name="text_in_walkthrough1">まずは誘う人を選びます。\n選んだら参加者のカレンダーを考慮してはちこまが会えそうな日時を提案するので、\nあとはいくつか候補日時を選び誘うだけです。</string>
+  <string name="text_in_walkthrough2">はちこまユーザ以外ももちろん誘えます。その場合は発行されたURLやメール内のフォームから回答を集めます。</string>
+  <string name="text_in_walkthrough3">誘われた時もあらかじめ自分の予定が考慮されているので、無意味なやりとりはありません。数タップで回答でき、信頼できる相手なら自動回答も可能です。</string>
   <string name="setup_start_auth">Googleアカウントで認証</string>
   <string name="setup_calendar_text">お使いのカレンダーを登録することで，あなたの開いている時間に予定を設定するお手伝いをします</string>
   <string name="setup_calendar_confirm">次へ進む</string>
@@ -40,6 +45,9 @@
   <string name="icon_unfixed_guest_plan">&#xf01a;</string>
   <string name="icon_unfixed_host_plan">&#xf01b;</string>
   <string name="icon_fixed_plan">&#xf05d;</string>
+  <string name="icon_replyall">&#xf0c0;</string>
+  <string name="icon_invite">&#xf0f4;</string>
+  <string name="icon_invited">&#xf0f5;</string>
 
   <string-array name="positive_num_list">
     <item>1</item>

@@ -17,15 +17,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 
-public class WalkthroughFragment1 extends Fragment {
+public class WalkthroughFragment2 extends Fragment {
     Typeface fontForIcon;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.walkthrough_fragment1, container, false);
+        View v = inflater.inflate(R.layout.walkthrough_fragment2, container, false);
         fontForIcon= Typeface.createFromAsset(getActivity().getAssets(), "fonts/fontawesome-webfont.ttf");
-        ((TextView)v.findViewById(R.id.icon_invite)).setTypeface(fontForIcon);
+        ((TextView)v.findViewById(R.id.icon_replyall)).setTypeface(fontForIcon);
         return v;
     }
 

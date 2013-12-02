@@ -7,4 +7,5 @@
   <dimen name="friend_name_text_margin_left">20px</dimen>
   <dimen name="no_event_image_length">128dp</dimen>
   <dimen name="no_event_image_length_rounded">192dp</dimen>
+  <dimen name="circle_in_walkthrough">192dp</dimen>
 </resources>

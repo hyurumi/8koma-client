@@ -198,7 +198,7 @@ public class GoogleAuthActivity extends SetupBaseActivity {
                                     }
                                 })
                                 .show();
-                        HachikoLogger.error("Hachiko registration error ", volleyError);
+                        HachikoLogger.error("Hachikoma registration error ", volleyError);
                     }
                 }
         );
@@ -226,15 +226,19 @@ public class GoogleAuthActivity extends SetupBaseActivity {
             switch(i){
                 case 0:
                     return new WalkthroughFragment0();
-                default:
+                case 1:
                     return new WalkthroughFragment1();
+                case 2:
+                    return new WalkthroughFragment2();
+                default:
+                    return new WalkthroughFragment3();
             }
 
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
 
 

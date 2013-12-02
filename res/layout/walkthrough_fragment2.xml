@@ -16,17 +16,17 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/icon_invite"
-        android:text="@string/icon_invite"
+        android:id="@+id/icon_replyall"
+        android:text="@string/icon_replyall"
         android:textColor="@color/font_color_white"
         android:textSize="48sp"
         android:gravity="center"/>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/font_color_white"
-        android:textSize="32sp" android:text="誘う"
-        android:gravity="center"/>
+  <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@color/font_color_white"
+      android:textSize="32sp" android:text="だれでも"
+      android:gravity="center"/>
   </LinearLayout>
   <LinearLayout
       android:layout_width="match_parent"
@@ -35,7 +35,7 @@
       android:padding="5dp" android:paddingTop="100dp">
 
     <TextView
-        android:text="@string/text_in_walkthrough1"
+        android:text="@string/text_in_walkthrough2"
         android:textSize="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

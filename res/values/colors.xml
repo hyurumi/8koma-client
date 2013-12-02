@@ -11,6 +11,7 @@
   <color name="font_shadow_black">#000000</color>
   <color name="background">#00AAAA</color>
   <color name="background_white">#FFFFFF</color>
+  <color name="background_black_half_transparent">#55000000</color>
   <color name="background_holo_like">#fff3f3f3</color>
   <color name="background_color_gray">#f5f5f5</color>
   <color name="font_color_gray">#666666</color>
