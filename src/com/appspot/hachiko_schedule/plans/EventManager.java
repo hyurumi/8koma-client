@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import com.appspot.hachiko_schedule.data.CalendarIdentifier;
+import com.appspot.hachiko_schedule.data.Event;
 import com.appspot.hachiko_schedule.data.Timeslot;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 
@@ -68,6 +69,43 @@ public class EventManager {
                     cursor.getInt(PROJECTION_IS_ALL_DAY_INDEX) == 1));
         }
         return events;
+    }
+
+    /**
+     * 引数で与えられた時間の直前の予定を返す
+     */
+    public Event getPreviousEvent(Date origin) {
+        return querySingleEvent(
+                Events.DTEND + "<" + origin.getTime(),
+                Events.DTEND + " DESC");
+    }
+
+    public Event getNextEvent(Date origin) {
+        return querySingleEvent(
+                Events.DTSTART + ">" + origin.getTime(),
+                Events.DTSTART + " ASC");
+    }
+
+    private Event querySingleEvent(String selection, String order) {
+        final String[] EVENT_PROJECTION = {Events.TITLE, Events.DTSTART, Events.DTEND};
+
+        Cursor cursor = contentResolver.query(
+                CalendarContract.Events.CONTENT_URI,
+                EVENT_PROJECTION,
+                selection,
+                null,
+                order);
+
+        if (!cursor.moveToFirst()) {
+            return null;
+        }
+
+        Event event = new Event(
+                cursor.getString(cursor.getColumnIndex(Events.TITLE)),
+                new Date(cursor.getLong(cursor.getColumnIndex(Events.DTSTART))),
+                new Date(cursor.getLong(cursor.getColumnIndex(Events.DTEND))));
+        cursor.close();
+        return event;
     }
 
     /**

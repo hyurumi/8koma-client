@@ -19,6 +19,7 @@ import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.apis.HachikoAPI;
 import com.appspot.hachiko_schedule.apis.base_requests.JSONStringRequest;
 import com.appspot.hachiko_schedule.data.CandidateDate;
+import com.appspot.hachiko_schedule.data.Event;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
@@ -160,6 +161,19 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     builder.setIcon(null);
                     builder.setTitle(R.string.recent_schedules);
                     builder.setView(calendarView);
+                    EventManager eventManager = new EventManager(getContext());
+                    Event prevEvent = eventManager.getPreviousEvent(candidateDate.getStartDate());
+                    if (prevEvent != null) {
+                        ((TextView) calendarView.findViewById(R.id.previous_event_text)).setText(
+                                "前: " + prevEvent.toString());
+                    }
+                    ((TextView) calendarView.findViewById(R.id.candidate_date)).setText(
+                            candidateText.getText() + "(回答待ち): " + titleView.getText());
+                    Event nextEvent = eventManager.getNextEvent(candidateDate.getEndDate());
+                    if (nextEvent != null) {
+                        ((TextView) calendarView.findViewById(R.id.next_event_text)).setText(
+                                "次: " + nextEvent.toString());
+                    }
                     builder.setPositiveButton(R.string.icon_smile, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int whichButton) {
