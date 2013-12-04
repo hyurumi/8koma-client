@@ -13,9 +13,11 @@ import android.widget.TextView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.CandidateDate;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
+import com.appspot.hachiko_schedule.db.PlansTableHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.google.common.base.Joiner;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +39,7 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
     }
 
     private long planId;
+    private Collection<Long> unrespondedFriendIds;
     private TextView titleView;
     private ViewGroup candidateDateContainer;
     private OnConfirmListener onConfirmListener;
@@ -68,6 +71,9 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         planId = plan.getPlanId();
         titleView.setText(plan.getTitle());
         candidateDateContainer.removeAllViews();
+        unrespondedFriendIds = new PlansTableHelper(getContext()).queryUnrespondedFriendIds(planId);
+        ((TextView) findViewById(R.id.num_of_unresponded_participants))
+                .setText(Integer.toString(unrespondedFriendIds.size()));
         List<CandidateDate> candidateDates = plan.getCandidateDates();
         Collections.sort(candidateDates, new Comparator<CandidateDate>() {
             @Override

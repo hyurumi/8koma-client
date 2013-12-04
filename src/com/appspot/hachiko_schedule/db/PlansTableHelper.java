@@ -132,8 +132,18 @@ public class PlansTableHelper {
         return queryPlans(PlansType.Fixed_Plans);
     }
 
-
-
+    public Collection<Long> queryUnrespondedFriendIds(long planId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(
+                PLAN_TABLE_NAME, new String[] {UNRESPONDED_FRIEND_IDS}, PLAN_ID + "==" + planId,
+                null, null, null, null);
+        List<Long> ret = null;
+        if (c.moveToFirst()) {
+            ret = stringArrayToList(c.getString(c.getColumnIndex(UNRESPONDED_FRIEND_IDS)));
+        }
+        c.close();
+        return ret;
+    }
 
     /**
      * @return すべての予定を取得
