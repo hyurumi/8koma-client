@@ -12,7 +12,6 @@ import android.widget.ListView;
 import com.appspot.hachiko_schedule.R;
 import com.appspot.hachiko_schedule.data.FriendOrGroup;
 import com.appspot.hachiko_schedule.ui.TexttipSpan;
-import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +63,17 @@ public class ChipsFriendNameEditText extends EditText {
             return;
         }
         String delimiter = ", ";
-        SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(Joiner.on(delimiter).join(selectedItems));
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        for (int i = 0; i < selectedItems.size(); i++) {
+            spannableStringBuilder.append(selectedItems.get(i).getDisplayName());
+            if (i != selectedItems.size() - 1) {
+                spannableStringBuilder.append(delimiter);
+            }
+        }
         spannableStringBuilder.append(delimiter);
         int x =0;
         for(FriendOrGroup item : selectedItems){
-            String chipText = item.toString();
+            String chipText = item.getDisplayName();
             spannableStringBuilder.setSpan(
                     new TexttipSpan(getContext(), R.layout.friend_name_tip,
                             R.id.friend_name_tip_name, R.id.friend_name_tip_image,
@@ -116,7 +120,7 @@ public class ChipsFriendNameEditText extends EditText {
 
         private FriendOrGroup getSelectedItemByName(String name) {
             for (FriendOrGroup item: selectedItems) {
-                if (name.equals(item.toString())) {
+                if (name.equals(item.getDisplayName())) {
                     return item;
                 }
             }

@@ -20,6 +20,7 @@ public class UserTableHelper {
     private static final String HACHIKO_ID = "hachiko_id";
     private static final String IS_HACHIKO_USER = "is_haciko_user";
     private static final String DISPLAY_NAME = "display_name";
+    private static final String PHONETIC_NAME = "phonetic_name";
     private static final String LOCAL_CONTACT_ID = "local_contact_id";
     private static final String PROFILE_PIC_URI = "profile_pic_uri";
     private static final String PRIMARY_EMAIL = "primary_email";
@@ -40,6 +41,7 @@ public class UserTableHelper {
                 .addColumn(HACHIKO_ID, SQLiteType.TEXT, SQLiteConstraint.PRIMARY_KEY)
                 .addColumn(IS_HACHIKO_USER, SQLiteType.INTEGER)
                 .addColumn(DISPLAY_NAME, SQLiteType.TEXT, SQLiteConstraint.NOT_NULL)
+                .addColumn(PHONETIC_NAME, SQLiteType.TEXT)
                 .addColumn(PROFILE_PIC_URI, SQLiteType.TEXT)
                 .addColumn(LOCAL_CONTACT_ID, SQLiteType.INTEGER)
                 .addColumn(PRIMARY_EMAIL, SQLiteType.TEXT)
@@ -69,11 +71,12 @@ public class UserTableHelper {
         return dbHelper.getWritableDatabase();
     }
 
-    public void insertUserToDb(SQLiteDatabase db, String displayName, long localContact,
-                               String profilePicUri, String primaryEmail) {
+    public void insertUserToDb(SQLiteDatabase db, String displayName, String phoneticName,
+                               long localContact, String profilePicUri, String primaryEmail) {
         ContentValues values = new ContentValues();
         values.put(IS_HACHIKO_USER, 0);
         values.put(DISPLAY_NAME, displayName);
+        values.put(PHONETIC_NAME, phoneticName);
         values.put(PROFILE_PIC_URI, profilePicUri);
         values.put(LOCAL_CONTACT_ID, localContact);
         values.put(PRIMARY_EMAIL, primaryEmail);
@@ -125,6 +128,7 @@ public class UserTableHelper {
         String uriString = c.getString(c.getColumnIndex(PROFILE_PIC_URI));
         FriendItem item = new FriendItem(hachikoid,
                 c.getString(c.getColumnIndex(DISPLAY_NAME)),
+                c.getString(c.getColumnIndex(PHONETIC_NAME)),
                 uriString == null ? null : Uri.parse(uriString),
                 c.getString(c.getColumnIndex(PRIMARY_EMAIL)));
         c.close();
@@ -208,10 +212,12 @@ public class UserTableHelper {
         List entries = new ArrayList<FriendItem>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + LOCAL_CONTACT_ID + "," + DISPLAY_NAME + ","
-                + PROFILE_PIC_URI + "," + PRIMARY_EMAIL + " from " + USER_TABLE_NAME +";", null);
+                + PHONETIC_NAME + "," + PROFILE_PIC_URI + "," + PRIMARY_EMAIL + " from "
+                + USER_TABLE_NAME +";", null);
 
         int idIndex = cursor.getColumnIndex(LOCAL_CONTACT_ID);
         int nameIndex = cursor.getColumnIndex(DISPLAY_NAME);
+        int phoneticNameIndex = cursor.getColumnIndex(PHONETIC_NAME);
         int thumbnailIndex = cursor.getColumnIndex(PROFILE_PIC_URI);
         int emailIndex = cursor.getColumnIndex(PRIMARY_EMAIL);
         if (!cursor.moveToFirst()) {
@@ -219,12 +225,14 @@ public class UserTableHelper {
         }
         do {
             String displayName = cursor.getString(nameIndex);
+            String phoneticName = cursor.getString(phoneticNameIndex);
             String uriString = cursor.getString(thumbnailIndex);
             String email = cursor.getString(emailIndex);
 
             entries.add(new FriendItem(
                     cursor.getLong(idIndex),
                     displayName,
+                    phoneticName,
                     uriString == null ? null : Uri.parse(uriString),
                     email));
         } while(cursor.moveToNext());

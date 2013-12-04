@@ -47,7 +47,7 @@ public class SetupUserTableActivity extends SetupBaseActivity {
         SQLiteDatabase db = userTableHelper.getWritableUserDB();
         for (FriendItem friend: friends) {
             Uri photoUri = friend.getPhotoUri();
-            userTableHelper.insertUserToDb(db, friend.getDisplayName(),
+            userTableHelper.insertUserToDb(db, friend.getDisplayName(), friend.getPhoneticName(),
                     friend.getLocalContactId(), photoUri == null ? null : photoUri.toString(),
                     friend.getEmailAddress());
         }

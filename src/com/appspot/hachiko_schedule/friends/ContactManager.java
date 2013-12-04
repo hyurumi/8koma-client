@@ -36,6 +36,7 @@ public class ContactManager {
         Cursor cursor = queryAllContacts(Contacts.DISPLAY_NAME);
         int idIndex = cursor.getColumnIndex(Contacts._ID);
         int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+        int phoneticNameIndex = cursor.getColumnIndex(Contacts.PHONETIC_NAME);
         int thumbnailIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI);
         if (!cursor.moveToFirst()) {
             return Collections.EMPTY_LIST;
@@ -57,6 +58,7 @@ public class ContactManager {
             entries.add(new FriendItem(
                     cursor.getLong(idIndex),
                     displayName,
+                    cursor.getString(phoneticNameIndex),
                     uriString == null ? null : Uri.parse(uriString),
                     email));
         } while(cursor.moveToNext());
@@ -73,6 +75,7 @@ public class ContactManager {
                 new String[] {
                         ContactsContract.Contacts._ID,
                         Contacts.DISPLAY_NAME,
+                        Contacts.PHONETIC_NAME,
                         Contacts.HAS_PHONE_NUMBER,
                         Contacts.PHOTO_THUMBNAIL_URI
                 },
