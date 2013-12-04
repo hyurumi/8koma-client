@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class FetchPlansRequest extends HachiJsonArrayRequest {
     public interface PlansUpdateListener {
         public void onPlansUpdated();
@@ -45,15 +47,16 @@ public class FetchPlansRequest extends HachiJsonArrayRequest {
                     JSONObject json = plans.getJSONObject(i);
                     Plan plan = PlanResponseParser.parsePlan(json);
                     long myId = HachikoPreferences.getMyHachikoId(context);
+                    List<Long> friendIds =  PlanResponseParser.parseFriendIds(json, true);
                     if (!plansTableHelper.planExists(plan.getPlanId())) {
                         plansTableHelper.insertNewPlan(
                                 plan,
                                 myId,
-                                PlanResponseParser.parseFriendIds(json, true),
+                                friendIds,
                                 PlanResponseParser.parseCandidateDates(json, CandidateDate.AnswerState.NEUTRAL));
                     }
                     PlanUpdateHelper.updateAttendanceInfo(
-                            context, plan.getPlanId(), myId, json.getJSONArray("attendance"));
+                            context, plan.getPlanId(), friendIds,  myId, json.getJSONArray("attendance"));
                     if (plan.isFixed() && !plansTableHelper.isFixed(plan.getPlanId())) {
                         long answerId = json.getLong("confirmed");
                         plansTableHelper.confirmCandidateDate(plan.getPlanId(), answerId);

@@ -23,6 +23,7 @@ public class PlansTableHelper {
     private static final String IS_HOST = "is_host";
     private static final String IS_FIXED = "is_fixed";
     private static final String FRIEND_IDS = "friend_ids";
+    private static final String UNRESPONDED_FRIEND_IDS = "unresponded_friend_ids";
     private static final String CREATED_AT = "created_at";
 
     private static final String CANDIDATE_DATE_TABLE_NAME = "candiate_dates";
@@ -44,6 +45,7 @@ public class PlansTableHelper {
                 .addColumn(IS_HOST, SQLiteType.INTEGER)
                 .addColumn(IS_FIXED, SQLiteType.INTEGER)
                 .addColumn(FRIEND_IDS, SQLiteType.TEXT)
+                .addColumn(UNRESPONDED_FRIEND_IDS, SQLiteType.TEXT)
                 .addColumn(CREATED_AT, SQLiteType.INTEGER)
                 .toString();
         String createCanidateDatesTable = new SQLiteCreateTableBuilder(CANDIDATE_DATE_TABLE_NAME)
@@ -88,6 +90,7 @@ public class PlansTableHelper {
         planValue.put(IS_HOST, isHost ? 1 : 0);
         planValue.put(IS_FIXED, 0);
         planValue.put(FRIEND_IDS, Joiner.on(",").join(friendIds));
+        planValue.put(UNRESPONDED_FRIEND_IDS, Joiner.on(",").join(friendIds));
         planValue.put(CREATED_AT, new Date().getTime());
         db.insert(PLAN_TABLE_NAME, null, planValue);
         for (CandidateDate date: dates) {
@@ -242,6 +245,14 @@ public class PlansTableHelper {
         values.put(NEGETIVE_MEMBER_IDS, negativeFriendIds.toString());
         db.update(CANDIDATE_DATE_TABLE_NAME, values, PLAN_ID + "==? AND " + ANSWER_ID + "==?",
                 new String[]{Long.toString(planId), Long.toString(answerId)});
+        db.close();
+    }
+
+    public void updateUnansweredFriendIds(long planId, Collection<Long> unanswered) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UNRESPONDED_FRIEND_IDS, Joiner.on(",").join(unanswered));
+        db.update(PLAN_TABLE_NAME, values, PLAN_ID + "==" + planId, null);
         db.close();
     }
 

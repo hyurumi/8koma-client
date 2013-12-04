@@ -18,6 +18,7 @@ import com.appspot.hachiko_schedule.plans.PlanListActivity;
 import com.appspot.hachiko_schedule.plans.PlanUpdateHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.appspot.hachiko_schedule.util.JSONUtils;
 import com.google.common.base.Joiner;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +62,9 @@ public class InvitedIntentHandler extends GcmIntentHandlerBase<JSONObject> {
                 }
             }
             PlanUpdateHelper.updateAttendanceInfo(
-                    getContext(), plan.getPlanId(), myHachikoId, body.getJSONArray("attendance"));
+                    getContext(), plan.getPlanId(),
+                    JSONUtils.toList(body.getJSONArray("friendsId")),
+                    myHachikoId, body.getJSONArray("attendance"));
             PendingIntent pendingIntent = getActivityIntent(
                     PlanListActivity.getIntentForUnfixedGuest(getContext()));
             PlanListActivity.sendBroadcastForUpdatePlan(getContext(),
