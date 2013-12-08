@@ -20,10 +20,13 @@ import com.appspot.hachiko_schedule.data.FixedPlan;
 import com.appspot.hachiko_schedule.data.Plan;
 import com.appspot.hachiko_schedule.data.UnfixedPlan;
 import com.appspot.hachiko_schedule.db.PlansTableHelper;
+import com.appspot.hachiko_schedule.db.UserTableHelper;
 import com.appspot.hachiko_schedule.prefs.HachikoPreferences;
 import com.appspot.hachiko_schedule.ui.HachikoDialogs;
 import com.appspot.hachiko_schedule.util.HachikoLogger;
+import com.google.common.base.Joiner;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -60,8 +63,13 @@ public class UnfixedHostPlansFragment extends PlanFragmentBase
                 new UnfixedHostPlanView.OnDemandButtonClickListener() {
                     @Override
                     public void onDemandButtonClicked(final long planId) {
+                        Collection<Long> unrespondedFriendIds = new PlansTableHelper(getActivity())
+                                .queryUnrespondedFriendIds(planId);
+                        Collection<String> unrespondedFriendNames = new UserTableHelper(getActivity())
+                                .getFriendsNameForHachikoIds(unrespondedFriendIds);
                         new AlertDialog.Builder(getActivity())
-                                .setMessage("未回答者に催促しますか？")
+                                .setMessage(Joiner.on("さん, ").join(unrespondedFriendNames)
+                                        + "さん\nに回答を催促しますか？")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
