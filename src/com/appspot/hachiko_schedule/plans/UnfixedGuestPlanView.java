@@ -64,8 +64,6 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
         View layout = LayoutInflater.from(context).inflate(R.layout.unfixed_guest_plan_view, this);
         titleView = (TextView) layout.findViewById(R.id.event_title);
         participantsView = (TextView) layout.findViewById(R.id.event_potential_participants);
-        layout.findViewById(R.id.event_show_detail_button)
-                .setOnClickListener(new OnExpandButtonClick());
         candidateDateContainer = (ViewGroup) layout.findViewById(R.id.candidate_date_container);
         plansTableHelper = new PlansTableHelper(context);
     }
@@ -253,14 +251,6 @@ public class UnfixedGuestPlanView extends LinearLayout implements PlanView<Unfix
                     });
             request.setRetryPolicy(HachikoAPI.RETRY_POLICY_LONG);
             HachikoApp.defaultRequestQueue().add(request);
-        }
-    }
-
-    private class OnExpandButtonClick implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            // TODO
-            Toast.makeText(getContext(), "未実装", Toast.LENGTH_SHORT).show();
         }
     }
 }

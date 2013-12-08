@@ -12,19 +12,7 @@
       android:paddingRight="10dp"
       android:paddingTop="5dp"
       android:paddingBottom="5dp">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="20dp"
-          android:id="@+id/event_show_detail_button"
-          android:layout_gravity="right"
-          android:layout_alignParentRight="true"
-          android:src="@drawable/ic_expand"
-          />
-      <include layout="@layout/plan_view_title_text"/>
-    </RelativeLayout>
+    <include layout="@layout/plan_view_title_text"/>
     <include layout="@layout/horizontal_line_gray"/>
     <TextView
         android:layout_width="match_parent"
