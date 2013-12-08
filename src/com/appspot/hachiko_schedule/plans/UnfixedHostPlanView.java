@@ -89,10 +89,26 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         }
         ((TextView) findViewById(R.id.event_potential_participants)).setText(
                 Joiner.on(", ").join(plan.getpotentialParticipants()));
-        Typeface fontForArrow= Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
-        TextView iconView = (TextView)findViewById(R.id.icon_in_right_top_button);
-        iconView.setTypeface(fontForArrow);
-        iconView.setText(R.string.icon_demand);
+
+        if (unrespondedFriendIds.size() != 0) {
+            initAndShowDemandButton();
+        }
+        return this;
+    }
+
+    public void setOnConfirmListener(OnConfirmListener confirmListener) {
+        this.onConfirmListener = confirmListener;
+    }
+
+    public void setOnDemandButtonClickListener(OnDemandButtonClickListener onDemandButtonClickListener) {
+        this.onDemandButtonClickListener = onDemandButtonClickListener;
+    }
+
+    private void initAndShowDemandButton() {
+        Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), "fonts/fontawesome-webfont.ttf");
+        TextView demandButtonIcon = (TextView)findViewById(R.id.icon_in_right_top_button);
+        demandButtonIcon.setTypeface(iconFont);
+        demandButtonIcon.setText(R.string.icon_demand);
         findViewById(R.id.right_top_button).setVisibility(VISIBLE);
         ((TextView)findViewById(R.id.text_in_right_top_button)).setText(R.string.demand);
         findViewById(R.id.right_top_button).setOnClickListener(new OnClickListener() {
@@ -103,15 +119,6 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
                 }
             }
         });
-        return this;
-    }
-
-    public void setOnConfirmListener(OnConfirmListener confirmListener) {
-        this.onConfirmListener = confirmListener;
-    }
-
-    public void setOnDemandButtonClickListener(OnDemandButtonClickListener onDemandButtonClickListener) {
-        this.onDemandButtonClickListener = onDemandButtonClickListener;
     }
 
     private class CandidateDateView extends LinearLayout {
