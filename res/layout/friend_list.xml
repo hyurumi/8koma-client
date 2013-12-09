@@ -60,13 +60,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/horizontalScrollView"
         android:fillViewport="true">
-      <com.appspot.hachiko_schedule.friends.ChipsFriendNameEditText
+      <tk.hachikoma.friends.ChipsFriendNameEditText
           android:id="@+id/search_friend"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/hint_on_search_friends">
         <requestFocus />
-      </com.appspot.hachiko_schedule.friends.ChipsFriendNameEditText>
+      </tk.hachikoma.friends.ChipsFriendNameEditText>
     </HorizontalScrollView>
   </LinearLayout>
   <ListView

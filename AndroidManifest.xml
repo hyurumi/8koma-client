@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.appspot.hachiko_schedule"
+          package="tk.hachikoma"
           android:versionCode="1"
           android:versionName="0.0.2">
 
@@ -8,7 +8,7 @@
       android:minSdkVersion="14"
       android:targetSdkVersion="17"/>
   <permission
-      android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"
+      android:name="tk.hachikoma.permission.C2D_MESSAGE"
       android:protectionLevel="signature"/>
 
   <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
@@ -20,7 +20,7 @@
   <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
-  <uses-permission android:name="com.appspot.hachiko_schedule.permission.C2D_MESSAGE"/>
+  <uses-permission android:name="tk.hachikoma.permission.C2D_MESSAGE"/>
 
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -32,7 +32,7 @@
       android:label="@string/app_name"
       android:icon="@drawable/ic_launcher"
       android:logo="@drawable/logo_launcher"
-      android:name="com.appspot.hachiko_schedule.HachikoApp">
+      android:name="tk.hachikoma.HachikoApp">
     <activity
         android:name=".plans.PlanListActivity"
         android:label="@string/app_name"
@@ -89,7 +89,7 @@
         android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
         <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-        <category android:name="com.appspot.hachiko_schedule"/>
+        <category android:name="tk.hachikoma"/>
       </intent-filter>
     </receiver>
     <service android:name=".push.GcmIntentService"/>

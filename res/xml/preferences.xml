@@ -24,25 +24,25 @@
         android:key="timerange_preferencescreen"
         android:title="朝昼夜の時間帯を設定">
       />
-      <com.appspot.hachiko_schedule.prefs.TimePickerDialogPreference
+      <tk.hachikoma.prefs.TimePickerDialogPreference
           android:key="timerange_asa"
           android:title="朝の時間帯を設定"
           android:summary="time"
           android:dialogTitle="朝の時間帯を設定"
           android:dialogLayout="@layout/dialog_timepicker" />
-      <com.appspot.hachiko_schedule.prefs.TimePickerDialogPreference
+      <tk.hachikoma.prefs.TimePickerDialogPreference
           android:key="timerange_hiru"
           android:title="昼の時間帯を設定"
           android:summary="time"
           android:dialogTitle="昼の時間帯を設定"
           android:dialogLayout="@layout/dialog_timepicker" />
-      <com.appspot.hachiko_schedule.prefs.TimePickerDialogPreference
+      <tk.hachikoma.prefs.TimePickerDialogPreference
           android:key="timerange_yu"
           android:title="夕の時間帯を設定"
           android:summary="time"
           android:dialogTitle="夕の時間帯を設定"
           android:dialogLayout="@layout/dialog_timepicker" />
-      <com.appspot.hachiko_schedule.prefs.TimePickerDialogPreference
+      <tk.hachikoma.prefs.TimePickerDialogPreference
           android:key="timerange_yoru"
           android:title="夜の時間帯を設定"
           android:summary="time"

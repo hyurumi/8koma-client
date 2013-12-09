@@ -19,12 +19,12 @@
         android:layout_gravity="center"
         android:layout_weight="1" android:layout_alignParentTop="true"/>
 
-    <com.appspot.hachiko_schedule.ui.ViewIndicator
+    <tk.hachikoma.ui.ViewIndicator
         android:id="@+id/indicator"
         android:layout_height="30dp"
         android:layout_width="fill_parent"
         android:layout_alignParentTop="true" android:layout_alignParentBottom="false">
-    </com.appspot.hachiko_schedule.ui.ViewIndicator>
+    </tk.hachikoma.ui.ViewIndicator>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
