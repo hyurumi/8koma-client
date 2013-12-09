@@ -111,7 +111,7 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
         TextView demandButtonIcon = (TextView)findViewById(R.id.icon_in_right_top_button);
         demandButtonIcon.setTypeface(iconFont);
         demandButtonIcon.setText(R.string.icon_demand);
-        findViewById(R.id.right_top_button).setVisibility(VISIBLE);
+        //findViewById(R.id.right_top_button).setVisibility(VISIBLE);
         ((TextView)findViewById(R.id.text_in_right_top_button)).setText(R.string.demand);
         findViewById(R.id.right_top_button).setOnClickListener(new OnClickListener() {
             @Override

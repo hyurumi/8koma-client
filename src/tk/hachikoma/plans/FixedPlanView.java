@@ -54,7 +54,7 @@ public class FixedPlanView extends LinearLayout implements PlanView<FixedPlan> {
         TextView iconView = (TextView)findViewById(R.id.icon_in_right_top_button);
         iconView.setTypeface(fontForIcon);
         iconView.setText(R.string.icon_remind);
-        findViewById(R.id.right_top_button).setVisibility(VISIBLE);
+        //findViewById(R.id.right_top_button).setVisibility(VISIBLE);
         ((TextView)findViewById(R.id.text_in_right_top_button)).setText(R.string.remind);
         findViewById(R.id.right_top_button).setOnClickListener(new OnClickListener() {
             @Override
