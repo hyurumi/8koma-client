@@ -245,11 +245,13 @@ public class CreatePlanActivity extends Activity {
                     public void onResponse(JSONObject json) {
                         long planId;
                         List<CandidateDate> candidateDates;
+                        String token;
                         try {
                             planId = json.getLong("planId");
                             HachikoLogger.debug("plan successfully created", planId, json);
                             candidateDates = PlanResponseParser.parseCandidateDates(
                                     json, CandidateDate.AnswerState.OK);
+                            token = json.getString("token");
                         } catch (JSONException e) {
                             HachikoLogger.error("JSON parse error/Never happen", e);
                             return;
@@ -265,6 +267,9 @@ public class CreatePlanActivity extends Activity {
                         intent.addFlags(
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra(Constants.EXTRA_KEY_NEW_EVENT, true);
+                        intent.putExtra(
+                                PlanListActivity.EXTRA_SHARE_PLAN_URL,
+                                HachikoAPI.Plan.shareUrl(token));
                         startActivity(intent);
                     }
                 },

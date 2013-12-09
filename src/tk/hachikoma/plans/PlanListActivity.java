@@ -1,10 +1,7 @@
 package tk.hachikoma.plans;
 
 import android.app.*;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +30,7 @@ import java.util.Date;
 public class PlanListActivity extends Activity{
     public static final String INTENT_KEY_TAB_NAME = "tab_name";
     public static final String EXTRA_UPDATE_PLAN_MESSAGE = "update_plan_message";
+    public static final String EXTRA_SHARE_PLAN_URL = "plan_share_plan_url";
     public static final String TAB_NAME_UNFIXED_GUEST = "unfixed_guest_plan";
     public static final String TAB_NAME_UNFIXED_HOST = "unfixed_host_plan";
     public static final String TAB_NAME_FIXED = "fixed_plan";
@@ -131,7 +129,8 @@ public class PlanListActivity extends Activity{
         (findViewById(R.id.angle_double_up)).startAnimation(animation);
         (findViewById(R.id.no_event_then_create_new)).startAnimation(animation);
 
-        handleIntent(getIntent());    }
+        handleIntent(getIntent());
+    }
 
     @Override
     protected void onResume() {
@@ -162,8 +161,18 @@ public class PlanListActivity extends Activity{
         for (int i = 0; i < tabNames.length; i++) {
             if (tabNames[i].equals(tabName)) {
                 getActionBar().setSelectedNavigationItem(i);
-                return;
+                break;
             }
+        }
+
+        String shareUrl = intent.getStringExtra(EXTRA_SHARE_PLAN_URL);
+        if (shareUrl != null) {
+            ClipboardManager clipboard =
+                    (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(shareUrl);
+            Toast.makeText(this,
+                    "予定共有用のURLがクリップボードにコピーされました",
+                    Toast.LENGTH_LONG).show();
         }
     }
 

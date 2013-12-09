@@ -48,6 +48,9 @@ public class HachikoAPI {
         public static final HachikoAPI GET_PLANS = new HachikoAPI(Request.Method.GET, "plans");
         public static final HachikoAPI RESPOND = new HachikoAPI(Request.Method.POST, "respond");
         public static final HachikoAPI DEMAND = new HachikoAPI(Request.Method.POST, "demand/");
+        public static final String shareUrl(String token) {
+            return BASE + "respond/" + token;
+        };
     }
 
     public static class User {
