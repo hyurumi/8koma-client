@@ -24,3 +24,20 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
+
+# gms
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+# guava
+-libraryjars libs/annotations/jsr305-2.0.2.jar
+-libraryjars libs/annotations/javax.inject-1.jar
+
+-dontoptimize
+-dontobfuscate
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.common.collect.MinMaxPriorityQueue
+
+-keepclasseswithmembers public class * {
+    public static void main(java.lang.String[]);
+}

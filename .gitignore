@@ -11,3 +11,5 @@ assets/commit.properties
 res/raw/debug.cer
 res/raw/release.cer
 debug.keystore
+proguard_logs
+*.apk
