@@ -1,5 +1,6 @@
 package tk.hachikoma.plans;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import tk.hachikoma.R;
 import tk.hachikoma.data.CandidateDate;
+import tk.hachikoma.data.Event;
 import tk.hachikoma.data.UnfixedPlan;
 import tk.hachikoma.db.PlansTableHelper;
 import tk.hachikoma.prefs.HachikoPreferences;
@@ -181,6 +183,34 @@ public class UnfixedHostPlanView extends LinearLayout implements PlanView<Unfixe
                 @Override
                 public void onClick(View v) {
                     confirmAnswerDialog(unfixedPlan, candidateDate);
+                }
+            });
+            setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    final View calendarView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.calendar_dialog, null);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder((Activity) getContext());
+                    builder.setIcon(null);
+                    builder.setTitle(R.string.recent_schedules);
+                    builder.setView(calendarView);
+                    EventManager eventManager = new EventManager(getContext());
+                    Event prevEvent = eventManager.getPreviousEvent(candidateDate.getStartDate());
+                    if (prevEvent != null) {
+                        ((TextView) calendarView.findViewById(R.id.previous_event_text)).setText(
+                                "前: " + prevEvent.toString());
+                    }
+                    ((TextView) calendarView.findViewById(R.id.candidate_date)).setText(
+                            dateTextView.getText() + "(回答待ち): " + titleView.getText());
+                    Event nextEvent = eventManager.getNextEvent(candidateDate.getEndDate());
+                    if (nextEvent != null) {
+                        ((TextView) calendarView.findViewById(R.id.next_event_text)).setText(
+                                "次: " + nextEvent.toString());
+                    }
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
+                    return false;
                 }
             });
         }
