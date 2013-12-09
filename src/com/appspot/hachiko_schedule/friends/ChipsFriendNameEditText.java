@@ -77,7 +77,7 @@ public class ChipsFriendNameEditText extends EditText {
             spannableStringBuilder.setSpan(
                     new TexttipSpan(getContext(), R.layout.friend_name_tip,
                             R.id.friend_name_tip_name, R.id.friend_name_tip_image,
-                            R.drawable.ic_contact_picture, chipText),
+                            item.getPhotoUri(), chipText),
                     x, x + chipText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             x = x + chipText.length() + delimiter.length();
         }

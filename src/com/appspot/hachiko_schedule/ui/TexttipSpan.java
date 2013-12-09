@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +17,18 @@ import android.widget.TextView;
  */
 public class TexttipSpan extends ImageSpan {
     public TexttipSpan(Context context, int viewResource, int textViewId,
-                       int imageViewId, int iconResource, CharSequence text) {
+                       int imageViewId, Uri iconUri, CharSequence text) {
         super(context,
-                createBitmap(context, viewResource, textViewId, imageViewId, iconResource, text));
+                createBitmap(context, viewResource, textViewId, imageViewId, iconUri, text));
     }
 
     private static Bitmap createBitmap(Context context, int viewResource, int textViewId,
-                                       int imageViewId, int iconResource, CharSequence text) {
+                                       int imageViewId, Uri iconUri, CharSequence text) {
         LayoutInflater inflater
                 = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(viewResource, null);
         ((TextView) view.findViewById(textViewId)).setText(text);
-        ((ImageView) view.findViewById(imageViewId)).setImageDrawable(
-                context.getResources().getDrawable(iconResource));
+        ((ImageView) view.findViewById(imageViewId)).setImageURI(iconUri);
         int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view.measure(spec, spec);
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
