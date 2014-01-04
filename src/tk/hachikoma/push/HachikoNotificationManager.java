@@ -21,7 +21,7 @@ class HachikoNotificationManager {
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.logo_launcher)
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                         .setAutoCancel(true)
@@ -32,6 +32,7 @@ class HachikoNotificationManager {
         }
         Notification notification = builder.build();
         // DEFAULT_LIGHTはNoLightの可能性があるのでここでライトを上書き
+        notification.icon = R.drawable.logo_launcher;
         notification.ledARGB = 0xff0000cc;
         notification.ledOnMS = 300;
         notification.ledOffMS = 1000;

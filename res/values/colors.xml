@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="main_accent_color">#00AAAA</color>
+  <color name="main_accent_color">#990055AA</color>
+
+  <color name="font_color_gray">#666666</color>
+  <color name="font_color_white">#FFFFFF</color>
+
+  <color name="background_white">#FFFFFF</color>
+  <color name="background_color_gray">#f5f5f5</color>
+
   <color name="ok">#1778E4</color>
   <color name="tentative">#555555</color>
   <color name="ng">#BB4E2F</color>
   <color name="unselected">#e6e6e6</color>
 
-  <color name="font_color_normal">#555555</color>
-  <color name="font_color_white">#FFFFFF</color>
-  <color name="font_shadow_black">#000000</color>
-  <color name="background">#00AAAA</color>
-  <color name="background_white">#FFFFFF</color>
-  <color name="background_black_half_transparent">#55000000</color>
-  <color name="background_holo_like">#fff3f3f3</color>
-  <color name="background_color_gray">#f5f5f5</color>
-  <color name="font_color_gray">#666666</color>
 
-  <color name="btn_normal">#00AAAA</color>
-  <color name="btn_focused">#007777</color>
-  <color name="btn_pressed">#007777</color>
+  <!-- walk_through -->
+  <color name="font_shadow_black">#000000</color>
+  <color name="walk_through_cirlc_background_black_half_transparent">#55000000</color>
+
+  <!-- friend list bg -->
+  <color name="background_holo_like">#fff3f3f3</color>
+
+  <color name="tab_title_font_color">#DDDDDD</color>
+
+  <!-- Button -->
+  <color name="btn_normal">#990055AA</color>
+  <color name="btn_focused">#333333</color>
+  <color name="btn_pressed">#0055AA</color>
   <color name="btn_unactive">#AAAAAA</color>
 
+  <!-- Toggle Button -->
   <color name="toggle_btn_normal">#f5f5f5</color>
-  <color name="toggle_btn_checked">#00AAAA</color>
-
+  <color name="toggle_btn_checked">#990055AA</color>
+  <color name="toggle_btn_pressed">#0055AA</color>
   <color name="toggle_btn_txt_normal">#666666</color>
   <color name="toggle_btn_txt_checked">#ffffff</color>
+  <color name="toggle_btn_txt_pressed">#ffffff</color>
 
-  <color name="friend_name_gray">#c6e6e6</color>
+  <!-- Friend name tip -->
+  <color name="friend_name_gray">#330055AA</color>
 
-  <color name="friend_list_selector_focused">#9900AAAA</color>
-  <color name="friend_list_selector_pressed">#9900AAAA</color>
+  <color name="friend_list_selector_focused">#990055AA</color>
+  <color name="friend_list_selector_pressed">#990055AA</color>
 </resources>

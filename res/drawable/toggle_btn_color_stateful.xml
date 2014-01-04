@@ -3,5 +3,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:state_checked="true"
       android:drawable="@color/toggle_btn_checked"/>
+<item android:state_pressed="true"
+      android:drawable="@color/toggle_btn_pressed"/>
 <item android:drawable="@color/toggle_btn_normal"/>
 </selector>

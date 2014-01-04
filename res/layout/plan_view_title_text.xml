@@ -19,14 +19,12 @@
       android:gravity="center_vertical"
       android:id="@+id/right_top_button"
       android:layout_gravity="center|right"
-      android:background="@color/background"
       android:padding="5dp" android:visibility="gone">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/icon_in_right_top_button"
-        android:background="@color/background"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
         android:textColor="@color/font_color_white"
@@ -36,7 +34,6 @@
         android:layout_height="wrap_content"
         android:text="@string/demand"
         android:id="@+id/text_in_right_top_button"
-        android:background="@color/background"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
         android:textColor="@color/font_color_white"

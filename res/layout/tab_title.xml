@@ -8,6 +8,7 @@
           android:layout_height="wrap_content"
           android:id="@+id/action_custom_title"
           android:text="PlaceHolder"
+          android:textColor="@color/tab_title_font_color"
           android:textSize="24sp"
           android:paddingTop="12dp"/>
 </LinearLayout>
