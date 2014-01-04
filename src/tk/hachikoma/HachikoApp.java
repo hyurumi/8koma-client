@@ -66,9 +66,9 @@ public class HachikoApp extends Application {
                         Integer.toString(HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT)),
                 HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT);
         if (numOfCandidateDates < 0 || HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_MAX < numOfCandidateDates) {
-            preferencesEditor.putInt(
+            preferencesEditor.putString(
                     HachikoPreferences.KEY_NUMBER_OF_CANDIDATE_DATES,
-                    HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT);
+                    Integer.toString(HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT));
         }
         preferencesEditor.commit();
     }
