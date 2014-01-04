@@ -43,6 +43,7 @@ import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import tk.hachikoma.util.IntegerUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -385,10 +386,17 @@ public class CreatePlanActivity extends Activity {
             HachikoLogger.debug("ignore invalid date or time input");
             return;
         }
+        int numOfCandidateDates = IntegerUtils.parseIntWithDefault(
+                HachikoPreferences.getDefault(this).getString(
+                        HachikoPreferences.KEY_NUMBER_OF_CANDIDATE_DATES,
+                        Integer.toString(HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT)),
+                HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT);
         VacancyRequest.Param param = new VacancyRequest.Param(
                 Arrays.asList(friendIds), preferredTimeRange, startDay, endDay,
                 dateRangeRadioGroup.getCheckedRadioButtonId() == R.id.date_range_asap,
-                durationMin);
+                durationMin,
+                numOfCandidateDates
+        );
         clearTimeSlots();
         loadingCandidateView.setVisibility(View.VISIBLE);
 

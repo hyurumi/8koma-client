@@ -4,6 +4,7 @@ import android.content.Context;
 import com.android.volley.Response;
 import tk.hachikoma.apis.base_requests.HachiJsonArrayRequest;
 import tk.hachikoma.data.TimeRange;
+import tk.hachikoma.prefs.HachikoPreferences;
 import tk.hachikoma.util.DateUtils;
 import tk.hachikoma.util.HachikoLogger;
 import com.google.common.annotations.VisibleForTesting;
@@ -65,6 +66,7 @@ public class VacancyRequest extends HachiJsonArrayRequest {
             }
             param.put("windows", windows);
             param.put("asap", parameter.shouldAsap);
+            param.put("maxResults", parameter.numOfFetchingDates);
         } catch (JSONException e) {
             HachikoLogger.error("Parameter error in vacancy" + param, e);
             return param;
@@ -79,15 +81,21 @@ public class VacancyRequest extends HachiJsonArrayRequest {
         private final Calendar endDay;
         private final boolean shouldAsap;
         private final int durationMin;
+        private final int numOfFetchingDates;
 
         public Param(List<Long> friendIds, List<TimeRange> preferredTimeRanges, Calendar startDay,
-                     Calendar endDay, boolean shouldAsap, int durationMin) {
+                     Calendar endDay, boolean shouldAsap, int durationMin, int numOfFetchingDates) {
             this.friendIds = friendIds;
             this.preferredTimeRanges = preferredTimeRanges;
             this.startDay = startDay;
             this.endDay = endDay;
             this.shouldAsap = shouldAsap;
             this.durationMin = durationMin;
+            if (numOfFetchingDates < 0 || HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_MAX < numOfFetchingDates) {
+                this.numOfFetchingDates = HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT;
+            } else {
+                this.numOfFetchingDates = numOfFetchingDates;
+            }
         }
 
         @Override

@@ -60,6 +60,9 @@ public class HachikoPreferences {
     public static final String KEY_SESSION_EXPIRES_MILLIS = "session_expires";
     public static final String KEY_MY_HACHIKO_ID = "my_hachiko_id";
     public static final String KEY_HACHIKO_INTERNAL_PASSWORD = "hachiko_internal_password";
+    public static final String KEY_NUMBER_OF_CANDIDATE_DATES = "number_of_candidate_datetime";
+    public static final int NUMBER_OF_CANDIDATE_DATES_DEFAULT = 5;
+    public static final int NUMBER_OF_CANDIDATE_DATES_MAX = 8;
 
     public static final String KEY_TIMERANGE_ASA = "timerange_asa";
     public static final String DEFAULT_TIMERANGE_ASA = "05:00-09:00";

@@ -35,7 +35,8 @@ public class VacancyRequestTest {
                 day(2013, 11, 10),
                 day(2013, 11, 11),
                 false,
-                60
+                60,
+                8
         ));
         JSONArray windows = json.getJSONArray("windows");
         for (int i = 0; i < windows.length(); i++) {
@@ -65,7 +66,8 @@ public class VacancyRequestTest {
                 day(2013, 11, 10),
                 day(2013, 11, 11),
                 false,
-                60
+                60,
+                4
         ));
         JSONArray windows = json.getJSONArray("windows");
         for (int i = 0; i < windows.length(); i++) {

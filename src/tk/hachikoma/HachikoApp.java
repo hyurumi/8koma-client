@@ -2,6 +2,7 @@ package tk.hachikoma;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import com.android.volley.RequestQueue;
@@ -9,6 +10,7 @@ import tk.hachikoma.apis.HachiRequestQueue;
 import tk.hachikoma.dev.FakeRequestQueue;
 import tk.hachikoma.prefs.HachikoPreferences;
 import com.deploygate.sdk.DeployGate;
+import tk.hachikoma.util.IntegerUtils;
 
 /**
  * アプリケーション全体で利用する管理するクラスなどを管理する
@@ -25,6 +27,7 @@ public class HachikoApp extends Application {
         requestQueue = new HachiRequestQueue(appContext);
         requestQueue.start();
 
+        initPrefs();
         DeployGate.install(this);
     }
 
@@ -55,5 +58,18 @@ public class HachikoApp extends Application {
         }
     }
 
-
+    private void initPrefs() {
+        SharedPreferences.Editor preferencesEditor = HachikoPreferences.getDefaultEditor(appContext);
+        int numOfCandidateDates = IntegerUtils.parseIntWithDefault(
+                HachikoPreferences.getDefault(appContext).getString(
+                        HachikoPreferences.KEY_NUMBER_OF_CANDIDATE_DATES,
+                        Integer.toString(HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT)),
+                HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT);
+        if (numOfCandidateDates < 0 || HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_MAX < numOfCandidateDates) {
+            preferencesEditor.putInt(
+                    HachikoPreferences.KEY_NUMBER_OF_CANDIDATE_DATES,
+                    HachikoPreferences.NUMBER_OF_CANDIDATE_DATES_DEFAULT);
+        }
+        preferencesEditor.commit();
+    }
 }

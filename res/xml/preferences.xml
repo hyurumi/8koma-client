@@ -10,7 +10,7 @@
     <EditTextPreference
         android:key="number_of_candidate_datetime"
         android:title="はちこまが提案する候補日時数"
-        android:summary="初期値は５、最大値は８です"
+        android:summary="1〜8の整数値を指定してください"
         android:dialogTitle="はちこまが提案する候補日時数"
         android:inputType="numberDecimal"
         />
