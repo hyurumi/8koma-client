@@ -226,6 +226,7 @@ public class PlansTableHelper {
                     stringArrayToList(c.getString(c.getColumnIndex(NEGETIVE_MEMBER_IDS)))
             ));
         } while (c.moveToNext());
+        c.close();
         return candidateDates;
     }
 

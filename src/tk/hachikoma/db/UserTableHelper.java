@@ -156,6 +156,7 @@ public class UserTableHelper {
         Map<Long, String> names = new HashMap<Long, String>();
         queryAndPutNames(db, names, USER_TABLE_NAME, hachikoIds);
         if (names.size() == hachikoIds.size()) {
+            db.close();
             return names;
         }
         Set<Long> unresolvedIds = new HashSet<Long>();
@@ -191,7 +192,9 @@ public class UserTableHelper {
         SQLiteDatabase db = getWritableUserDB();
         ContentValues values = new ContentValues();
         values.put(IS_HACHIKO_USER, true);
-        return db.update(USER_TABLE_NAME, values, HACHIKO_ID + "==" + hachikoId, null) > 0;
+        boolean ans =  db.update(USER_TABLE_NAME, values, HACHIKO_ID + "==" + hachikoId, null) > 0;
+        db.close();
+        return ans;
     }
 
     /**
@@ -222,6 +225,7 @@ public class UserTableHelper {
         int thumbnailIndex = cursor.getColumnIndex(PROFILE_PIC_URI);
         int emailIndex = cursor.getColumnIndex(PRIMARY_EMAIL);
         if (!cursor.moveToFirst()) {
+            cursor.close();
             return Collections.EMPTY_LIST;
         }
         do {
@@ -264,6 +268,7 @@ public class UserTableHelper {
         int thumbnailIndex = cursor.getColumnIndex(GROUP_ICON_URI);
         int friendIdsIndex = cursor.getColumnIndex(FRIEND_IDS_COMMA_SEPARATED);
         if (!cursor.moveToFirst()) {
+            cursor.close();
             return Collections.EMPTY_LIST;
         }
         do {
@@ -288,7 +293,9 @@ public class UserTableHelper {
 
     public int deleteGroup(int groupId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.delete(GROUP_TABLE_NAME, GROUP_ID + "==" + groupId, null);
+        int ans = db.delete(GROUP_TABLE_NAME, GROUP_ID + "==" + groupId, null);
+        db.close();
+        return ans;
     }
 
     /**
@@ -299,11 +306,13 @@ public class UserTableHelper {
         Cursor c = db.rawQuery("select " + '*' + " from " + USER_TABLE_NAME + ";", null);
         if (!c.moveToFirst()) {
             HachikoLogger.debug("No entry in " + USER_TABLE_NAME);
+            c.close();
             return;
         }
         do {
             HachikoLogger.debug(c.getString(c.getColumnIndex(HACHIKO_ID)) + "|"
                     + c.getString(c.getColumnIndex(PRIMARY_EMAIL)));
         } while (c.moveToNext());
+        c.close();
     }
 }
