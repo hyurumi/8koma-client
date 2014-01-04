@@ -165,6 +165,7 @@ public class UserTableHelper {
             }
         }
         queryAndPutNames(db, names, NON_FRIEND_NAME_TABLE_NAME, unresolvedIds);
+        db.close();
         return names;
     }
 
