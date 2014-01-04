@@ -5,11 +5,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import tk.hachikoma.data.FriendItem;
-import tk.hachikoma.util.HachikoLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import tk.hachikoma.data.FriendItem;
+import tk.hachikoma.prefs.GoogleAuthPreferences;
+import tk.hachikoma.util.HachikoLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,7 @@ public class ContactManager {
         if (!cursor.moveToFirst()) {
             return Collections.EMPTY_LIST;
         }
+        String myOwnEmail = new GoogleAuthPreferences(context).getAccountName();
         do {
             String displayName = cursor.getString(nameIndex);
             if (displayName == null || displayName.contains("@")) {
@@ -51,7 +53,8 @@ public class ContactManager {
                     cursor.getColumnIndex(Contacts._ID)));
             if (email == null
                     /* 名前がemailから勝手に推測されるケースがあるぽい */
-                    || email.startsWith(displayName)) {
+                    || email.startsWith(displayName)
+                    || email.equals(myOwnEmail)) {
                 continue;
             }
 
